@@ -85,9 +85,9 @@ describe('Account signer', () => {
   })
 
   describe('with new account', () => {
-    var account: Account
-    var config: any
-    var accountSigner: ethers.Wallet
+    let account: Account
+    let config: any
+    let accountSigner: ethers.Wallet
 
     beforeEach(async () => {
       accountSigner = randomWallet('Should create a new account')
@@ -220,8 +220,8 @@ describe('Account signer', () => {
         })
 
         describe('select fee', () => {
-          var account: never
-          var getAccount: (feeOptions: FeeOption[], feeQuote: FeeQuote) => Promise<Account>
+          let account: never
+          let getAccount: (feeOptions: FeeOption[], feeQuote: FeeQuote) => Promise<Account>
 
           beforeEach(async () => {
             class LocalRelayerWithFee extends LocalRelayer {
