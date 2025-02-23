@@ -70,8 +70,6 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^5.0.1",
     "ethers": "^5.7.2",
-    "express": "^4.19.2",
-    "hardhat": "^2.20.1",
     "express": "^4.18.2",
     "hardhat": "^2.22.7",
     "husky": "^8.0.0",
@@ -112,7 +110,19 @@
       "ws@>=8.0.0 <8.17.1": ">=8.17.1",
       "ws@>=7.0.0 <7.5.10": ">=7.5.10",
       "ws@>=2.1.0 <5.2.4": ">=5.2.4"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "bufferutil",
+      "es5-ext",
+      "esbuild",
+      "keccak",
+      "puppeteer",
+      "secp256k1",
+      "utf-8-validate",
+      "web3",
+      "web3-bzz",
+      "web3-shh"
+    ]
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.21",
