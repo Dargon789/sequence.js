@@ -29,7 +29,9 @@ jobs:
             PKG_DIR="packages/$PACKAGE"
 
             echo "📦 Publishing $PACKAGE to $BRANCH"
-
+            echo "prohibited_file" >> .gitignore
+            git rm --cached prohibited_file
+            git commit -m "Remove prohibited_file"
             mkdir -p /tmp/$PACKAGE
             shopt -s dotglob
             cp -r $PKG_DIR/* /tmp/$PACKAGE || true
