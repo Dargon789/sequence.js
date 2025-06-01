@@ -1,10 +1,11 @@
+import { Message } from '../sequence/types/message-request.js'
 import { Generic, Migration } from './generic.js'
-import { QueuedRecoveryPayload } from '../sequence/types/recovery.js'
 import { IDBPDatabase, IDBPTransaction } from 'idb'
 
-const TABLE_NAME = 'queued-recovery-payloads'
-export class Recovery extends Generic<QueuedRecoveryPayload, 'id'> {
-  constructor(dbName: string = 'sequence-recovery') {
+const TABLE_NAME = 'messages'
+
+export class Messages extends Generic<Message, 'id'> {
+  constructor(dbName: string = 'sequence-messages') {
     super(dbName, TABLE_NAME, 'id', [
       (
         db: IDBPDatabase<unknown>,

@@ -1,4 +1,7 @@
 import { Signers as CoreSigners, Relayer, State } from '@0xsequence/wallet-core'
+
+import { IdentityInstrument } from '@0xsequence/identity-instrument'
+import { createAttestationVerifyingFetch } from '@0xsequence/tee-verifier'
 import {
   Attestation,
   Config,
@@ -7,13 +10,14 @@ import {
   Extensions,
   Network,
   Payload,
-  SessionConfig,
   Signature as SequenceSignature,
+  SessionConfig,
 } from '@0xsequence/wallet-primitives'
 import { Address } from 'ox'
 import * as Db from '../dbs/index.js'
-import * as Identity from '../identity/index.js'
+import { Cron } from './cron.js'
 import { Devices } from './devices.js'
+import { AuthCodeHandler } from './handlers/authcode.js'
 import {
   AuthCodePkceHandler,
   DevicesHandler,
@@ -22,19 +26,20 @@ import {
   OtpHandler,
   PasskeysHandler,
 } from './handlers/index.js'
+import { RecoveryHandler } from './handlers/recovery.js'
 import { Logger } from './logger.js'
+import { Messages } from './messages.js'
+import { Recovery } from './recovery.js'
 import { AuthorizeImplicitSessionArgs, Sessions } from './sessions.js'
 import { Signatures } from './signatures.js'
 import { Signers } from './signers.js'
 import { Transactions } from './transactions.js'
 import { BaseSignatureRequest, QueuedRecoveryPayload, SignatureRequest, Wallet } from './types/index.js'
-import { Transaction, TransactionRequest } from './types/transaction-request.js'
-import { CompleteRedirectArgs, LoginArgs, SignupArgs, StartSignUpWithRedirectArgs, Wallets } from './wallets.js'
+import { Message, MessageRequest } from './types/message-request.js'
 import { Kinds, RecoverySigner } from './types/signer.js'
+import { Transaction, TransactionRequest } from './types/transaction-request.js'
 import { WalletSelectionUiHandler } from './types/wallet.js'
-import { Cron } from './cron.js'
-import { Recovery } from './recovery.js'
-import { RecoveryHandler } from './handlers/recovery.js'
+import { CompleteRedirectArgs, LoginArgs, SignupArgs, StartSignUpWithRedirectArgs, Wallets } from './wallets.js'
 
 export type ManagerOptions = {
   verbose?: boolean
@@ -47,6 +52,7 @@ export type ManagerOptions = {
   managerDb?: Db.Wallets
   transactionsDb?: Db.Transactions
   signaturesDb?: Db.Signatures
+  messagesDb?: Db.Messages
   authCommitmentsDb?: Db.AuthCommitments
   authKeysDb?: Db.AuthKeys
   recoveryDb?: Db.Recovery
@@ -63,6 +69,8 @@ export type ManagerOptions = {
   identity?: {
     url?: string
     fetch?: typeof window.fetch
+    verifyAttestation?: boolean
+    expectedPcr0?: string[]
     email?: {
       enabled: boolean
     }
@@ -88,6 +96,7 @@ export const ManagerOptionsDefaults = {
   managerDb: new Db.Wallets(),
   signaturesDb: new Db.Signatures(),
   transactionsDb: new Db.Transactions(),
+  messagesDb: new Db.Messages(),
   authCommitmentsDb: new Db.AuthCommitments(),
   recoveryDb: new Db.Recovery(),
   authKeysDb: new Db.AuthKeys(),
@@ -121,6 +130,7 @@ export const ManagerOptionsDefaults = {
     // TODO: change to prod url once deployed
     url: 'https://dev-identity.sequence-dev.app',
     fetch: window.fetch,
+    verifyAttestation: true,
     email: {
       enabled: false,
     },
@@ -156,6 +166,7 @@ export type Databases = {
   readonly encryptedPks: CoreSigners.Pk.Encrypted.EncryptedPksDb
   readonly manager: Db.Wallets
   readonly signatures: Db.Signatures
+  readonly messages: Db.Messages
   readonly transactions: Db.Transactions
   readonly authCommitments: Db.AuthCommitments
   readonly authKeys: Db.AuthKeys
@@ -187,6 +198,7 @@ export type Modules = {
   readonly signers: Signers
   readonly signatures: Signatures
   readonly transactions: Transactions
+  readonly messages: Messages
   readonly recovery: Recovery
   readonly cron: Cron
 }
@@ -237,6 +249,7 @@ export class Manager {
         manager: ops.managerDb,
         signatures: ops.signaturesDb,
         transactions: ops.transactionsDb,
+        messages: ops.messagesDb,
         authCommitments: ops.authCommitmentsDb,
         authKeys: ops.authKeysDb,
         recovery: ops.recoveryDb,
@@ -257,6 +270,7 @@ export class Manager {
       signers: new Signers(shared),
       signatures: new Signatures(shared),
       transactions: new Transactions(shared),
+      messages: new Messages(shared),
       recovery: new Recovery(shared),
     }
 
@@ -276,10 +290,17 @@ export class Manager {
     this.recoveryHandler = new RecoveryHandler(modules.signatures, modules.recovery)
     shared.handlers.set(Kinds.Recovery, this.recoveryHandler)
 
-    // TODO: configurable nitro rpc
-    const nitro = new Identity.IdentityInstrument(ops.identity.url, ops.identity.fetch)
+    const verifyingFetch = ops.identity.verifyAttestation
+      ? createAttestationVerifyingFetch({
+          fetch: ops.identity.fetch,
+          expectedPCRs: ops.identity.expectedPcr0 ? new Map([[0, ops.identity.expectedPcr0]]) : undefined,
+          logTiming: true,
+        })
+      : ops.identity.fetch
+    const identityInstrument = new IdentityInstrument(ops.identity.url, verifyingFetch)
+
     if (ops.identity.email?.enabled) {
-      this.otpHandler = new OtpHandler(nitro, modules.signatures, shared.databases.authKeys)
+      this.otpHandler = new OtpHandler(identityInstrument, modules.signatures, shared.databases.authKeys)
       shared.handlers.set(Kinds.LoginEmailOtp, this.otpHandler)
     }
     if (ops.identity.google?.enabled) {
@@ -289,7 +310,7 @@ export class Manager {
           'google-pkce',
           'https://accounts.google.com',
           ops.identity.google.clientId,
-          nitro,
+          identityInstrument,
           modules.signatures,
           shared.databases.authCommitments,
           shared.databases.authKeys,
@@ -298,12 +319,12 @@ export class Manager {
     }
     if (ops.identity.apple?.enabled) {
       shared.handlers.set(
-        Kinds.LoginApplePkce,
-        new AuthCodePkceHandler(
-          'apple-pkce',
+        Kinds.LoginApple,
+        new AuthCodeHandler(
+          'apple',
           'https://appleid.apple.com',
           ops.identity.apple.clientId,
-          nitro,
+          identityInstrument,
           modules.signatures,
           shared.databases.authCommitments,
           shared.databases.authKeys,
@@ -373,7 +394,15 @@ export class Manager {
   }
 
   public async getConfiguration(wallet: Address.Address) {
-    return this.shared.modules.wallets.getConfiguration({ wallet })
+    return this.shared.modules.wallets.getConfiguration(wallet)
+  }
+
+  public async getOnchainConfiguration(wallet: Address.Address, chainId: bigint) {
+    return this.shared.modules.wallets.getOnchainConfiguration(wallet, chainId)
+  }
+
+  public async isUpdatedOnchain(wallet: Address.Address, chainId: bigint) {
+    return this.shared.modules.wallets.isUpdatedOnchain(wallet, chainId)
   }
 
   // Signatures
@@ -409,7 +438,7 @@ export class Manager {
     from: Address.Address,
     chainId: bigint,
     txs: TransactionRequest[],
-    options?: { skipDefineGas?: boolean; source?: string },
+    options?: { skipDefineGas?: boolean; source?: string; noConfigUpdate?: boolean; unsafe?: boolean },
   ) {
     return this.shared.modules.transactions.request(from, chainId, txs, options)
   }
@@ -455,10 +484,45 @@ export class Manager {
 
   public async setRedirectPrefix(prefix: string) {
     this.shared.handlers.forEach((handler) => {
-      if (handler instanceof AuthCodePkceHandler) {
+      if (handler instanceof AuthCodeHandler) {
         handler.setRedirectUri(prefix + '/' + handler.signupKind)
       }
     })
+  }
+
+  // Messages
+
+  public async listMessageRequests() {
+    return this.shared.modules.messages.list()
+  }
+
+  public async getMessageRequest(messageOrSignatureId: string) {
+    return this.shared.modules.messages.get(messageOrSignatureId)
+  }
+
+  public onMessageRequestsUpdate(cb: (messages: Message[]) => void, trigger?: boolean) {
+    return this.shared.modules.messages.onMessagesUpdate(cb, trigger)
+  }
+
+  public onMessageRequestUpdate(messageOrSignatureId: string, cb: (message: Message) => void, trigger?: boolean) {
+    return this.shared.modules.messages.onMessageUpdate(messageOrSignatureId, cb, trigger)
+  }
+
+  public async requestMessageSignature(
+    wallet: Address.Address,
+    message: MessageRequest,
+    chainId?: bigint,
+    options?: { source?: string },
+  ) {
+    return this.shared.modules.messages.request(wallet, message, chainId, options)
+  }
+
+  public async completedMessageSignature(messageOrSignatureId: string) {
+    return this.shared.modules.messages.complete(messageOrSignatureId)
+  }
+
+  public async deleteMessageRequest(messageOrSignatureId: string) {
+    return this.shared.modules.messages.delete(messageOrSignatureId)
   }
 
   // Sessions

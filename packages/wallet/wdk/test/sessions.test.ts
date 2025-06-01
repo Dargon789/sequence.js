@@ -115,7 +115,7 @@ describe('Sessions (via Manager)', () => {
   })
 
   const signAndSend = async (call: Payload.Call) => {
-    const envelope = await dapp.wallet.prepareTransaction(provider, [call])
+    const envelope = await dapp.wallet.prepareTransaction(provider, [call], { noConfigUpdate: true })
     const parentedEnvelope: Payload.Parented = {
       ...envelope.payload,
       parentWallets: [dapp.wallet.address],
@@ -149,6 +149,7 @@ describe('Sessions (via Manager)', () => {
       const pkRelayer = new Relayer.Pk.PkRelayer(senderPk, provider)
       const tx = await pkRelayer.relay(transaction.to, transaction.data, chainId, undefined)
       console.log('Transaction sent', tx)
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       const receipt = await provider.request({ method: 'eth_getTransactionReceipt', params: [tx.opHash] })
       console.log('Transaction receipt', receipt)
       return tx.opHash
@@ -176,9 +177,9 @@ describe('Sessions (via Manager)', () => {
                 // Require the explicitEmit selector
                 cumulative: false,
                 operation: Permission.ParameterOperation.EQUAL,
-                value: Bytes.padRight(Bytes.fromHex(AbiFunction.getSelector(EMITTER_ABI[0])), 32),
+                value: Bytes.fromHex(AbiFunction.getSelector(EMITTER_ABI[0]), { size: 32 }),
                 offset: 0n,
-                mask: Bytes.padRight(Bytes.fromHex('0xffffffff'), 32),
+                mask: Bytes.fromHex('0xffffffff', { size: 32 }),
               },
             ],
           },

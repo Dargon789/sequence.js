@@ -1,379 +1,324 @@
-import { vi, beforeEach, describe, it, expect } from 'vitest'
-import { AbiFunction, Address, Bytes, Hex, Provider, RpcTransport, Secp256k1, TransactionEnvelopeEip1559 } from 'ox'
+import { AbiFunction, Address, Bytes, Hex, Provider, RpcTransport, Secp256k1 } from 'ox'
+import { describe, expect, it } from 'vitest'
 
 import { Attestation, Constants, GenericTree, Payload, Permission, SessionConfig } from '../../primitives/src/index.js'
 import { Envelope, Signers, State, Wallet } from '../src/index.js'
 
-import { CAN_RUN_LIVE, EMITTER_ABI, EMITTER_ADDRESS, PRIVATE_KEY, RPC_URL } from './constants'
+import { EMITTER_FUNCTIONS, EMITTER_ADDRESS, EMITTER_EVENT_TOPICS, LOCAL_RPC_URL } from './constants'
 
 function randomAddress(): Address.Address {
   return Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: Secp256k1.randomPrivateKey() }))
 }
 
 describe('SessionManager', () => {
-  const getProvider = async (): Promise<{ provider: Provider.Provider; chainId: bigint }> => {
-    let provider: Provider.Provider
-    let chainId = 1n
-    if (CAN_RUN_LIVE) {
-      provider = Provider.from(RpcTransport.fromHttp(RPC_URL!!))
-      chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
-    } else {
-      provider = vi.mocked<Provider.Provider>({
-        request: vi.fn(),
-        on: vi.fn(),
-        removeListener: vi.fn(),
-      })
-    }
-    return { provider: provider!, chainId }
-  }
+  const timeout = 30000
 
   const identityPrivateKey = Secp256k1.randomPrivateKey()
   const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
 
   const stateProvider = new State.Local.Provider()
 
-  const requireContractDeployed = async (provider: Provider.Provider, contract: Address.Address) => {
-    const code = await provider.request({ method: 'eth_getCode', params: [contract, 'latest'] })
-    if (code === '0x') {
-      throw new Error(`Contract ${contract} not deployed`)
-    }
-  }
+  it(
+    'should load from state',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+      let topology = SessionConfig.emptySessionsTopology(identityAddress)
+      // Add random signer to the topology
+      const sessionPermission: Signers.Session.ExplicitParams = {
+        valueLimit: 1000000000000000000n,
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [
+          {
+            target: randomAddress(),
+            rules: [
+              {
+                cumulative: true,
+                operation: Permission.ParameterOperation.EQUAL,
+                value: Bytes.padLeft(Bytes.fromHex('0x'), 32),
+                offset: 0n,
+                mask: Bytes.padLeft(Bytes.fromHex('0x'), 32),
+              },
+              {
+                cumulative: false,
+                operation: Permission.ParameterOperation.EQUAL,
+                value: Bytes.padLeft(Bytes.fromHex('0x01'), 32),
+                offset: 2n,
+                mask: Bytes.padLeft(Bytes.fromHex('0x03'), 32),
+              },
+            ],
+          },
+        ],
+      }
+      const randomSigner = randomAddress()
+      topology = SessionConfig.addExplicitSession(topology, {
+        ...sessionPermission,
+        signer: randomSigner,
+      })
+      // Add random blacklist to the topology
+      const randomBlacklistAddress = randomAddress()
+      topology = SessionConfig.addToImplicitBlacklist(topology, randomBlacklistAddress)
 
-  it('should load from state', async () => {
-    const { provider } = await getProvider()
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
 
-    let topology = SessionConfig.emptySessionsTopology(identityAddress)
-    // Add random signer to the topology
-    const sessionPermission: Signers.Session.ExplicitParams = {
-      valueLimit: 1000000000000000000n,
-      deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
-      permissions: [
+      // Save the topology to storage
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+
+      // Create a wallet with the session manager topology as a leaf
+      const wallet = await Wallet.fromConfiguration(
         {
-          target: randomAddress(),
-          rules: [
-            {
-              cumulative: true,
-              operation: Permission.ParameterOperation.EQUAL,
-              value: Bytes.padLeft(Bytes.fromHex('0x'), 32),
-              offset: 0n,
-              mask: Bytes.padLeft(Bytes.fromHex('0x'), 32),
-            },
-            {
-              cumulative: false,
-              operation: Permission.ParameterOperation.EQUAL,
-              value: Bytes.padLeft(Bytes.fromHex('0x01'), 32),
-              offset: 2n,
-              mask: Bytes.padLeft(Bytes.fromHex('0x03'), 32),
-            },
-          ],
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
         },
-      ],
-    }
-    const randomSigner = randomAddress()
-    topology = SessionConfig.addExplicitSession(topology, {
-      ...sessionPermission,
-      signer: randomSigner,
-    })
-    // Add random blacklist to the topology
-    const randomBlacklistAddress = randomAddress()
-    topology = SessionConfig.addToImplicitBlacklist(topology, randomBlacklistAddress)
-
-    const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-
-    // Save the topology to storage
-    await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-
-    // Create a wallet with the session manager topology as a leaf
-    const wallet = await Wallet.fromConfiguration(
-      {
-        threshold: 1n,
-        checkpoint: 0n,
-        topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
-      },
-      {
-        stateProvider,
-      },
-    )
-
-    // Create the session manager using the storage
-    const sessionManager = new Signers.SessionManager(wallet, {
-      provider,
-    })
-
-    // Check config is correct
-    const actualTopology = await sessionManager.topology
-    const actualImageHash = await sessionManager.imageHash
-    expect(actualImageHash).toBe(imageHash)
-    expect(SessionConfig.isCompleteSessionsTopology(actualTopology)).toBe(true)
-    expect(SessionConfig.getIdentitySigner(actualTopology)).toBe(identityAddress)
-    expect(SessionConfig.getImplicitBlacklist(actualTopology)).toStrictEqual([randomBlacklistAddress])
-    const actualPermissions = SessionConfig.getSessionPermissions(actualTopology, randomSigner)
-    expect(actualPermissions).toStrictEqual({
-      ...sessionPermission,
-      type: 'session-permissions',
-      signer: randomSigner,
-    })
-  })
-
-  it('should create and sign with an implicit session', async () => {
-    const { provider, chainId } = await getProvider()
-    await requireContractDeployed(provider, EMITTER_ADDRESS)
-
-    // Create implicit signer
-    const implicitPrivateKey = Secp256k1.randomPrivateKey()
-    const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
-    // -- This is sent to the wallet (somehow)--
-    const attestation: Attestation.Attestation = {
-      approvedSigner: implicitAddress,
-      identityType: new Uint8Array(4),
-      issuerHash: new Uint8Array(32),
-      audienceHash: new Uint8Array(32),
-      applicationData: new Uint8Array(),
-      authData: {
-        redirectUrl: 'https://example.com',
-      },
-    }
-    const identitySignature = Secp256k1.sign({
-      payload: Attestation.hash(attestation),
-      privateKey: identityPrivateKey,
-    })
-    const topology = SessionConfig.emptySessionsTopology(identityAddress)
-    await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-    const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-    // -- Back in dapp --
-    const implicitSigner = new Signers.Session.Implicit(
-      implicitPrivateKey,
-      attestation,
-      identitySignature,
-      implicitAddress,
-    )
-    const wallet = await Wallet.fromConfiguration(
-      {
-        threshold: 1n,
-        checkpoint: 0n,
-        topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
-      },
-      {
-        stateProvider,
-      },
-    )
-    const sessionManager = new Signers.SessionManager(wallet, {
-      provider,
-    }).withImplicitSigner(implicitSigner)
-
-    if (!CAN_RUN_LIVE) {
-      // Configure the provider mock
-      const generateImplicitRequestMagicResult = Attestation.generateImplicitRequestMagic(attestation, wallet.address)
-      ;(provider as any).request.mockResolvedValue(generateImplicitRequestMagicResult)
-    }
-
-    // Create a test transaction
-    const call: Payload.Call = {
-      to: EMITTER_ADDRESS,
-      value: 0n,
-      data: AbiFunction.encodeData(EMITTER_ABI[1]), // Implicit emit
-      gasLimit: 0n,
-      delegateCall: false,
-      onlyFallback: false,
-      behaviorOnError: 'revert',
-    }
-    const payload: Payload.Parented = {
-      type: 'call',
-      nonce: 0n,
-      space: 0n,
-      calls: [call],
-      parentWallets: [wallet.address],
-    }
-
-    // Sign the transaction
-    const signature = await sessionManager.signSapient(wallet.address, chainId, payload, imageHash)
-
-    expect(signature.type).toBe('sapient')
-    expect(signature.address).toBe(sessionManager.address)
-    expect(signature.data).toBeDefined()
-
-    if (!CAN_RUN_LIVE) {
-      // Configure the provider mock
-      ;(provider as any).request.mockResolvedValue(sessionManager.imageHash)
-    }
-
-    // Check if the signature is valid
-    const isValid = await sessionManager.isValidSapientSignature(wallet.address, chainId, payload, signature)
-    expect(isValid).toBe(true)
-  })
-
-  it('should create and sign with an explicit session', async () => {
-    const { provider, chainId } = await getProvider()
-    await requireContractDeployed(provider, EMITTER_ADDRESS)
-
-    // Create explicit signer
-    const explicitPrivateKey = Secp256k1.randomPrivateKey()
-    const explicitPermissions: Signers.Session.ExplicitParams = {
-      valueLimit: 1000000000000000000n, // 1 ETH
-      deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
-      permissions: [
         {
-          target: EMITTER_ADDRESS,
-          rules: [],
+          stateProvider,
         },
-      ],
-    }
-    const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
-    // Create the topology and wallet
-    const topology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
-      ...explicitPermissions,
-      signer: explicitSigner.address,
-    })
-    await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-    const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
-    const wallet = await Wallet.fromConfiguration(
-      {
-        threshold: 1n,
-        checkpoint: 0n,
-        topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
-      },
-      {
-        stateProvider,
-      },
-    )
-    // Create the session manager
-    const sessionManager = new Signers.SessionManager(wallet, {
-      provider,
-    }).withExplicitSigner(explicitSigner)
+      )
 
-    // Create a test transaction within permissions
-    const call: Payload.Call = {
-      to: EMITTER_ADDRESS,
-      value: 0n,
-      data: AbiFunction.encodeData(EMITTER_ABI[0]), // Explicit emit
-      gasLimit: 0n,
-      delegateCall: false,
-      onlyFallback: false,
-      behaviorOnError: 'revert',
-    }
-    const payload: Payload.Calls = {
-      type: 'call',
-      nonce: 0n,
-      space: 0n,
-      calls: [call],
-    }
+      // Create the session manager using the storage
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+      })
 
-    // Sign the transaction
-    const signature = await sessionManager.signSapient(wallet.address, chainId, payload, imageHash)
+      // Check config is correct
+      const actualTopology = await sessionManager.topology
+      const actualImageHash = await sessionManager.imageHash
+      expect(actualImageHash).toBe(imageHash)
+      expect(SessionConfig.isCompleteSessionsTopology(actualTopology)).toBe(true)
+      expect(SessionConfig.getIdentitySigner(actualTopology)).toBe(identityAddress)
+      expect(SessionConfig.getImplicitBlacklist(actualTopology)).toStrictEqual([randomBlacklistAddress])
+      const actualPermissions = SessionConfig.getSessionPermissions(actualTopology, randomSigner)
+      expect(actualPermissions).toStrictEqual({
+        ...sessionPermission,
+        type: 'session-permissions',
+        signer: randomSigner,
+      })
+    },
+    timeout,
+  )
 
-    expect(signature.type).toBe('sapient')
-    expect(signature.address).toBe(sessionManager.address)
-    expect(signature.data).toBeDefined()
+  it(
+    'should create and sign with an implicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
 
-    if (!CAN_RUN_LIVE) {
-      // Configure the provider mock
-      ;(provider as any).request.mockResolvedValue(sessionManager.imageHash)
-    }
+      // Create implicit signer
+      const implicitPrivateKey = Secp256k1.randomPrivateKey()
+      const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
+      // -- This is sent to the wallet (somehow)--
+      const attestation: Attestation.Attestation = {
+        approvedSigner: implicitAddress,
+        identityType: new Uint8Array(4),
+        issuerHash: new Uint8Array(32),
+        audienceHash: new Uint8Array(32),
+        applicationData: new Uint8Array(),
+        authData: {
+          redirectUrl: 'https://example.com',
+        },
+      }
+      const identitySignature = Secp256k1.sign({
+        payload: Attestation.hash(attestation),
+        privateKey: identityPrivateKey,
+      })
+      const topology = SessionConfig.emptySessionsTopology(identityAddress)
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+      // -- Back in dapp --
+      const implicitSigner = new Signers.Session.Implicit(
+        implicitPrivateKey,
+        attestation,
+        identitySignature,
+        implicitAddress,
+      )
+      const wallet = await Wallet.fromConfiguration(
+        {
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
+        },
+        {
+          stateProvider,
+        },
+      )
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+      }).withImplicitSigner(implicitSigner)
 
-    // Check if the signature is valid
-    const isValid = await sessionManager.isValidSapientSignature(wallet.address, chainId, payload, signature)
-    expect(isValid).toBe(true)
-  })
-
-  if (CAN_RUN_LIVE) {
-    // Load the sender
-    const pkHex = Hex.from(PRIVATE_KEY as `0x${string}`)
-    const senderAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: pkHex }))
-
-    const buildAndSignCall = async (
-      wallet: Wallet,
-      sessionManager: Signers.SessionManager,
-      call: Payload.Call,
-      provider: Provider.Provider,
-      chainId: bigint,
-    ) => {
-      // Prepare the transaction
-      const envelope = await wallet.prepareTransaction(provider, [call])
-      const parentedEnvelope: Payload.Parented = {
-        ...envelope.payload,
+      // Create a test transaction
+      const call: Payload.Call = {
+        to: EMITTER_ADDRESS,
+        value: 0n,
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
+        gasLimit: 0n,
+        delegateCall: false,
+        onlyFallback: false,
+        behaviorOnError: 'revert',
+      }
+      const payload: Payload.Parented = {
+        type: 'call',
+        nonce: 0n,
+        space: 0n,
+        calls: [call],
         parentWallets: [wallet.address],
       }
-      const imageHash = await sessionManager.imageHash
-      if (!imageHash) {
-        throw new Error('Image hash is undefined')
+
+      // Sign the transaction
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
+      const signature = await sessionManager.signSapient(wallet.address, chainId, payload, imageHash)
+
+      expect(signature.type).toBe('sapient')
+      expect(signature.address).toBe(sessionManager.address)
+      expect(signature.data).toBeDefined()
+
+      // Check if the signature is valid
+      const isValid = await sessionManager.isValidSapientSignature(wallet.address, chainId, payload, signature)
+      expect(isValid).toBe(true)
+    },
+    timeout,
+  )
+
+  it(
+    'should create and sign with an explicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
+
+      // Create explicit signer
+      const explicitPrivateKey = Secp256k1.randomPrivateKey()
+      const explicitPermissions: Signers.Session.ExplicitParams = {
+        valueLimit: 1000000000000000000n, // 1 ETH
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [
+          {
+            target: EMITTER_ADDRESS,
+            rules: [],
+          },
+        ],
       }
-      const signature = await sessionManager.signSapient(wallet.address, chainId, parentedEnvelope, imageHash)
-      const sapientSignature: Envelope.SapientSignature = {
-        imageHash,
-        signature,
-      }
-      // Sign the envelope
-      const signedEnvelope = Envelope.toSigned(envelope, [sapientSignature])
-      const transaction = await wallet.buildTransaction(provider, signedEnvelope)
-      return transaction
-    }
-
-    const sendTransaction = async (
-      provider: Provider.Provider,
-      transaction: { to: Address.Address; data: Hex.Hex },
-      chainId: bigint,
-    ) => {
-      // Estimate gas with a safety buffer
-      const estimatedGas = BigInt(await provider.request({ method: 'eth_estimateGas', params: [transaction] }))
-      const safeGasLimit = estimatedGas > 21000n ? (estimatedGas * 12n) / 10n : 50000n
-
-      // Get base fee and priority fee
-      const baseFee = BigInt(await provider.request({ method: 'eth_gasPrice' }))
-      const priorityFee = 100000000n // 0.1 gwei priority fee
-      const maxFeePerGas = baseFee + priorityFee
-
-      // Check sender have enough balance
-      const senderBalance = BigInt(
-        await provider.request({ method: 'eth_getBalance', params: [senderAddress, 'latest'] }),
+      const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
+      // Create the topology and wallet
+      const topology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
+        ...explicitPermissions,
+        signer: explicitSigner.address,
+      })
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+      const wallet = await Wallet.fromConfiguration(
+        {
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: { type: 'sapient-signer', address: Constants.DefaultSessionManager, weight: 1n, imageHash },
+        },
+        {
+          stateProvider,
+        },
       )
-      if (senderBalance < maxFeePerGas * safeGasLimit) {
-        console.log('Sender balance:', senderBalance.toString(), 'wei')
-        throw new Error('Sender has insufficient balance to pay for gas')
-      }
-      const nonce = BigInt(
-        await provider.request({
-          method: 'eth_getTransactionCount',
-          params: [senderAddress, 'latest'],
-        }),
-      )
+      // Create the session manager
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+      }).withExplicitSigner(explicitSigner)
 
-      const relayEnvelope = TransactionEnvelopeEip1559.from({
-        chainId: Number(chainId),
-        type: 'eip1559',
-        from: senderAddress,
-        to: transaction.to,
-        data: transaction.data,
-        gas: safeGasLimit,
-        maxFeePerGas: maxFeePerGas,
-        maxPriorityFeePerGas: priorityFee,
-        nonce: nonce,
+      // Create a test transaction within permissions
+      const call: Payload.Call = {
+        to: EMITTER_ADDRESS,
         value: 0n,
-      })
-      const relayerSignature = Secp256k1.sign({
-        payload: TransactionEnvelopeEip1559.getSignPayload(relayEnvelope),
-        privateKey: pkHex,
-      })
-      const signedRelayEnvelope = TransactionEnvelopeEip1559.from(relayEnvelope, {
-        signature: relayerSignature,
-      })
-      const tx = await provider.request({
-        method: 'eth_sendRawTransaction',
-        params: [TransactionEnvelopeEip1559.serialize(signedRelayEnvelope)],
-      })
-      console.log('Transaction sent', tx)
-      await provider.request({ method: 'eth_getTransactionReceipt', params: [tx] })
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
+        gasLimit: 0n,
+        delegateCall: false,
+        onlyFallback: false,
+        behaviorOnError: 'revert',
+      }
+      const payload: Payload.Calls = {
+        type: 'call',
+        nonce: 0n,
+        space: 0n,
+        calls: [call],
+      }
+
+      // Sign the transaction
+      const signature = await sessionManager.signSapient(wallet.address, chainId, payload, imageHash)
+
+      expect(signature.type).toBe('sapient')
+      expect(signature.address).toBe(sessionManager.address)
+      expect(signature.data).toBeDefined()
+
+      // Check if the signature is valid
+      const isValid = await sessionManager.isValidSapientSignature(wallet.address, chainId, payload, signature)
+      expect(isValid).toBe(true)
+    },
+    timeout,
+  )
+
+  const buildAndSignCall = async (
+    wallet: Wallet,
+    sessionManager: Signers.SessionManager,
+    calls: Payload.Call[],
+    provider: Provider.Provider,
+    chainId: bigint,
+  ) => {
+    // Prepare the transaction
+    const envelope = await wallet.prepareTransaction(provider, calls)
+    const parentedEnvelope: Payload.Parented = {
+      ...envelope.payload,
+      parentWallets: [wallet.address],
+    }
+    const imageHash = await sessionManager.imageHash
+    if (!imageHash) {
+      throw new Error('Image hash is undefined')
+    }
+    const signature = await sessionManager.signSapient(wallet.address, chainId, parentedEnvelope, imageHash)
+    const sapientSignature: Envelope.SapientSignature = {
+      imageHash,
+      signature,
+    }
+    // Sign the envelope
+    const signedEnvelope = Envelope.toSigned(envelope, [sapientSignature])
+    const transaction = await wallet.buildTransaction(provider, signedEnvelope)
+    return transaction
+  }
+
+  const simulateTransaction = async (
+    provider: Provider.Provider,
+    transaction: { to: Address.Address; data: Hex.Hex },
+    expectedEventTopic?: Hex.Hex,
+  ) => {
+    console.log('Simulating transaction', transaction)
+    const txHash = await provider.request({
+      method: 'eth_sendTransaction',
+      params: [transaction],
+    })
+    console.log('Transaction hash:', txHash)
+
+    // Wait for transaction receipt
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    const receipt = await provider.request({
+      method: 'eth_getTransactionReceipt',
+      params: [txHash],
+    })
+    if (!receipt) {
+      throw new Error('Transaction receipt not found')
     }
 
-    // Submit a real transaction with a wallet that has a SessionManager using implicit session
-    it('Submits a real transaction with a wallet that has a SessionManager using implicit session', async () => {
+    if (expectedEventTopic) {
+      // Check for event
+      if (!receipt.logs) {
+        throw new Error('No events emitted')
+      }
+      if (!receipt.logs.some((log) => log.topics.includes(expectedEventTopic))) {
+        throw new Error(`Expected topic ${expectedEventTopic} not found in event`)
+      }
+    }
+
+    return receipt
+  }
+
+  it(
+    'signs a payload using an implicit session',
+    async () => {
       // Check the contracts have been deployed
-      const { provider, chainId } = await getProvider()
-      await requireContractDeployed(provider, EMITTER_ADDRESS)
-      await requireContractDeployed(provider, Constants.DefaultGuest)
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
 
       // Create an implicit signer
       const implicitPrivateKey = Secp256k1.randomPrivateKey()
@@ -425,7 +370,7 @@ describe('SessionManager', () => {
       const call: Payload.Call = {
         to: EMITTER_ADDRESS,
         value: 0n,
-        data: AbiFunction.encodeData(EMITTER_ABI[1]), // Implicit emit
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
         gasLimit: 0n,
         delegateCall: false,
         onlyFallback: false,
@@ -433,15 +378,17 @@ describe('SessionManager', () => {
       }
 
       // Build, sign and send the transaction
-      const transaction = await buildAndSignCall(wallet, sessionManager, call, provider, chainId)
-      await sendTransaction(provider, transaction, chainId)
-    }, 60000)
+      const transaction = await buildAndSignCall(wallet, sessionManager, [call], provider, chainId)
+      await simulateTransaction(provider, transaction, EMITTER_EVENT_TOPICS[1])
+    },
+    timeout,
+  )
 
-    it('Submits a real transaction with a wallet that has a SessionManager using explicit session', async () => {
-      const { provider, chainId } = await getProvider()
-      // Check the contracts have been deployed
-      await requireContractDeployed(provider, EMITTER_ADDRESS)
-      await requireContractDeployed(provider, Constants.DefaultGuest)
+  it(
+    'signs a payload using an explicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
 
       // Create explicit signer
       const explicitPrivateKey = Secp256k1.randomPrivateKey()
@@ -489,7 +436,7 @@ describe('SessionManager', () => {
       const call: Payload.Call = {
         to: EMITTER_ADDRESS,
         value: 0n,
-        data: AbiFunction.encodeData(EMITTER_ABI[0]), // Explicit emit
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
         gasLimit: 0n,
         delegateCall: false,
         onlyFallback: false,
@@ -497,8 +444,334 @@ describe('SessionManager', () => {
       }
 
       // Build, sign and send the transaction
-      const transaction = await buildAndSignCall(wallet, sessionManager, call, provider, chainId)
-      await sendTransaction(provider, transaction, chainId)
-    }, 60000)
-  }
+      const transaction = await buildAndSignCall(wallet, sessionManager, [call], provider, chainId)
+      await simulateTransaction(provider, transaction, EMITTER_EVENT_TOPICS[0])
+    },
+    timeout,
+  )
+
+  it(
+    'signs a payload using an explicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
+
+      // Create explicit signer
+      const explicitPrivateKey = Secp256k1.randomPrivateKey()
+      const sessionPermission: Signers.Session.ExplicitParams = {
+        valueLimit: 0n,
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [
+          {
+            target: EMITTER_ADDRESS,
+            rules: [
+              {
+                cumulative: true,
+                operation: Permission.ParameterOperation.EQUAL,
+                value: Bytes.fromHex(AbiFunction.getSelector(EMITTER_FUNCTIONS[0]), { size: 32 }),
+                offset: 0n,
+                mask: Permission.SELECTOR_MASK,
+              },
+            ],
+          },
+        ],
+      }
+      const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
+      // Test manually building the session topology
+      const sessionTopology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
+        ...sessionPermission,
+        signer: explicitSigner.address,
+      })
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+
+      // Create the wallet
+      const wallet = await Wallet.fromConfiguration(
+        {
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: [
+            // Random explicit signer will randomise the image hash
+            {
+              type: 'sapient-signer',
+              address: Constants.DefaultSessionManager,
+              weight: 1n,
+              imageHash,
+            },
+            // Include a random node leaf (bytes32) to prevent image hash collision
+            Hex.random(32),
+          ],
+        },
+        {
+          stateProvider,
+        },
+      )
+      // Create the session manager
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+        explicitSigners: [explicitSigner],
+      })
+
+      const call: Payload.Call = {
+        to: EMITTER_ADDRESS,
+        value: 0n,
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
+        gasLimit: 0n,
+        delegateCall: false,
+        onlyFallback: false,
+        behaviorOnError: 'revert',
+      }
+
+      const increment = await sessionManager.prepareIncrement(wallet.address, chainId, [call])
+      expect(increment).not.toBeNull()
+      expect(increment).toBeDefined()
+
+      if (!increment) {
+        return
+      }
+
+      // Build, sign and send the transaction
+      const transaction = await buildAndSignCall(wallet, sessionManager, [call, increment], provider, chainId)
+      await simulateTransaction(provider, transaction, EMITTER_EVENT_TOPICS[0])
+
+      // Repeat call fails because the usage limit has been reached
+      try {
+        await sessionManager.prepareIncrement(wallet.address, chainId, [call])
+        throw new Error('Expected call as no signer supported to fail')
+      } catch (error) {
+        expect(error).toBeDefined()
+        expect(error.message).toContain('No signer supported')
+      }
+    },
+    timeout,
+  )
+
+  it(
+    'signs a payload sending value using an explicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
+
+      // Create explicit signer
+      const explicitPrivateKey = Secp256k1.randomPrivateKey()
+      const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
+      const sessionPermission: Signers.Session.ExplicitParams = {
+        valueLimit: 1000000000000000000n, // 1 ETH
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [
+          {
+            target: explicitAddress,
+            rules: [
+              {
+                cumulative: true,
+                operation: Permission.ParameterOperation.EQUAL,
+                value: Bytes.fromHex(AbiFunction.getSelector(EMITTER_FUNCTIONS[0]), { size: 32 }),
+                offset: 0n,
+                mask: Permission.SELECTOR_MASK,
+              },
+            ],
+          },
+        ],
+      }
+      const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
+      // Test manually building the session topology
+      const sessionTopology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
+        ...sessionPermission,
+        signer: explicitSigner.address,
+      })
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+
+      // Create the wallet
+      const wallet = await Wallet.fromConfiguration(
+        {
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: [
+            // Random explicit signer will randomise the image hash
+            {
+              type: 'sapient-signer',
+              address: Constants.DefaultSessionManager,
+              weight: 1n,
+              imageHash,
+            },
+            // Include a random node leaf (bytes32) to prevent image hash collision
+            Hex.random(32),
+          ],
+        },
+        {
+          stateProvider,
+        },
+      )
+      // Force 1 ETH to the wallet
+      await provider.request({
+        method: 'anvil_setBalance',
+        params: [wallet.address, Hex.fromNumber(1000000000000000000n)],
+      })
+      // Create the session manager
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+        explicitSigners: [explicitSigner],
+      })
+
+      const call: Payload.Call = {
+        to: explicitAddress,
+        value: 1000000000000000000n, // 1 ETH
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
+        gasLimit: 0n,
+        delegateCall: false,
+        onlyFallback: false,
+        behaviorOnError: 'revert',
+      }
+
+      const increment = await sessionManager.prepareIncrement(wallet.address, chainId, [call])
+      expect(increment).not.toBeNull()
+      expect(increment).toBeDefined()
+
+      if (!increment) {
+        return
+      }
+
+      // Build, sign and send the transaction
+      const transaction = await buildAndSignCall(wallet, sessionManager, [call, increment], provider, chainId)
+      await simulateTransaction(provider, transaction)
+
+      // Check the balances
+      const walletBalance = await provider.request({
+        method: 'eth_getBalance',
+        params: [wallet.address, 'latest'],
+      })
+      expect(BigInt(walletBalance)).toBe(0n)
+      const explicitAddressBalance = await provider.request({
+        method: 'eth_getBalance',
+        params: [explicitAddress, 'latest'],
+      })
+      expect(BigInt(explicitAddressBalance)).toBe(1000000000000000000n)
+
+      // Repeat call fails because the usage limit has been reached
+      try {
+        await sessionManager.prepareIncrement(wallet.address, chainId, [call])
+        throw new Error('Expected call as no signer supported to fail')
+      } catch (error) {
+        expect(error).toBeDefined()
+        expect(error.message).toContain('No signer supported')
+      }
+    },
+    timeout,
+  )
+
+  it(
+    'signs a payload sending two transactions with cumulative rules using an explicit session',
+    async () => {
+      const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+      const chainId = BigInt(await provider.request({ method: 'eth_chainId' }))
+
+      // Create explicit signer
+      const explicitPrivateKey = Secp256k1.randomPrivateKey()
+      const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
+      const sessionPermission: Signers.Session.ExplicitParams = {
+        valueLimit: 1000000000000000000n, // 1 ETH
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [
+          {
+            target: explicitAddress,
+            rules: [
+              // This rule is a hack. The selector "usage" will increment for testing. As we check for greater than or equal,
+              // we can use this to test that the usage is cumulative.
+              {
+                cumulative: true,
+                operation: Permission.ParameterOperation.GREATER_THAN_OR_EQUAL,
+                value: Bytes.fromHex(AbiFunction.getSelector(EMITTER_FUNCTIONS[0]), { size: 32 }),
+                offset: 0n,
+                mask: Permission.SELECTOR_MASK,
+              },
+            ],
+          },
+        ],
+      }
+      const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
+      const sessionTopology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
+        ...sessionPermission,
+        signer: explicitSigner.address,
+      })
+      await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+      const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(sessionTopology))
+
+      // Create the wallet
+      const wallet = await Wallet.fromConfiguration(
+        {
+          threshold: 1n,
+          checkpoint: 0n,
+          topology: [
+            {
+              type: 'sapient-signer',
+              address: Constants.DefaultSessionManager,
+              weight: 1n,
+              imageHash,
+            },
+            // Include a random node leaf (bytes32) to prevent image hash collision
+            Hex.random(32),
+          ],
+        },
+        {
+          stateProvider,
+        },
+      )
+      // Force 1 ETH to the wallet
+      await provider.request({
+        method: 'anvil_setBalance',
+        params: [wallet.address, Hex.fromNumber(1000000000000000000n)],
+      })
+      // Create the session manager
+      const sessionManager = new Signers.SessionManager(wallet, {
+        provider,
+        explicitSigners: [explicitSigner],
+      })
+
+      const call: Payload.Call = {
+        to: explicitAddress,
+        value: 500000000000000000n, // 0.5 ETH
+        data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
+        gasLimit: 0n,
+        delegateCall: false,
+        onlyFallback: false,
+        behaviorOnError: 'revert',
+      }
+
+      // Do it twice to test cumulative rules
+      const increment = await sessionManager.prepareIncrement(wallet.address, chainId, [call, call])
+      expect(increment).not.toBeNull()
+      expect(increment).toBeDefined()
+
+      if (!increment) {
+        return
+      }
+
+      // Build, sign and send the transaction
+      const transaction = await buildAndSignCall(wallet, sessionManager, [call, call, increment], provider, chainId)
+      await simulateTransaction(provider, transaction)
+
+      // Check the balances
+      const walletBalance = await provider.request({
+        method: 'eth_getBalance',
+        params: [wallet.address, 'latest'],
+      })
+      expect(BigInt(walletBalance)).toBe(0n)
+      const explicitAddressBalance = await provider.request({
+        method: 'eth_getBalance',
+        params: [explicitAddress, 'latest'],
+      })
+      expect(BigInt(explicitAddressBalance)).toBe(1000000000000000000n)
+
+      // Repeat call fails because the usage limit has been reached
+      try {
+        await sessionManager.prepareIncrement(wallet.address, chainId, [call])
+        throw new Error('Expected call as no signer supported to fail')
+      } catch (error) {
+        expect(error).toBeDefined()
+        expect(error.message).toContain('No signer supported')
+      }
+    },
+    timeout,
+  )
 })
