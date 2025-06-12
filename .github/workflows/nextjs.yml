@@ -88,6 +88,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        run: |
+            if [ -f "yarn.lock" ]; then
+            yarn install
+            elif [ -f "package-lock.json" ]; then
+            npm ci
+            else
+            echo "Unable to determine package manager"
+            exit 1
+            fi
