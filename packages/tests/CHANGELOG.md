@@ -1,5 +1,31 @@
 # @0xsequence/tests
 
+## 1.10.14
+
+### Patch Changes
+
+- network: add borne-testnet to allNetworks
+- Updated dependencies
+  - @0xsequence/core@1.10.14
+
+## 1.10.13
+
+### Patch Changes
+
+- network: add borne testnet
+- Updated dependencies
+  - @0xsequence/core@1.10.13
+
+## 1.10.12
+
+### Patch Changes
+
+- api: update bindings
+- global/window -> globalThis
+- Updated dependencies
+- Updated dependencies
+  - @0xsequence/core@1.10.12
+
 ## 1.10.11
 
 ### Patch Changes
