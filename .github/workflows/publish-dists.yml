@@ -85,3 +85,21 @@ jobs:
 
             cd -
           done
+          
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate commit messages
+        run: |
+          git log -1 --pretty=%B | grep -E '^(feat|fix|docs|chore|test|refactor): .+' || exit 1
+
+      - name: Validate file paths
+        run: |
+          invalid_files=$(git diff --name-only HEAD~1 | grep -vE '^src|test|config/')
+          if [ -n "$invalid_files" ]; then
+            echo "Invalid file paths: $invalid_files"
+            exit 1
+          fi
