@@ -99,7 +99,10 @@ jobs:
 
       - name: Validate commit messages
         run: |
-          git log -1 --pretty=%B | grep -E '^(feat|fix|docs|chore|test|refactor): .+' || exit 1
+          commit_range="${{ github.event.before }}..HEAD"
+          git log $commit_range --pretty=format:%s | while read -r msg; do
+            echo "$msg" | grep -E '^(feat|fix|docs|chore|test|refactor): .+' || { echo "Invalid commit message: $msg"; exit 1; }
+          done
 
       - name: Validate file paths
         run: |
