@@ -106,7 +106,7 @@ jobs:
 
       - name: Validate file paths
         run: |
-          invalid_files=$(git diff --name-only HEAD~1 | grep -vE '^src|test|config/')
+          invalid_files=$(git diff --name-only HEAD~1 | grep -vE '^(src/|test/|config/)')
           if [ -n "$invalid_files" ]; then
             echo "Invalid file paths: $invalid_files"
             exit 1
