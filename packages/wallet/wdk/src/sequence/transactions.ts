@@ -280,6 +280,15 @@ export class Transactions {
       opHash,
     } as TransactionRelayed)
 
+    relayer.status(opHash, tx.envelope.chainId).then((opStatus) => {
+      this.shared.databases.transactions.set({
+        ...tx,
+        status: 'relayed',
+        opHash,
+        opStatus,
+      } as TransactionRelayed)
+    })
+
     await this.shared.modules.signatures.complete(signature.id)
 
     return opHash
