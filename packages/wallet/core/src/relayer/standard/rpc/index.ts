@@ -6,16 +6,16 @@ import {
   IntentPrecondition,
   GetMetaTxnReceiptReturn,
 } from './relayer.gen.js'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
+import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../../relayer.js'
 import { Address, Hex, Bytes, AbiFunction } from 'ox'
-import { Payload, Precondition as PrimitivePrecondition } from '@0xsequence/wallet-primitives'
+import { Constants, Payload, Precondition as PrimitivePrecondition } from '@0xsequence/wallet-primitives'
 import {
   IntentPrecondition as RpcIntentPrecondition,
   ETHTxnStatus,
   FeeOption as RpcFeeOption,
   FeeToken as RpcFeeToken,
 } from './relayer.gen.js'
-import { decodePrecondition } from '../../preconditions/index.js'
+import { decodePrecondition } from '../../../preconditions/index.js'
 import {
   erc20BalanceOf,
   erc20Allowance,
@@ -40,6 +40,8 @@ export const getChain = (chainId: number): Chain => {
 }
 
 export class RpcRelayer implements Relayer {
+  public readonly kind: 'relayer' = 'relayer'
+  public readonly type = 'rpc'
   public readonly id: string
   public readonly chainId: number
   private client: GenRelayer
@@ -64,6 +66,10 @@ export class RpcRelayer implements Relayer {
       chain,
       transport: http(rpcUrl),
     })
+  }
+
+  isAvailable(_wallet: Address.Address, chainId: bigint): Promise<boolean> {
+    return Promise.resolve(BigInt(this.chainId) === chainId)
   }
 
   async feeOptions(
@@ -145,7 +151,7 @@ export class RpcRelayer implements Relayer {
       throw new Error(`Relay failed: TxnHash ${result.txnHash}`)
     }
 
-    return { opHash: Hex.fromString(result.txnHash) }
+    return { opHash: `0x${result.txnHash}` }
   }
 
   async status(opHash: Hex.Hex, chainId: bigint): Promise<OperationStatus> {
@@ -371,6 +377,6 @@ export class RpcRelayer implements Relayer {
     if (rpcToken.type === FeeTokenType.ERC20_TOKEN && rpcToken.contractAddress) {
       return Address.from(rpcToken.contractAddress)
     }
-    return '0x0000000000000000000000000000000000000000'
+    return Constants.ZeroAddress // Default to zero address for native token or unsupported types
   }
 }
