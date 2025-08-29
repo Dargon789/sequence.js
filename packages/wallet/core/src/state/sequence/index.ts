@@ -1,6 +1,14 @@
-import { Config, Constants, Context, GenericTree, Payload, Signature } from '@0xsequence/wallet-primitives'
-import { Address, Bytes, Hex, Signature as oxSignature } from 'ox'
-import { Provider as ProviderInterface } from '../index.js'
+import { Config, Constants, Context, Extensions, GenericTree, Payload, Signature } from '@0xsequence/wallet-primitives'
+import {
+  AbiFunction,
+  Address,
+  Bytes,
+  Hex,
+  Provider as oxProvider,
+  Signature as oxSignature,
+  TransactionRequest,
+} from 'ox'
+import { normalizeAddressKeys, Provider as ProviderInterface } from '../index.js'
 import { Sessions, SignatureType } from './sessions.gen.js'
 
 export class Provider implements ProviderInterface {
@@ -42,19 +50,16 @@ export class Provider implements ProviderInterface {
 
   async getWallets(signer: Address.Address): Promise<{
     [wallet: Address.Address]: {
-      chainId: bigint
+      chainId: number
       payload: Payload.Parented
       signature: Signature.SignatureOfSignerLeaf
     }
   }> {
     const result = await this.service.wallets({ signer })
-    const wallets = toAddressKeys(result.wallets)
+    const wallets = normalizeAddressKeys(result.wallets)
 
     return Object.fromEntries(
-      Object.entries(wallets).map((entry) => {
-        const wallet = Address.checksum(entry[0])
-        const signature = entry[1]
-
+      Object.entries(wallets).map(([wallet, signature]) => {
         Address.assert(wallet)
         Hex.assert(signature.signature)
 
@@ -63,7 +68,7 @@ export class Provider implements ProviderInterface {
             return [
               wallet,
               {
-                chainId: BigInt(signature.chainID),
+                chainId: Number(signature.chainID),
                 payload: fromServicePayload(signature.payload),
                 signature: { type: 'hash', ...oxSignature.from(signature.signature) },
               },
@@ -72,7 +77,7 @@ export class Provider implements ProviderInterface {
             return [
               wallet,
               {
-                chainId: BigInt(signature.chainID),
+                chainId: Number(signature.chainID),
                 payload: fromServicePayload(signature.payload),
                 signature: { type: 'eth_sign', ...oxSignature.from(signature.signature) },
               },
@@ -81,7 +86,7 @@ export class Provider implements ProviderInterface {
             return [
               wallet,
               {
-                chainId: BigInt(signature.chainID),
+                chainId: Number(signature.chainID),
                 payload: fromServicePayload(signature.payload),
                 signature: { type: 'erc1271', address: signer, data: signature.signature },
               },
@@ -100,19 +105,19 @@ export class Provider implements ProviderInterface {
     imageHash: Hex.Hex,
   ): Promise<{
     [wallet: Address.Address]: {
-      chainId: bigint
+      chainId: number
       payload: Payload.Parented
       signature: Signature.SignatureOfSapientSignerLeaf
     }
   }> {
     const result = await this.service.wallets({ signer, sapientHash: imageHash })
-    const wallets = toAddressKeys(result.wallets)
+    const wallets = normalizeAddressKeys(result.wallets)
 
     return Object.fromEntries(
       Object.entries(wallets).map(
         ([wallet, signature]): [
           Address.Address,
-          { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf },
+          { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf },
         ] => {
           Address.assert(wallet)
           Hex.assert(signature.signature)
@@ -128,7 +133,7 @@ export class Provider implements ProviderInterface {
               return [
                 wallet,
                 {
-                  chainId: BigInt(signature.chainID),
+                  chainId: Number(signature.chainID),
                   payload: fromServicePayload(signature.payload),
                   signature: { type: 'sapient', address: signer, data: signature.signature },
                 },
@@ -137,7 +142,7 @@ export class Provider implements ProviderInterface {
               return [
                 wallet,
                 {
-                  chainId: BigInt(signature.chainID),
+                  chainId: Number(signature.chainID),
                   payload: fromServicePayload(signature.payload),
                   signature: { type: 'sapient_compact', address: signer, data: signature.signature },
                 },
@@ -151,7 +156,7 @@ export class Provider implements ProviderInterface {
   async getWitnessFor(
     wallet: Address.Address,
     signer: Address.Address,
-  ): Promise<{ chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined> {
+  ): Promise<{ chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined> {
     try {
       const { witness } = await this.service.witness({ signer, wallet })
 
@@ -160,19 +165,19 @@ export class Provider implements ProviderInterface {
       switch (witness.type) {
         case SignatureType.EIP712:
           return {
-            chainId: BigInt(witness.chainID),
+            chainId: Number(witness.chainID),
             payload: fromServicePayload(witness.payload),
             signature: { type: 'hash', ...oxSignature.from(witness.signature) },
           }
         case SignatureType.EthSign:
           return {
-            chainId: BigInt(witness.chainID),
+            chainId: Number(witness.chainID),
             payload: fromServicePayload(witness.payload),
             signature: { type: 'eth_sign', ...oxSignature.from(witness.signature) },
           }
         case SignatureType.EIP1271:
           return {
-            chainId: BigInt(witness.chainID),
+            chainId: Number(witness.chainID),
             payload: fromServicePayload(witness.payload),
             signature: { type: 'erc1271', address: signer, data: witness.signature },
           }
@@ -189,7 +194,7 @@ export class Provider implements ProviderInterface {
     signer: Address.Address,
     imageHash: Hex.Hex,
   ): Promise<
-    { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
+    { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
   > {
     try {
       const { witness } = await this.service.witness({ signer, wallet, sapientHash: imageHash })
@@ -205,13 +210,13 @@ export class Provider implements ProviderInterface {
           throw new Error(`unexpected erc-1271 signature by ${signer}`)
         case SignatureType.Sapient:
           return {
-            chainId: BigInt(witness.chainID),
+            chainId: Number(witness.chainID),
             payload: fromServicePayload(witness.payload),
             signature: { type: 'sapient', address: signer, data: witness.signature },
           }
         case SignatureType.SapientCompact:
           return {
-            chainId: BigInt(witness.chainID),
+            chainId: Number(witness.chainID),
             payload: fromServicePayload(witness.payload),
             signature: { type: 'sapient_compact', address: signer, data: witness.signature },
           }
@@ -232,7 +237,10 @@ export class Provider implements ProviderInterface {
         Hex.assert(signature)
 
         const decoded = Signature.decodeSignature(Hex.toBytes(signature))
-        const { configuration } = await Signature.recover(decoded, wallet, 0n, Payload.fromConfigUpdate(toImageHash))
+
+        const { configuration } = await Signature.recover(decoded, wallet, 0, Payload.fromConfigUpdate(toImageHash), {
+          provider: passkeySignatureValidator,
+        })
 
         return { imageHash: toImageHash, signature: { ...decoded, configuration } }
       }),
@@ -251,7 +259,7 @@ export class Provider implements ProviderInterface {
 
   async getPayload(
     opHash: Hex.Hex,
-  ): Promise<{ chainId: bigint; payload: Payload.Parented; wallet: Address.Address } | undefined> {
+  ): Promise<{ chainId: number; payload: Payload.Parented; wallet: Address.Address } | undefined> {
     const { version, payload, wallet, chainID } = await this.service.payload({ digest: opHash })
 
     if (version !== 3) {
@@ -260,7 +268,7 @@ export class Provider implements ProviderInterface {
 
     Address.assert(wallet)
 
-    return { payload: fromServicePayload(payload), wallet, chainId: BigInt(chainID) }
+    return { payload: fromServicePayload(payload), wallet, chainId: Number(chainID) }
   }
 
   async saveWallet(deployConfiguration: Config.Config, context: Context.Context): Promise<void> {
@@ -280,7 +288,7 @@ export class Provider implements ProviderInterface {
 
   async saveWitnesses(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     payload: Payload.Parented,
     signatures: Signature.RawTopology,
   ): Promise<void> {
@@ -346,7 +354,7 @@ export class Provider implements ProviderInterface {
     // TODO: save deploy hash even if we don't have its configuration
   }
 
-  async savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: bigint): Promise<void> {
+  async savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: number): Promise<void> {
     await this.service.savePayload({
       version: 3,
       payload: getServicePayload(payload),
@@ -355,6 +363,55 @@ export class Provider implements ProviderInterface {
     })
   }
 }
+
+const passkeySigners = [Extensions.Dev1.passkeys, Extensions.Dev2.passkeys].map(Address.checksum)
+
+const recoverSapientSignatureCompactSignature =
+  'function recoverSapientSignatureCompact(bytes32 _digest, bytes _signature) view returns (bytes32)'
+
+const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSignatureCompactSignature)
+
+class PasskeySignatureValidator implements oxProvider.Provider {
+  request: oxProvider.Provider['request'] = (({ method, params }: { method: string; params: unknown }) => {
+    switch (method) {
+      case 'eth_call':
+        const transaction: TransactionRequest.Rpc = (params as any)[0]
+
+        if (!transaction.data?.startsWith(AbiFunction.getSelector(recoverSapientSignatureCompactFunction))) {
+          throw new Error(
+            `unknown selector ${transaction.data?.slice(0, 10)}, expected selector ${AbiFunction.getSelector(recoverSapientSignatureCompactFunction)} for ${recoverSapientSignatureCompactSignature}`,
+          )
+        }
+
+        if (!passkeySigners.includes(transaction.to ? Address.checksum(transaction.to) : '0x')) {
+          throw new Error(`unknown passkey signer ${transaction.to}`)
+        }
+
+        const [digest, signature] = AbiFunction.decodeData(recoverSapientSignatureCompactFunction, transaction.data)
+
+        const decoded = Extensions.Passkeys.decode(Hex.toBytes(signature))
+
+        if (Extensions.Passkeys.isValidSignature(digest, decoded)) {
+          return Extensions.Passkeys.rootFor(decoded.publicKey)
+        } else {
+          throw new Error(`invalid passkey signature ${signature} for digest ${digest}`)
+        }
+
+      default:
+        throw new Error(`method ${method} not implemented`)
+    }
+  }) as any
+
+  on(event: string) {
+    throw new Error(`unable to listen for ${event}: not implemented`)
+  }
+
+  removeListener(event: string) {
+    throw new Error(`unable to remove listener for ${event}: not implemented`)
+  }
+}
+
+const passkeySignatureValidator = new PasskeySignatureValidator()
 
 type ServiceConfig = {
   threshold: number | string
@@ -611,13 +668,4 @@ function getSignerSignatures(
   } else {
     throw new Error(`unknown topology '${JSON.stringify(topology)}'`)
   }
-}
-
-function toAddressKeys<T extends Record<string, unknown>>(obj: T): Record<Address.Address, T[keyof T]> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([wallet, signature]) => {
-      const checksumAddress = Address.checksum(wallet)
-      return [checksumAddress, signature]
-    }),
-  ) as Record<Address.Address, T[keyof T]>
 }

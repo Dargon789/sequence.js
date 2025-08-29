@@ -3,7 +3,8 @@ import { Signers as CoreSigners, Relayer, State } from '@0xsequence/wallet-core'
 import { IdentityInstrument } from '@0xsequence/identity-instrument'
 import { createAttestationVerifyingFetch } from '@0xsequence/tee-verifier'
 import { Config, Constants, Context, Extensions, Network } from '@0xsequence/wallet-primitives'
-import { Address } from 'ox'
+import * as Guard from '@0xsequence/guard'
+import { Address, Hex, Secp256k1 } from 'ox'
 import * as Db from '../dbs/index.js'
 import { Cron } from './cron.js'
 import { Devices } from './devices.js'
@@ -26,6 +27,8 @@ import { Signers } from './signers.js'
 import { Transactions, TransactionsInterface } from './transactions.js'
 import { Kinds } from './types/signer.js'
 import { Wallets, WalletsInterface } from './wallets.js'
+import { GuardHandler } from './handlers/guard.js'
+import { PasskeyCredential } from '../dbs/index.js'
 
 export type ManagerOptions = {
   verbose?: boolean
@@ -42,6 +45,7 @@ export type ManagerOptions = {
   authCommitmentsDb?: Db.AuthCommitments
   authKeysDb?: Db.AuthKeys
   recoveryDb?: Db.Recovery
+  passkeyCredentialsDb?: Db.PasskeyCredentials
 
   dbPruningInterval?: number
 
@@ -49,6 +53,8 @@ export type ManagerOptions = {
   networks?: Network.Network[]
   relayers?: Relayer.Relayer[] | (() => Relayer.Relayer[])
   bundlers?: Relayer.Bundler[]
+  guardUrl?: string
+  guardAddress?: Address.Address
 
   defaultGuardTopology?: Config.Topology
   defaultRecoverySettings?: RecoverySettings
@@ -61,6 +67,7 @@ export type ManagerOptions = {
     fetch?: typeof window.fetch
     verifyAttestation?: boolean
     expectedPcr0?: string[]
+    scope?: string
     email?: {
       enabled: boolean
     }
@@ -91,25 +98,30 @@ export const ManagerOptionsDefaults = {
   authCommitmentsDb: new Db.AuthCommitments(),
   recoveryDb: new Db.Recovery(),
   authKeysDb: new Db.AuthKeys(),
+  passkeyCredentialsDb: new Db.PasskeyCredentials(),
 
   dbPruningInterval: 1000 * 60 * 60 * 24, // 24 hours
 
   stateProvider: new State.Sequence.Provider(),
-  networks: Network.All,
+  networks: Network.ALL,
   relayers: () => [Relayer.Standard.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined),
   bundlers: [],
+
+  guardUrl: 'https://dev-guard.sequence.app',
+  guardAddress: '0xa2e70CeaB3Eb145F32d110383B75B330fA4e288a' as Address.Address, // TODO: change to the actual guard address
+  guardPrivateKey: '0x0046e54c861e7d4e1dcd952d86ab6462dedabc55dcf00ac3a99dcce59f516370' as Hex.Hex,
 
   defaultGuardTopology: {
     // TODO: Move this somewhere else
     type: 'signer',
-    address: '0xf71eC72C8C03a0857DD7601ACeF1e42b85983e99',
+    address: '0xa2e70CeaB3Eb145F32d110383B75B330fA4e288a', // TODO: change to the actual guard address
     weight: 1n,
   } as Config.SignerLeaf,
 
   defaultSessionsTopology: {
     // TODO: Move this somewhere else
     type: 'sapient-signer',
-    weight: 255n,
+    weight: 1n,
   } as Omit<Config.SapientSignerLeaf, 'imageHash' | 'address'>,
 
   defaultRecoverySettings: {
@@ -164,6 +176,7 @@ export type Databases = {
   readonly authCommitments: Db.AuthCommitments
   readonly authKeys: Db.AuthKeys
   readonly recovery: Db.Recovery
+  readonly passkeyCredentials: Db.PasskeyCredentials
 
   readonly pruningInterval: number
 }
@@ -182,11 +195,16 @@ export type Sequence = {
 
   readonly defaultGuardTopology: Config.Topology
   readonly defaultRecoverySettings: RecoverySettings
+
+  readonly guardUrl: string
+  readonly guardAddress: Address.Address
+  readonly guardPrivateKey: Hex.Hex
 }
 
 export type Modules = {
   readonly logger: Logger
   readonly devices: Devices
+  readonly guard: CoreSigners.Guard
   readonly wallets: Wallets
   readonly sessions: Sessions
   readonly signers: Signers
@@ -215,6 +233,7 @@ export class Manager {
   private readonly devicesHandler: DevicesHandler
   private readonly passkeysHandler: PasskeysHandler
   private readonly recoveryHandler: RecoveryHandler
+  private readonly guardHandler: GuardHandler
 
   private readonly otpHandler?: OtpHandler
 
@@ -364,6 +383,10 @@ export class Manager {
 
         defaultGuardTopology: ops.defaultGuardTopology,
         defaultRecoverySettings: ops.defaultRecoverySettings,
+
+        guardUrl: ops.guardUrl,
+        guardAddress: ops.guardAddress,
+        guardPrivateKey: ops.guardPrivateKey,
       },
 
       databases: {
@@ -375,6 +398,7 @@ export class Manager {
         authCommitments: ops.authCommitmentsDb,
         authKeys: ops.authKeysDb,
         recovery: ops.recoveryDb,
+        passkeyCredentials: ops.passkeyCredentialsDb,
 
         pruningInterval: ops.dbPruningInterval,
       },
@@ -387,6 +411,11 @@ export class Manager {
       cron: new Cron(shared),
       logger: new Logger(shared),
       devices: new Devices(shared),
+      guard: new CoreSigners.Guard(
+        shared.sequence.guardUrl
+          ? new Guard.Sequence.Guard(shared.sequence.guardUrl, shared.sequence.guardAddress)
+          : new Guard.Local.Guard(shared.sequence.guardPrivateKey || Secp256k1.randomPrivateKey()),
+      ),
       wallets: new Wallets(shared),
       sessions: new Sessions(shared),
       signers: new Signers(shared),
@@ -419,6 +448,9 @@ export class Manager {
     this.recoveryHandler = new RecoveryHandler(modules.signatures, modules.recovery)
     shared.handlers.set(Kinds.Recovery, this.recoveryHandler)
 
+    this.guardHandler = new GuardHandler(modules.signatures, modules.guard)
+    shared.handlers.set(Kinds.Guard, this.guardHandler)
+
     const verifyingFetch = ops.identity.verifyAttestation
       ? createAttestationVerifyingFetch({
           fetch: ops.identity.fetch,
@@ -426,7 +458,7 @@ export class Manager {
           logTiming: true,
         })
       : ops.identity.fetch
-    const identityInstrument = new IdentityInstrument(ops.identity.url, verifyingFetch)
+    const identityInstrument = new IdentityInstrument(ops.identity.url, ops.identity.scope, verifyingFetch)
 
     if (ops.identity.email?.enabled) {
       this.otpHandler = new OtpHandler(identityInstrument, modules.signatures, shared.databases.authKeys)
@@ -492,8 +524,12 @@ export class Manager {
     return this.shared.sequence.networks
   }
 
-  public getNetwork(chainId: bigint): Network.Network | undefined {
+  public getNetwork(chainId: number): Network.Network | undefined {
     return this.shared.sequence.networks.find((n) => n.chainId === chainId)
+  }
+
+  public async getPasskeyCredentials(): Promise<PasskeyCredential[]> {
+    return this.shared.databases.passkeyCredentials.list()
   }
 
   // DBs

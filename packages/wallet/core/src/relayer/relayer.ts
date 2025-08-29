@@ -1,9 +1,9 @@
 import { Payload, Precondition } from '@0xsequence/wallet-primitives'
 import { Address, Hex } from 'ox'
-import { GetMetaTxnReceiptReturn } from './standard/rpc/index.js'
+import { FeeToken, GetMetaTxnReceiptReturn } from './standard/rpc/index.js'
 
 export interface FeeOption {
-  token: Address.Address
+  token: FeeToken
   to: string
   value: string
   gasLimit: number
@@ -61,17 +61,17 @@ export interface Relayer {
   type: string
   id: string
 
-  isAvailable(wallet: Address.Address, chainId: bigint): Promise<boolean>
+  isAvailable(wallet: Address.Address, chainId: number): Promise<boolean>
 
   feeOptions(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }>
 
-  relay(to: Address.Address, data: Hex.Hex, chainId: bigint, quote?: FeeQuote): Promise<{ opHash: Hex.Hex }>
+  relay(to: Address.Address, data: Hex.Hex, chainId: number, quote?: FeeQuote): Promise<{ opHash: Hex.Hex }>
 
-  status(opHash: Hex.Hex, chainId: bigint): Promise<OperationStatus>
+  status(opHash: Hex.Hex, chainId: number): Promise<OperationStatus>
 
   checkPrecondition(precondition: Precondition.Precondition): Promise<boolean>
 }

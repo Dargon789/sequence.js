@@ -1,6 +1,7 @@
 import { Address, Hex } from 'ox'
 import { MaybePromise, Provider } from './index.js'
 import { Config, Context, GenericTree, Payload, Signature } from '@0xsequence/wallet-primitives'
+import { normalizeAddressKeys } from './utils.js'
 
 export class Cached implements Provider {
   constructor(
@@ -38,14 +39,14 @@ export class Cached implements Provider {
 
   async getWallets(signer: Address.Address): Promise<{
     [wallet: Address.Address]: {
-      chainId: bigint
+      chainId: number
       payload: Payload.Parented
       signature: Signature.SignatureOfSignerLeaf
     }
   }> {
     // Get both from cache and source
-    const cached = toAddressKeys(await this.args.cache.getWallets(signer))
-    const source = toAddressKeys(await this.args.source.getWallets(signer))
+    const cached = normalizeAddressKeys(await this.args.cache.getWallets(signer))
+    const source = normalizeAddressKeys(await this.args.source.getWallets(signer))
 
     // Merge and deduplicate
     const deduplicated = { ...cached, ...source }
@@ -78,7 +79,7 @@ export class Cached implements Provider {
     imageHash: Hex.Hex,
   ): Promise<{
     [wallet: Address.Address]: {
-      chainId: bigint
+      chainId: number
       payload: Payload.Parented
       signature: Signature.SignatureOfSapientSignerLeaf
     }
@@ -113,7 +114,7 @@ export class Cached implements Provider {
   async getWitnessFor(
     wallet: Address.Address,
     signer: Address.Address,
-  ): Promise<{ chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined> {
+  ): Promise<{ chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined> {
     const cached = await this.args.cache.getWitnessFor(wallet, signer)
     if (cached) {
       return cached
@@ -136,7 +137,7 @@ export class Cached implements Provider {
     signer: Address.Address,
     imageHash: Hex.Hex,
   ): Promise<
-    { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
+    { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
   > {
     const cached = await this.args.cache.getWitnessForSapient(wallet, signer, imageHash)
     if (cached) {
@@ -181,7 +182,7 @@ export class Cached implements Provider {
 
   saveWitnesses(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     payload: Payload.Parented,
     signatures: Signature.RawTopology,
   ): MaybePromise<void> {
@@ -210,7 +211,7 @@ export class Cached implements Provider {
 
   async getPayload(opHash: Hex.Hex): Promise<
     | {
-        chainId: bigint
+        chainId: number
         payload: Payload.Parented
         wallet: Address.Address
       }
@@ -228,16 +229,7 @@ export class Cached implements Provider {
     return source
   }
 
-  savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: bigint): MaybePromise<void> {
+  savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: number): MaybePromise<void> {
     return this.args.source.savePayload(wallet, payload, chainId)
   }
-}
-
-function toAddressKeys<T extends Record<string, unknown>>(obj: T): Record<Address.Address, T[keyof T]> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([wallet, signature]) => {
-      const checksumAddress = Address.checksum(wallet)
-      return [checksumAddress, signature]
-    }),
-  ) as Record<Address.Address, T[keyof T]>
 }

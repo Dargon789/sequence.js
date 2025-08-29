@@ -91,7 +91,7 @@ export class OtpHandler extends IdentityHandler implements Handler {
         new Promise(async (resolve, reject) => {
           const challenge = Identity.OtpChallenge.fromSigner(this.identityType, {
             address,
-            keyType: Identity.KeyType.Secp256k1,
+            keyType: Identity.KeyType.Ethereum_Secp256k1,
           })
           const { loginHint, challenge: codeChallenge } = await this.nitroCommitVerifier(challenge)
 
@@ -101,7 +101,6 @@ export class OtpHandler extends IdentityHandler implements Handler {
               resolve(true)
             } catch (e) {
               resolve(false)
-              throw e
             }
           }
 

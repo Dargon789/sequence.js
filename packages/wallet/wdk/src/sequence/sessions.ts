@@ -103,6 +103,29 @@ export interface SessionsInterface {
   ): Promise<string>
 
   /**
+   * Initiates an on-chain configuration update to modify an existing "explicit session".
+   *
+   * This method atomically replaces the permissions for a given session key. If the session
+   * key does not already exist, it will be added. This is the recommended way to update
+   * permissions for an active session.
+   *
+   * Like adding a session, this requires a signed configuration update.
+   *
+   * @param walletAddress The address of the wallet to modify.
+   * @param sessionAddress The address of the session signer to modify.
+   * @param permissions The new, complete set of rules and limits for this session key.
+   * @param origin Optional string to identify the source of the request.
+   * @returns A promise that resolves to a `requestId` for the configuration update.
+   * @see {complete} to finalize the update after it has been signed.
+   */
+  modifyExplicitSession(
+    walletAddress: Address.Address,
+    sessionAddress: Address.Address,
+    permissions: CoreSigners.Session.ExplicitParams,
+    origin?: string,
+  ): Promise<string>
+
+  /**
    * Initiates an on-chain configuration update to remove an explicit session key.
    *
    * This revokes all on-chain permissions for the specified `sessionAddress`, effectively disabling it.
@@ -164,8 +187,10 @@ export class Sessions implements SessionsInterface {
 
   async getTopology(walletAddress: Address.Address, fixMissing = false): Promise<SessionConfig.SessionsTopology> {
     const { loginTopology, modules } = await this.shared.modules.wallets.getConfigurationParts(walletAddress)
-    const managerLeaf = modules.find((leaf) => Address.isEqual(leaf.address, this.shared.sequence.extensions.sessions))
-    if (!managerLeaf) {
+    const managerModule = modules.find((m) =>
+      Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.sessions),
+    )
+    if (!managerModule) {
       if (fixMissing) {
         // Create the default session manager leaf
         if (!Config.isSignerLeaf(loginTopology) && !Config.isSapientSignerLeaf(loginTopology)) {
@@ -180,12 +205,15 @@ export class Sessions implements SessionsInterface {
           address: this.shared.sequence.extensions.sessions,
           imageHash,
         }
-        modules.push(leaf)
+        modules.push({
+          sapientLeaf: leaf,
+          weight: 255n,
+        })
         return SessionConfig.configurationTreeToSessionsTopology(sessionsConfigTree)
       }
       throw new Error('Session manager not found')
     }
-    const imageHash = managerLeaf.imageHash
+    const imageHash = managerModule.sapientLeaf.imageHash
     const tree = await this.shared.sequence.stateProvider.getTree(imageHash)
     if (!tree) {
       throw new Error('Session topology not found')
@@ -251,7 +279,7 @@ export class Sessions implements SessionsInterface {
         attestation,
       },
       wallet: walletAddress,
-      chainId: 0n,
+      chainId: 0,
       configuration,
     }
 
@@ -310,6 +338,25 @@ export class Sessions implements SessionsInterface {
     return this.prepareSessionUpdate(walletAddress, newTopology, origin)
   }
 
+  async modifyExplicitSession(
+    walletAddress: Address.Address,
+    sessionAddress: Address.Address,
+    permissions: CoreSigners.Session.ExplicitParams,
+    origin?: string,
+  ): Promise<string> {
+    // This will add the session manager if it's missing
+    const topology = await this.getTopology(walletAddress, true)
+    const intermediateTopology = SessionConfig.removeExplicitSession(topology, sessionAddress)
+    if (!intermediateTopology) {
+      throw new Error('Incomplete session topology')
+    }
+    const newTopology = SessionConfig.addExplicitSession(intermediateTopology, {
+      ...permissions,
+      signer: sessionAddress,
+    })
+    return this.prepareSessionUpdate(walletAddress, newTopology, origin)
+  }
+
   async removeExplicitSession(
     walletAddress: Address.Address,
     sessionAddress: Address.Address,
@@ -318,7 +365,7 @@ export class Sessions implements SessionsInterface {
     const topology = await this.getTopology(walletAddress)
     const newTopology = SessionConfig.removeExplicitSession(topology, sessionAddress)
     if (!newTopology) {
-      throw new Error('Session not found')
+      throw new Error('Incomplete session topology')
     }
     return this.prepareSessionUpdate(walletAddress, newTopology, origin)
   }
@@ -355,17 +402,22 @@ export class Sessions implements SessionsInterface {
 
     // Find the session manager in the old configuration
     const { modules } = await this.shared.modules.wallets.getConfigurationParts(walletAddress)
-    const managerLeaf = modules.find((leaf) => Address.isEqual(leaf.address, this.shared.sequence.extensions.sessions))
-    if (!managerLeaf) {
+    const managerModule = modules.find((m) =>
+      Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.sessions),
+    )
+    if (!managerModule) {
       // Missing. Add it
       modules.push({
-        ...ManagerOptionsDefaults.defaultSessionsTopology,
-        address: this.shared.sequence.extensions.sessions,
-        imageHash: newImageHash,
+        sapientLeaf: {
+          ...ManagerOptionsDefaults.defaultSessionsTopology,
+          address: this.shared.sequence.extensions.sessions,
+          imageHash: newImageHash,
+        },
+        weight: 255n,
       })
     } else {
       // Update the configuration to use the new session manager image hash
-      managerLeaf.imageHash = newImageHash
+      managerModule.sapientLeaf.imageHash = newImageHash
     }
 
     return this.shared.modules.wallets.requestConfigurationUpdate(

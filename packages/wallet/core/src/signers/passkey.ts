@@ -13,7 +13,7 @@ export type PasskeyOptions = {
   metadata?: Extensions.Passkeys.PasskeyMetadata
 }
 
-export type CreaetePasskeyOptions = {
+export type CreatePasskeyOptions = {
   stateProvider?: State.Provider
   requireUserVerification?: boolean
   credentialName?: string
@@ -93,7 +93,7 @@ export class Passkey implements SapientSigner, Witnessable {
     })
   }
 
-  static async create(extensions: Pick<Extensions.Extensions, 'passkeys'>, options?: CreaetePasskeyOptions) {
+  static async create(extensions: Pick<Extensions.Extensions, 'passkeys'>, options?: CreatePasskeyOptions) {
     const name = options?.credentialName ?? `Sequence (${Date.now()})`
 
     const credential = await WebAuthnP256.createCredential({
@@ -223,7 +223,7 @@ export class Passkey implements SapientSigner, Witnessable {
 
   async signSapient(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     payload: Payload.Parented,
     imageHash: Hex.Hex,
   ): Promise<SignatureTypes.SignatureOfSapientSignerLeaf> {
@@ -274,8 +274,8 @@ export class Passkey implements SapientSigner, Witnessable {
       ),
     )
 
-    const signature = await this.signSapient(wallet, 0n, payload, this.imageHash)
-    await stateWriter.saveWitnesses(wallet, 0n, payload, {
+    const signature = await this.signSapient(wallet, 0, payload, this.imageHash)
+    await stateWriter.saveWitnesses(wallet, 0, payload, {
       type: 'unrecovered-signer',
       weight: 1n,
       signature,

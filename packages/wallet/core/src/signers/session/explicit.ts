@@ -1,4 +1,4 @@
-import { Payload, Permission, SessionSignature, Constants } from '@0xsequence/wallet-primitives'
+import { Payload, Permission, SessionSignature, Constants, Network } from '@0xsequence/wallet-primitives'
 import { AbiFunction, AbiParameters, Address, Bytes, Hash, Hex, Provider } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
 import { ExplicitSessionSigner, UsageLimit } from './session.js'
@@ -24,12 +24,12 @@ export class Explicit implements ExplicitSessionSigner {
 
   async findSupportedPermission(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     call: Payload.Call,
     sessionManagerAddress: Address.Address,
     provider?: Provider.Provider,
   ): Promise<Permission.Permission | undefined> {
-    if (this.sessionPermissions.chainId !== 0n && this.sessionPermissions.chainId !== chainId) {
+    if (this.sessionPermissions.chainId !== 0 && this.sessionPermissions.chainId !== chainId) {
       return undefined
     }
 
@@ -156,7 +156,7 @@ export class Explicit implements ExplicitSessionSigner {
 
   async supportedCall(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     call: Payload.Call,
     sessionManagerAddress: Address.Address,
     provider?: Provider.Provider,
@@ -178,7 +178,7 @@ export class Explicit implements ExplicitSessionSigner {
 
   async signCall(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     call: Payload.Call,
     nonce: {
       space: bigint
@@ -243,13 +243,14 @@ export class Explicit implements ExplicitSessionSigner {
 
   async prepareIncrements(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     calls: Payload.Call[],
     sessionManagerAddress: Address.Address,
     provider?: Provider.Provider,
   ): Promise<UsageLimit[]> {
     const increments: { usageHash: Hex.Hex; increment: bigint }[] = []
     const usageValueHash = this.getValueUsageHash()
+    let valueUsed = 0n
 
     for (const call of calls) {
       // Find matching permission
@@ -281,18 +282,15 @@ export class Explicit implements ExplicitSessionSigner {
         }
       }
 
-      // Check the value
-      if (call.value !== 0n) {
-        const existingIncrement = increments.find((i) => Hex.isEqual(i.usageHash, usageValueHash))
-        if (existingIncrement) {
-          existingIncrement.increment += call.value
-        } else {
-          increments.push({
-            usageHash: usageValueHash,
-            increment: call.value,
-          })
-        }
-      }
+      valueUsed += call.value
+    }
+
+    // Check the value
+    if (valueUsed > 0n) {
+      increments.push({
+        usageHash: usageValueHash,
+        increment: valueUsed,
+      })
     }
 
     // If no increments, return early

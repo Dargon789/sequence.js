@@ -1,6 +1,6 @@
 import { Envelope, Wallet } from '@0xsequence/wallet-core'
 import { Payload } from '@0xsequence/wallet-primitives'
-import { Address, Bytes, Hex, Provider, RpcTransport } from 'ox'
+import { Address, Hex, Provider, RpcTransport } from 'ox'
 import { v7 as uuidv7 } from 'uuid'
 import { Shared } from './manager.js'
 import { Message, MessageRequest, MessageRequested, MessageSigned } from './types/message-request.js'
@@ -51,7 +51,7 @@ export interface MessagesInterface {
   request(
     wallet: Address.Address,
     message: MessageRequest,
-    chainId?: bigint,
+    chainId?: number,
     options?: { source?: string },
   ): Promise<string>
 
@@ -131,7 +131,7 @@ export class Messages implements MessagesInterface {
   async request(
     from: Address.Address,
     message: MessageRequest,
-    chainId?: bigint,
+    chainId?: number,
     options?: {
       source?: string
     },
@@ -139,7 +139,7 @@ export class Messages implements MessagesInterface {
     const wallet = new Wallet(from, { stateProvider: this.shared.sequence.stateProvider })
 
     // Prepare message payload
-    const envelope = await wallet.prepareMessageSignature(message, chainId ?? 0n)
+    const envelope = await wallet.prepareMessageSignature(message, chainId ?? 0)
 
     // Prepare signature request
     const signatureRequest = await this.shared.modules.signatures.request(envelope, 'sign-message', {
@@ -190,12 +190,12 @@ export class Messages implements MessagesInterface {
 
     // Get the provider for the message chain
     let provider: Provider.Provider | undefined
-    if (message.envelope.chainId !== 0n) {
+    if (message.envelope.chainId !== 0) {
       const network = this.shared.sequence.networks.find((network) => network.chainId === message.envelope.chainId)
       if (!network) {
         throw new Error(`Network not found for ${message.envelope.chainId}`)
       }
-      const transport = RpcTransport.fromHttp(network.rpc)
+      const transport = RpcTransport.fromHttp(network.rpcUrl)
       provider = Provider.from(transport)
     }
 

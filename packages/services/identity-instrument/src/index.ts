@@ -1,4 +1,5 @@
 import { Hex, Bytes } from 'ox'
+import { canonicalize } from 'json-canonicalize'
 import {
   CommitVerifierReturn,
   CompleteAuthReturn,
@@ -14,51 +15,64 @@ export { KeyType, IdentityType, AuthMode }
 export * from './challenge.js'
 
 export class IdentityInstrument {
+  private scope?: string
   private rpc: IdentityInstrumentRpc
 
-  constructor(hostname: string, fetch = window.fetch) {
+  constructor(hostname: string, scope?: string, fetch = window.fetch) {
     this.rpc = new IdentityInstrumentRpc(hostname.endsWith('/') ? hostname.slice(0, -1) : hostname, fetch)
+    this.scope = scope
   }
 
   async commitVerifier(authKey: AuthKey, challenge: Challenge) {
+    const params = {
+      ...challenge.getCommitParams(),
+      scope: this.scope,
+    }
+    const signature = await authKey.sign(Bytes.fromString(canonicalize(params)))
     return this.rpc.commitVerifier({
-      params: {
-        ...challenge.getCommitParams(),
-        authKey: {
-          address: authKey.address,
-          keyType: authKey.keyType,
-        },
+      params,
+      authKey: {
+        address: authKey.address,
+        keyType: authKey.keyType,
       },
+      signature,
     })
   }
 
   async completeAuth(authKey: AuthKey, challenge: Challenge) {
+    const params = {
+      ...challenge.getCompleteParams(),
+      signerType: KeyType.Ethereum_Secp256k1,
+      scope: this.scope,
+    }
+    const signature = await authKey.sign(Bytes.fromString(canonicalize(params)))
     return this.rpc.completeAuth({
-      params: {
-        ...challenge.getCompleteParams(),
-        signerType: KeyType.Secp256k1,
-        authKey: {
-          address: authKey.address,
-          keyType: authKey.keyType,
-        },
+      params,
+      authKey: {
+        address: authKey.address,
+        keyType: authKey.keyType,
       },
+      signature,
     })
   }
 
   async sign(authKey: AuthKey, digest: Bytes.Bytes) {
-    const res = await this.rpc.sign({
-      params: {
-        signer: {
-          address: authKey.signer,
-          keyType: KeyType.Secp256k1,
-        },
-        digest: Hex.fromBytes(digest),
-        authKey: {
-          address: authKey.address,
-          keyType: authKey.keyType,
-        },
-        signature: await authKey.sign(digest),
+    const params = {
+      scope: this.scope,
+      signer: {
+        address: authKey.signer,
+        keyType: KeyType.Ethereum_Secp256k1,
       },
+      digest: Hex.fromBytes(digest),
+      nonce: Hex.random(16),
+    }
+    const res = await this.rpc.sign({
+      params,
+      authKey: {
+        address: authKey.address,
+        keyType: authKey.keyType,
+      },
+      signature: await authKey.sign(Bytes.fromString(canonicalize(params))),
     })
     Hex.assert(res.signature)
     return res.signature

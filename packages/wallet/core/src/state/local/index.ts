@@ -10,6 +10,7 @@ import {
 import { Address, Bytes, Hex, PersonalMessage, Secp256k1 } from 'ox'
 import { Provider as ProviderInterface } from '../index.js'
 import { MemoryStore } from './memory.js'
+import { normalizeAddressKeys } from '../utils.js'
 
 export interface Store {
   // top level configurations store
@@ -25,10 +26,10 @@ export interface Store {
   // payloads
   loadPayloadOfSubdigest: (
     subdigest: Hex.Hex,
-  ) => Promise<{ content: Payload.Parented; chainId: bigint; wallet: Address.Address } | undefined>
+  ) => Promise<{ content: Payload.Parented; chainId: number; wallet: Address.Address } | undefined>
   savePayloadOfSubdigest: (
     subdigest: Hex.Hex,
-    payload: { content: Payload.Parented; chainId: bigint; wallet: Address.Address },
+    payload: { content: Payload.Parented; chainId: number; wallet: Address.Address },
   ) => Promise<void>
 
   // signatures
@@ -105,9 +106,9 @@ export class Provider implements ProviderInterface {
   private async getWalletsGeneric<T>(
     subdigests: Hex.Hex[],
     loadSignatureFn: (subdigest: Hex.Hex) => Promise<T | undefined>,
-  ): Promise<Record<Address.Address, { chainId: bigint; payload: Payload.Parented; signature: T }>> {
+  ): Promise<Record<Address.Address, { chainId: number; payload: Payload.Parented; signature: T }>> {
     const payloads = await Promise.all(subdigests.map((sd) => this.store.loadPayloadOfSubdigest(sd)))
-    const response: Record<Address.Address, { chainId: bigint; payload: Payload.Parented; signature: T }> = {}
+    const response: Record<Address.Address, { chainId: number; payload: Payload.Parented; signature: T }> = {}
 
     for (const payload of payloads) {
       if (!payload) {
@@ -123,7 +124,10 @@ export class Provider implements ProviderInterface {
 
       const subdigest = Hex.fromBytes(Payload.hash(walletAddress, payload.chainId, payload.content))
       const signature = await loadSignatureFn(subdigest)
-      if (!signature) continue
+
+      if (!signature) {
+        continue
+      }
 
       response[walletAddress] = {
         chainId: payload.chainId,
@@ -136,16 +140,20 @@ export class Provider implements ProviderInterface {
   }
 
   async getWallets(signer: Address.Address) {
-    return this.getWalletsGeneric<Signature.SignatureOfSignerLeaf>(
-      await this.store.loadSubdigestsOfSigner(signer),
-      (subdigest) => this.store.loadSignatureOfSubdigest(signer, subdigest),
+    return normalizeAddressKeys(
+      await this.getWalletsGeneric<Signature.SignatureOfSignerLeaf>(
+        await this.store.loadSubdigestsOfSigner(signer),
+        (subdigest) => this.store.loadSignatureOfSubdigest(signer, subdigest),
+      ),
     )
   }
 
   async getWalletsForSapient(signer: Address.Address, imageHash: Hex.Hex) {
-    return this.getWalletsGeneric<Signature.SignatureOfSapientSignerLeaf>(
-      await this.store.loadSubdigestsOfSapientSigner(signer, imageHash),
-      (subdigest) => this.store.loadSapientSignatureOfSubdigest(signer, subdigest, imageHash),
+    return normalizeAddressKeys(
+      await this.getWalletsGeneric<Signature.SignatureOfSapientSignerLeaf>(
+        await this.store.loadSubdigestsOfSapientSigner(signer, imageHash),
+        (subdigest) => this.store.loadSapientSignatureOfSubdigest(signer, subdigest, imageHash),
+      ),
     )
   }
 
@@ -153,10 +161,11 @@ export class Provider implements ProviderInterface {
     wallet: Address.Address,
     signer: Address.Address,
   ):
-    | { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf }
-    | Promise<{ chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined>
+    | { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf }
+    | Promise<{ chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSignerLeaf } | undefined>
     | undefined {
-    return this.getWallets(signer).then((wallets) => wallets[wallet])
+    const checksumAddress = Address.checksum(wallet)
+    return this.getWallets(signer).then((wallets) => wallets[checksumAddress])
   }
 
   getWitnessForSapient(
@@ -164,17 +173,18 @@ export class Provider implements ProviderInterface {
     signer: Address.Address,
     imageHash: Hex.Hex,
   ):
-    | { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf }
+    | { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf }
     | Promise<
-        { chainId: bigint; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
+        { chainId: number; payload: Payload.Parented; signature: Signature.SignatureOfSapientSignerLeaf } | undefined
       >
     | undefined {
-    return this.getWalletsForSapient(signer, imageHash).then((wallets) => wallets[wallet])
+    const checksumAddress = Address.checksum(wallet)
+    return this.getWalletsForSapient(signer, imageHash).then((wallets) => wallets[checksumAddress])
   }
 
   async saveWitnesses(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     payload: Payload.Parented,
     signatures: Signature.RawTopology,
   ): Promise<void> {
@@ -343,9 +353,9 @@ export class Provider implements ProviderInterface {
       imageHash: nextImageHash,
     }
 
-    const subdigest = Payload.hash(wallet, 0n, payload)
+    const subdigest = Payload.hash(wallet, 0, payload)
 
-    await this.store.savePayloadOfSubdigest(Hex.fromBytes(subdigest), { content: payload, chainId: 0n, wallet })
+    await this.store.savePayloadOfSubdigest(Hex.fromBytes(subdigest), { content: payload, chainId: 0, wallet })
     await this.saveConfig(configuration)
 
     await this.saveSignature(Hex.fromBytes(subdigest), signature.configuration.topology)
@@ -416,12 +426,12 @@ export class Provider implements ProviderInterface {
 
   async getPayload(
     opHash: Hex.Hex,
-  ): Promise<{ chainId: bigint; payload: Payload.Parented; wallet: Address.Address } | undefined> {
+  ): Promise<{ chainId: number; payload: Payload.Parented; wallet: Address.Address } | undefined> {
     const data = await this.store.loadPayloadOfSubdigest(opHash)
     return data ? { chainId: data.chainId, payload: data.content, wallet: data.wallet } : undefined
   }
 
-  savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: bigint): Promise<void> {
+  savePayload(wallet: Address.Address, payload: Payload.Parented, chainId: number): Promise<void> {
     const subdigest = Hex.fromBytes(Payload.hash(wallet, chainId, payload))
     return this.store.savePayloadOfSubdigest(subdigest, { content: payload, chainId, wallet })
   }

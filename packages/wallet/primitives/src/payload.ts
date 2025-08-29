@@ -1,7 +1,7 @@
 import { AbiFunction, AbiParameters, Address, Bytes, Hash, Hex } from 'ox'
 import { getSignPayload } from 'ox/TypedData'
 import { EXECUTE_USER_OP, RECOVER_SAPIENT_SIGNATURE } from './constants.js'
-import { Attestation } from './index.js'
+import { Attestation, Network } from './index.js'
 import { minBytesFor } from './utils.js'
 import { UserOperation } from 'ox/erc4337'
 
@@ -202,7 +202,6 @@ export function isSessionImplicitAuthorize(payload: Payload): payload is Session
 export function encode(payload: Calls, self?: Address.Address): Bytes.Bytes {
   const callsLen = payload.calls.length
   const nonceBytesNeeded = minBytesFor(payload.nonce)
-  console.log('TS encode: nonce value:', payload.nonce, 'nonceBytesNeeded:', nonceBytesNeeded)
   if (nonceBytesNeeded > 15) {
     throw new Error('Nonce is too large')
   }
@@ -351,7 +350,7 @@ export function encode(payload: Calls, self?: Address.Address): Bytes.Bytes {
 }
 
 export function encodeSapient(
-  chainId: bigint,
+  chainId: number,
   payload: Parented,
 ): Exclude<AbiFunction.encodeData.Args<typeof RECOVER_SAPIENT_SIGNATURE>[0], undefined>[0] {
   const encoded: ReturnType<typeof encodeSapient> = {
@@ -397,7 +396,7 @@ export function encodeSapient(
   return encoded
 }
 
-export function hash(wallet: Address.Address, chainId: bigint, payload: Parented): Bytes.Bytes {
+export function hash(wallet: Address.Address, chainId: number, payload: Parented): Bytes.Bytes {
   if (isDigest(payload)) {
     return Bytes.fromHex(payload.digest)
   }
@@ -411,7 +410,7 @@ export function hash(wallet: Address.Address, chainId: bigint, payload: Parented
 function domainFor(
   payload: Payload,
   wallet: Address.Address,
-  chainId: bigint,
+  chainId: number,
 ): {
   name: string
   version: string
@@ -441,7 +440,7 @@ export function encode4337Nonce(key: bigint, seq: bigint): bigint {
   return (key << 64n) | seq
 }
 
-export function toTyped(wallet: Address.Address, chainId: bigint, payload: Parented): TypedDataToSign {
+export function toTyped(wallet: Address.Address, chainId: number, payload: Parented): TypedDataToSign {
   const domain = domainFor(payload, wallet, chainId)
 
   switch (payload.type) {
@@ -583,7 +582,7 @@ export function to4337UserOperation(
   return operation
 }
 
-export function to4337Message(payload: Calls4337_07, wallet: Address.Address, chainId: bigint): Hex.Hex {
+export function to4337Message(payload: Calls4337_07, wallet: Address.Address, chainId: number): Hex.Hex {
   const operation = to4337UserOperation(payload, wallet)
   const accountGasLimits = Hex.concat(
     Hex.padLeft(Hex.fromNumber(operation.verificationGasLimit), 16),
@@ -632,7 +631,7 @@ export function to4337Message(payload: Calls4337_07, wallet: Address.Address, ch
 
   return AbiParameters.encode(
     [{ type: 'bytes32' }, { type: 'address' }, { type: 'uint256' }],
-    [Hash.keccak256(packedUserOp), payload.entrypoint, chainId],
+    [Hash.keccak256(packedUserOp), payload.entrypoint, BigInt(chainId)],
   )
 }
 

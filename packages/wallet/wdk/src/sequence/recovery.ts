@@ -1,11 +1,11 @@
-import { Config, Constants, Extensions, GenericTree, Payload } from '@0xsequence/wallet-primitives'
-import { Shared } from './manager.js'
-import { Address, Hex, Provider, RpcTransport } from 'ox'
-import { Kinds, RecoverySigner } from './types/signer.js'
 import { Envelope } from '@0xsequence/wallet-core'
-import { QueuedRecoveryPayload } from './types/recovery.js'
-import { Actions } from './types/index.js'
+import { Config, Constants, Extensions, GenericTree, Payload } from '@0xsequence/wallet-primitives'
+import { Address, Hex, Provider, RpcTransport } from 'ox'
 import { MnemonicHandler } from './handlers/mnemonic.js'
+import { Shared } from './manager.js'
+import { Actions, Module } from './types/index.js'
+import { QueuedRecoveryPayload } from './types/recovery.js'
+import { Kinds, RecoverySigner } from './types/signer.js'
 
 export interface RecoveryInterface {
   /**
@@ -36,7 +36,7 @@ export interface RecoveryInterface {
    *   with the signing UI and `completePayload`.
    * @see {completePayload} for the next step.
    */
-  queuePayload(wallet: Address.Address, chainId: bigint, payload: Payload.Calls): Promise<string>
+  queuePayload(wallet: Address.Address, chainId: number, payload: Payload.Calls): Promise<string>
 
   /**
    * Finalizes a queued recovery payload request and returns the transaction data needed to start the timelock on-chain.
@@ -166,21 +166,21 @@ export class Recovery implements RecoveryInterface {
   }
 
   private async updateRecoveryModule(
-    modules: Config.SapientSignerLeaf[],
+    modules: Module[],
     transformer: (leaves: Extensions.Recovery.RecoveryLeaf[]) => Extensions.Recovery.RecoveryLeaf[],
   ) {
     const ext = this.shared.sequence.extensions.recovery
-    const idx = modules.findIndex((m) => Address.isEqual(m.address, ext))
+    const idx = modules.findIndex((m) => Address.isEqual(m.sapientLeaf.address, ext))
     if (idx === -1) {
       return
     }
 
-    const sapientSigner = modules[idx]
-    if (!sapientSigner) {
+    const recoveryModule = modules[idx]
+    if (!recoveryModule) {
       throw new Error('recovery-module-not-found')
     }
 
-    const genericTree = await this.shared.sequence.stateProvider.getTree(sapientSigner.imageHash)
+    const genericTree = await this.shared.sequence.stateProvider.getTree(recoveryModule.sapientLeaf.imageHash)
     if (!genericTree) {
       throw new Error('recovery-module-tree-not-found')
     }
@@ -198,10 +198,10 @@ export class Recovery implements RecoveryInterface {
       throw new Error('recovery-module-not-found-(unreachable)')
     }
 
-    modules[idx].imageHash = GenericTree.hash(nextGeneric)
+    modules[idx].sapientLeaf.imageHash = GenericTree.hash(nextGeneric)
   }
 
-  public async initRecoveryModule(modules: Config.SapientSignerLeaf[], address: Address.Address) {
+  public async initRecoveryModule(modules: Module[], address: Address.Address) {
     if (this.hasRecoveryModule(modules)) {
       throw new Error('recovery-module-already-initialized')
     }
@@ -221,18 +221,21 @@ export class Recovery implements RecoveryInterface {
     const recoveryImageHash = GenericTree.hash(recoveryGenericTree)
 
     modules.push({
-      type: 'sapient-signer',
-      address: this.shared.sequence.extensions.recovery,
+      sapientLeaf: {
+        type: 'sapient-signer',
+        address: this.shared.sequence.extensions.recovery,
+        weight: 255n,
+        imageHash: recoveryImageHash,
+      },
       weight: 255n,
-      imageHash: recoveryImageHash,
-    } as Config.SapientSignerLeaf)
+    })
   }
 
-  hasRecoveryModule(modules: Config.SapientSignerLeaf[]): boolean {
-    return modules.some((m) => Address.isEqual(m.address, this.shared.sequence.extensions.recovery))
+  hasRecoveryModule(modules: Module[]): boolean {
+    return modules.some((m) => Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.recovery))
   }
 
-  async addRecoverySignerToModules(modules: Config.SapientSignerLeaf[], address: Address.Address) {
+  async addRecoverySignerToModules(modules: Module[], address: Address.Address) {
     if (!this.hasRecoveryModule(modules)) {
       throw new Error('recovery-module-not-enabled')
     }
@@ -256,7 +259,7 @@ export class Recovery implements RecoveryInterface {
     })
   }
 
-  async removeRecoverySignerFromModules(modules: Config.SapientSignerLeaf[], address: Address.Address) {
+  async removeRecoverySignerFromModules(modules: Module[], address: Address.Address) {
     if (!this.hasRecoveryModule(modules)) {
       throw new Error('recovery-module-not-enabled')
     }
@@ -327,12 +330,14 @@ export class Recovery implements RecoveryInterface {
 
   async getSigners(address: Address.Address): Promise<RecoverySigner[] | undefined> {
     const { raw } = await this.shared.modules.wallets.getConfiguration(address)
-    const recoveryLeaf = raw.modules.find((m) => Address.isEqual(m.address, this.shared.sequence.extensions.recovery))
-    if (!recoveryLeaf) {
+    const recoveryModule = raw.modules.find((m) =>
+      Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.recovery),
+    )
+    if (!recoveryModule) {
       return undefined
     }
 
-    const recoveryGenericTree = await this.shared.sequence.stateProvider.getTree(recoveryLeaf.imageHash)
+    const recoveryGenericTree = await this.shared.sequence.stateProvider.getTree(recoveryModule.sapientLeaf.imageHash)
     if (!recoveryGenericTree) {
       throw new Error('recovery-module-tree-not-found')
     }
@@ -359,7 +364,7 @@ export class Recovery implements RecoveryInterface {
       }))
   }
 
-  async queuePayload(wallet: Address.Address, chainId: bigint, payload: Payload.Calls) {
+  async queuePayload(wallet: Address.Address, chainId: number, payload: Payload.Calls) {
     const signers = await this.getSigners(wallet)
     if (!signers) {
       throw new Error('recovery-signers-not-found')
@@ -468,7 +473,7 @@ export class Recovery implements RecoveryInterface {
     // Create providers for each network
     const providers = this.shared.sequence.networks.map((network) => ({
       chainId: network.chainId,
-      provider: Provider.from(RpcTransport.fromHttp(network.rpc)),
+      provider: Provider.from(RpcTransport.fromHttp(network.rpcUrl)),
     }))
 
     const seenInThisRun = new Set<string>()

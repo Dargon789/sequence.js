@@ -1,5 +1,5 @@
-import { Constants, Payload } from '@0xsequence/wallet-primitives'
 import { Envelope, Relayer, Wallet } from '@0xsequence/wallet-core'
+import { Constants, Payload } from '@0xsequence/wallet-primitives'
 import { Abi, AbiFunction, Address, Hex, Provider, RpcTransport } from 'ox'
 import { v7 as uuidv7 } from 'uuid'
 import { Shared } from './manager.js'
@@ -55,7 +55,7 @@ export interface TransactionsInterface {
    */
   request(
     from: Address.Address,
-    chainId: bigint,
+    chainId: number,
     txs: TransactionRequest[],
     options?: { source?: string; noConfigUpdate?: boolean; unsafe?: boolean; space?: bigint },
   ): Promise<string>
@@ -244,7 +244,7 @@ export class Transactions implements TransactionsInterface {
 
   async request(
     from: Address.Address,
-    chainId: bigint,
+    chainId: number,
     txs: TransactionRequest[],
     options?: {
       source?: string
@@ -258,7 +258,7 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Network not found for ${chainId}`)
     }
 
-    const transport = RpcTransport.fromHttp(network.rpc)
+    const transport = RpcTransport.fromHttp(network.rpcUrl)
     const provider = Provider.from(transport)
     const wallet = new Wallet(from, { stateProvider: this.shared.sequence.stateProvider })
 
@@ -327,11 +327,11 @@ export class Transactions implements TransactionsInterface {
     }
 
     const wallet = new Wallet(tx.wallet, { stateProvider: this.shared.sequence.stateProvider })
-    const provider = Provider.from(
-      RpcTransport.fromHttp(
-        this.shared.sequence.networks.find((network) => network.chainId === tx.envelope.chainId)!.rpc,
-      ),
-    )
+    const network = this.shared.sequence.networks.find((network) => network.chainId === tx.envelope.chainId)
+    if (!network) {
+      throw new Error(`Network not found for ${tx.envelope.chainId}`)
+    }
+    const provider = Provider.from(RpcTransport.fromHttp(network.rpcUrl))
 
     // Get relayer and relayer options
     const [allRelayerOptions, allBundlerOptions] = await Promise.all([
@@ -434,7 +434,7 @@ export class Transactions implements TransactionsInterface {
 
         Address.assert(to)
 
-        if (token === Constants.ZeroAddress) {
+        if (token.contractAddress === Constants.ZeroAddress) {
           tx.envelope.payload.calls.unshift({
             to,
             value: BigInt(value),
@@ -448,7 +448,7 @@ export class Transactions implements TransactionsInterface {
           const [transfer] = Abi.from(['function transfer(address to, uint256 amount) returns (bool)'])
 
           tx.envelope.payload.calls.unshift({
-            to: token,
+            to: token.contractAddress as Address.Address,
             value: 0n,
             data: AbiFunction.encodeData(transfer, [to, BigInt(value)]),
             gasLimit: BigInt(gasLimit),
@@ -523,7 +523,7 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Network not found for ${tx.envelope.chainId}`)
     }
 
-    const transport = RpcTransport.fromHttp(network.rpc)
+    const transport = RpcTransport.fromHttp(network.rpcUrl)
     const provider = Provider.from(transport)
 
     const wallet = new Wallet(tx.wallet, { stateProvider: this.shared.sequence.stateProvider })

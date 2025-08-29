@@ -4,17 +4,11 @@ import {
   MetaTxn as RpcMetaTxn,
   FeeTokenType,
   IntentPrecondition,
-  GetMetaTxnReceiptReturn,
 } from './relayer.gen.js'
 import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../../relayer.js'
 import { Address, Hex, Bytes, AbiFunction } from 'ox'
-import { Constants, Payload, Precondition as PrimitivePrecondition } from '@0xsequence/wallet-primitives'
-import {
-  IntentPrecondition as RpcIntentPrecondition,
-  ETHTxnStatus,
-  FeeOption as RpcFeeOption,
-  FeeToken as RpcFeeToken,
-} from './relayer.gen.js'
+import { Constants, Payload } from '@0xsequence/wallet-primitives'
+import { ETHTxnStatus, FeeToken as RpcFeeToken } from './relayer.gen.js'
 import { decodePrecondition } from '../../../preconditions/index.js'
 import {
   erc20BalanceOf,
@@ -68,13 +62,13 @@ export class RpcRelayer implements Relayer {
     })
   }
 
-  isAvailable(_wallet: Address.Address, chainId: bigint): Promise<boolean> {
-    return Promise.resolve(BigInt(this.chainId) === chainId)
+  isAvailable(_wallet: Address.Address, chainId: number): Promise<boolean> {
+    return Promise.resolve(this.chainId === chainId)
   }
 
   async feeOptions(
     wallet: Address.Address,
-    chainId: bigint,
+    chainId: number,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     const callsStruct: Payload.Calls = { type: 'call', space: 0n, nonce: 0n, calls: calls }
@@ -87,8 +81,16 @@ export class RpcRelayer implements Relayer {
         data: Bytes.toHex(data),
       })
 
-      const options = result.options.map((feeOption) => this.mapRpcFeeOptionToFeeOption(feeOption))
       const quote = result.quote ? ({ _tag: 'FeeQuote', _quote: result.quote } as FeeQuote) : undefined
+      const options = result.options.map((option) => ({
+        token: {
+          ...option.token,
+          contractAddress: this.mapRpcFeeTokenToAddress(option.token),
+        },
+        to: option.to,
+        value: option.value,
+        gasLimit: option.gasLimit,
+      }))
 
       return { options, quote }
     } catch (e) {
@@ -101,7 +103,7 @@ export class RpcRelayer implements Relayer {
     walletAddress: Address.Address,
     to: Address.Address,
     data: Hex.Hex,
-    chainId: bigint,
+    chainId: number,
     quote?: FeeQuote,
     preconditions?: IntentPrecondition[],
   ): Promise<{ opHash: Hex.Hex }> {
@@ -129,7 +131,7 @@ export class RpcRelayer implements Relayer {
   async relay(
     to: Address.Address,
     data: Hex.Hex,
-    chainId: bigint,
+    chainId: number,
     quote?: FeeQuote,
     preconditions?: IntentPrecondition[],
   ): Promise<{ opHash: Hex.Hex }> {
@@ -154,7 +156,7 @@ export class RpcRelayer implements Relayer {
     return { opHash: `0x${result.txnHash}` }
   }
 
-  async status(opHash: Hex.Hex, chainId: bigint): Promise<OperationStatus> {
+  async status(opHash: Hex.Hex, chainId: number): Promise<OperationStatus> {
     try {
       const cleanedOpHash = opHash.startsWith('0x') ? opHash.substring(2) : opHash
       const result = await this.client.getMetaTxnReceipt({ metaTxID: cleanedOpHash })
@@ -361,15 +363,6 @@ export class RpcRelayer implements Relayer {
 
       default:
         return false
-    }
-  }
-
-  private mapRpcFeeOptionToFeeOption(rpcOption: RpcFeeOption): FeeOption {
-    return {
-      token: this.mapRpcFeeTokenToAddress(rpcOption.token),
-      to: rpcOption.to,
-      value: rpcOption.value,
-      gasLimit: rpcOption.gasLimit,
     }
   }
 

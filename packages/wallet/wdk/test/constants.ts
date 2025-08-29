@@ -4,6 +4,7 @@ import { Manager, ManagerOptions, ManagerOptionsDefaults } from '../src/sequence
 import { mockEthereum } from './setup'
 import { Signers as CoreSigners, State, Relayer } from '@0xsequence/wallet-core'
 import * as Db from '../src/dbs'
+import { Network } from '@0xsequence/wallet-primitives'
 
 const envFile = process.env.CI ? '.env.test' : '.env.test.local'
 dotenvConfig({ path: envFile })
@@ -37,9 +38,10 @@ export function newManager(options?: ManagerOptions, noEthereumMock?: boolean, t
     networks: [
       {
         name: 'Arbitrum (local fork)',
-        rpc: LOCAL_RPC_URL,
-        chainId: 42161n,
-        explorer: 'https://arbiscan.io/',
+        type: Network.NetworkType.MAINNET,
+        rpcUrl: LOCAL_RPC_URL,
+        chainId: Network.ChainId.ARBITRUM,
+        blockExplorer: { url: 'https://arbiscan.io/' },
         nativeCurrency: {
           name: 'Ether',
           symbol: 'ETH',
@@ -52,6 +54,7 @@ export function newManager(options?: ManagerOptions, noEthereumMock?: boolean, t
     // This assumes options?.someDb is either undefined or a fully constructed DB instance.
     encryptedPksDb: effectiveOptions.encryptedPksDb || new CoreSigners.Pk.Encrypted.EncryptedPksDb('pk-db' + dbSuffix),
     managerDb: effectiveOptions.managerDb || new Db.Wallets('sequence-manager' + dbSuffix),
+    messagesDb: effectiveOptions.messagesDb || new Db.Messages('sequence-messages' + dbSuffix),
     transactionsDb: effectiveOptions.transactionsDb || new Db.Transactions('sequence-transactions' + dbSuffix),
     signaturesDb: effectiveOptions.signaturesDb || new Db.Signatures('sequence-signature-requests' + dbSuffix),
     authCommitmentsDb:
@@ -68,7 +71,7 @@ export function newRemoteManager(
       relayerPk: string
       bundlerUrl: string
       rpcUrl: string
-      chainId: bigint
+      chainId: number
     }
     tag?: string
   },
@@ -108,9 +111,10 @@ export function newRemoteManager(
     networks: [
       {
         name: 'Remote Test Network',
-        rpc: remoteManagerOptions.network.rpcUrl,
+        type: Network.NetworkType.MAINNET,
+        rpcUrl: remoteManagerOptions.network.rpcUrl,
         chainId: remoteManagerOptions.network.chainId,
-        explorer: 'https://undefined/',
+        blockExplorer: { url: 'https://undefined/' },
         nativeCurrency: {
           name: 'Ether',
           symbol: 'ETH',
@@ -123,6 +127,7 @@ export function newRemoteManager(
     // This assumes options?.someDb is either undefined or a fully constructed DB instance.
     encryptedPksDb: effectiveOptions.encryptedPksDb || new CoreSigners.Pk.Encrypted.EncryptedPksDb('pk-db' + dbSuffix),
     managerDb: effectiveOptions.managerDb || new Db.Wallets('sequence-manager' + dbSuffix),
+    messagesDb: effectiveOptions.messagesDb || new Db.Messages('sequence-messages' + dbSuffix),
     transactionsDb: effectiveOptions.transactionsDb || new Db.Transactions('sequence-transactions' + dbSuffix),
     signaturesDb: effectiveOptions.signaturesDb || new Db.Signatures('sequence-signature-requests' + dbSuffix),
     authCommitmentsDb:

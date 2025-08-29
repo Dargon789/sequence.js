@@ -1,7 +1,8 @@
 import { Abi, AbiFunction, Address, Bytes, Hex, Provider } from 'ox'
-import * as Payload from '../payload.js'
 import * as GenericTree from '../generic-tree.js'
 import { Signature } from '../index.js'
+import * as Network from '../network.js'
+import * as Payload from '../payload.js'
 import { packRSY } from '../utils.js'
 
 export const FLAG_RECOVERY_LEAF = 1
@@ -347,11 +348,11 @@ export function fromRecoveryLeaves(leaves: RecoveryLeaf[]): Tree {
 export function hashRecoveryPayload(
   payload: Payload.MayRecoveryPayload,
   wallet: Address.Address,
-  chainId: bigint,
+  chainId: number,
   noChainId: boolean,
 ): Hex.Hex {
   const recoveryPayload = Payload.toRecovery(payload)
-  return Hex.fromBytes(Payload.hash(wallet, noChainId ? 0n : chainId, recoveryPayload))
+  return Hex.fromBytes(Payload.hash(wallet, noChainId ? 0 : chainId, recoveryPayload))
 }
 
 /**

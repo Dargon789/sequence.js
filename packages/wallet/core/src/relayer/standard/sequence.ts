@@ -1,5 +1,5 @@
 import { ETHTxnStatus, IntentPrecondition, Relayer as Service } from '@0xsequence/relayer'
-import { Constants, Payload } from '@0xsequence/wallet-primitives'
+import { Payload } from '@0xsequence/wallet-primitives'
 import { AbiFunction, Address, Bytes, Hex } from 'ox'
 import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
 
@@ -14,13 +14,13 @@ export class SequenceRelayer implements Relayer {
     this.service = new Service(host, fetch)
   }
 
-  async isAvailable(_wallet: Address.Address, _chainId: bigint): Promise<boolean> {
+  async isAvailable(_wallet: Address.Address, _chainId: number): Promise<boolean> {
     return true
   }
 
   async feeOptions(
     wallet: Address.Address,
-    _chainId: bigint,
+    _chainId: number,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     const to = wallet // TODO: this might be the guest module
@@ -32,17 +32,7 @@ export class SequenceRelayer implements Relayer {
     const { options, quote } = await this.service.feeOptions({ wallet, to, data })
 
     return {
-      options: options.map(({ token: { contractAddress }, to, value, gasLimit }) => {
-        let token: Address.Address
-        if (contractAddress) {
-          Address.assert(contractAddress)
-          token = contractAddress
-        } else {
-          token = Constants.ZeroAddress
-        }
-
-        return { token, to, value, gasLimit }
-      }),
+      options,
       quote: quote ? { _tag: 'FeeQuote', _quote: quote } : undefined,
     }
   }
@@ -52,7 +42,7 @@ export class SequenceRelayer implements Relayer {
     return false
   }
 
-  async relay(to: Address.Address, data: Hex.Hex, _chainId: bigint, quote?: FeeQuote): Promise<{ opHash: Hex.Hex }> {
+  async relay(to: Address.Address, data: Hex.Hex, _chainId: number, quote?: FeeQuote): Promise<{ opHash: Hex.Hex }> {
     const walletAddress = to // TODO: pass wallet address or stop requiring it
 
     const { txnHash } = await this.service.sendMetaTxn({
@@ -63,7 +53,7 @@ export class SequenceRelayer implements Relayer {
     return { opHash: `0x${txnHash}` }
   }
 
-  async status(opHash: Hex.Hex, _chainId: bigint): Promise<OperationStatus> {
+  async status(opHash: Hex.Hex, _chainId: number): Promise<OperationStatus> {
     try {
       const {
         receipt: { status, revertReason, txnReceipt },
