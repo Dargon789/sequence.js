@@ -3,17 +3,30 @@ on: [push]
 name: tests
 
 jobs:
-  install:
-    name: Install dependencies
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/install-dependencies
+      # ... (other steps)
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Start local blockchain node
+        run: npx hardhat node &
+        # Or use npx ganache-cli --port 8545 &
+
+      - name: Wait for node
+        run: |
+          for i in {1..10}; do
+            nc -z localhost 8545 && break
+            sleep 1
+          done
+
+      - name: Run tests
+        run: pnpm run test
 
   build:
     name: Run build
     runs-on: ubuntu-latest
-    needs: [install]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install-dependencies
@@ -23,7 +36,6 @@ jobs:
   tests:
     name: Run all tests
     runs-on: ubuntu-latest
-    needs: [install]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install-dependencies
