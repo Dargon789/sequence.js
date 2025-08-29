@@ -12,6 +12,7 @@ jobs:
 
     - name: Install dependencies
       run: pnpm install
+      working-directory: ./app
 
     - name: Start local blockchain node
       run: npx hardhat node &
