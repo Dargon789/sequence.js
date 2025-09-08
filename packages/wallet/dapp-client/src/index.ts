@@ -4,7 +4,7 @@ export type {
   LoginMethod,
   GuardConfig,
   Transaction,
-  SignatureResponse,
+  SignatureSuccessResponse,
   ChainSessionManagerEvent,
   SequenceSessionStorage,
   RandomPrivateKeyFn,
@@ -16,8 +16,12 @@ export type {
   ConnectSuccessResponsePayload,
   ModifySessionSuccessResponsePayload,
   ModifySessionPayload,
-  DappClientSignatureEventListener,
+  DappClientWalletActionEventListener,
   DappClientExplicitSessionEventListener,
+  TransactionRequest,
+  SendWalletTransactionPayload,
+  SendWalletTransactionSuccessResponse,
+  WalletActionResponse,
 } from './types/index.js'
 export { RequestActionType, TransportMode } from './types/index.js'
 export {
@@ -38,3 +42,6 @@ export type {
   PendingPayload,
 } from './utils/storage.js'
 export { WebStorage } from './utils/storage.js'
+
+export { Permission, Extensions, SessionConfig } from '@0xsequence/wallet-primitives'
+export { Signers, Wallet, Utils, Relayer } from '@0xsequence/wallet-core'

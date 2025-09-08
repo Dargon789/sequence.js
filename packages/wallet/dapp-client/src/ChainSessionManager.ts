@@ -2,7 +2,6 @@ import { Envelope, Relayer, Signers, State, Wallet } from '@0xsequence/wallet-co
 import { Attestation, Constants, Extensions, Payload, SessionConfig } from '@0xsequence/wallet-primitives'
 import * as Guard from '@0xsequence/guard'
 import { AbiFunction, Address, Hex, Provider, RpcTransport, Secp256k1 } from 'ox'
-import { TypedData } from 'ox/TypedData'
 
 import { DappTransport } from './DappTransport.js'
 
@@ -12,7 +11,6 @@ import {
   InitializationError,
   ModifyExplicitSessionError,
   SessionConfigError,
-  SigningError,
   TransactionError,
   WalletRedirectError,
 } from './utils/errors.js'
@@ -30,10 +28,6 @@ import {
   RandomPrivateKeyFn,
   RequestActionType,
   Session,
-  SignatureEventListener,
-  SignatureResponse,
-  SignMessagePayload,
-  SignTypedDataPayload,
   Transaction,
   TransportMode,
   GuardConfig,
@@ -41,7 +35,6 @@ import {
 import { CACHE_DB_NAME, VALUE_FORWARDER_ADDRESS } from './utils/constants.js'
 
 interface ChainSessionManagerEventMap {
-  signatureResponse: SignatureEventListener
   explicitSessionResponse: ExplicitSessionEventListener
 }
 
@@ -707,6 +700,42 @@ export class ChainSessionManager {
   }
 
   /**
+   * Checks if the current session has permission to execute a set of transactions.
+   * @param transactions The transactions to check permissions for.
+   * @returns A promise that resolves to true if the session has permission, false otherwise.
+   */
+  async hasPermission(transactions: Transaction[]): Promise<boolean> {
+    if (!this.wallet || !this.sessionManager || !this.provider || !this.isInitialized) {
+      return false
+    }
+
+    try {
+      const calls: Payload.Call[] = transactions.map((tx) => ({
+        to: tx.to,
+        value: tx.value,
+        data: tx.data,
+        gasLimit: tx.gasLimit ?? BigInt(0),
+        delegateCall: tx.delegateCall ?? false,
+        onlyFallback: tx.onlyFallback ?? false,
+        behaviorOnError: tx.behaviorOnError ?? ('revert' as const),
+      }))
+
+      // Attempt to prepare and sign the transaction. If this succeeds, the session
+      // has the necessary permissions. We don't relay the transaction.
+      await this._buildAndSignCalls(calls)
+      return true
+    } catch (error) {
+      // If building or signing fails, it indicates a lack of permissions or another issue.
+      // For the purpose of this check, we treat it as a permission failure.
+      console.warn(
+        `Permission check failed for chain ${this.chainId}:`,
+        error instanceof Error ? error.message : String(error),
+      )
+      return false
+    }
+  }
+
+  /**
    * Fetches fee options for a set of transactions.
    * @param calls The transactions to estimate fees for.
    * @returns A promise that resolves with an array of fee options.
@@ -811,11 +840,6 @@ export class ChainSessionManager {
     if ('error' in response && response.error) {
       const { action } = response
 
-      if (action === RequestActionType.SIGN_MESSAGE || action === RequestActionType.SIGN_TYPED_DATA) {
-        this.emit('signatureResponse', { action, error: response.error })
-        return true
-      }
-
       if (action === RequestActionType.ADD_EXPLICIT_SESSION || action === RequestActionType.MODIFY_EXPLICIT_SESSION) {
         this.emit('explicitSessionResponse', { action, error: response.error })
         return true
@@ -828,15 +852,6 @@ export class ChainSessionManager {
         response.action === RequestActionType.ADD_EXPLICIT_SESSION
       ) {
         return this._handleRedirectConnectionResponse(response)
-      } else if (
-        response.action === RequestActionType.SIGN_MESSAGE ||
-        response.action === RequestActionType.SIGN_TYPED_DATA
-      ) {
-        this.emit('signatureResponse', {
-          action: response.action,
-          response: response.payload as SignatureResponse,
-        })
-        return true
       } else if (response.action === RequestActionType.MODIFY_EXPLICIT_SESSION) {
         const modifyResponse = response.payload as ModifySessionSuccessResponsePayload
         if (!Address.isEqual(Address.from(modifyResponse.walletAddress), this.walletAddress!)) {
@@ -871,100 +886,6 @@ export class ChainSessionManager {
    */
   getSessions(): Session[] {
     return this.sessions
-  }
-
-  /**
-   * Requests a signature for a standard message (EIP-191).
-   * The signature is delivered via the `signatureResponse` event.
-   * @param message The message to sign.
-   *
-   * @throws {InitializationError} If the session is not initialized.
-   * @throws {SigningError} If the signature request fails.
-   *
-   * @returns A promise that resolves when the signing process is initiated.
-   */
-  async signMessage(message: string): Promise<void> {
-    const payload: SignMessagePayload = {
-      address: this.walletAddress!,
-      message,
-      chainId: this.chainId,
-    }
-    try {
-      await this._requestSignature(RequestActionType.SIGN_MESSAGE, payload)
-    } catch (err) {
-      throw new SigningError(`Signing message failed: ${err instanceof Error ? err.message : String(err)}`)
-    }
-  }
-
-  /**
-   * Requests a signature for typed data (EIP-712).
-   * The signature is delivered via the `signatureResponse` event.
-   * @param typedData The EIP-712 typed data object to sign.
-   *
-   * @throws {InitializationError} If the session is not initialized.
-   * @throws {SigningError} If the signature request fails.
-   *
-   * @returns A promise that resolves when the signing process is initiated.
-   */
-  async signTypedData(typedData: TypedData): Promise<void> {
-    const payload: SignTypedDataPayload = {
-      address: this.walletAddress!,
-      typedData,
-      chainId: this.chainId,
-    }
-    try {
-      await this._requestSignature(RequestActionType.SIGN_TYPED_DATA, payload)
-    } catch (err) {
-      throw new SigningError(`Signing typed data failed: ${err instanceof Error ? err.message : String(err)}`)
-    }
-  }
-
-  /**
-   * @private A generic helper to handle the logic for requesting any type of signature.
-   *
-   * @param action The action to request.
-   * @param payload The payload to send.
-   *
-   * @throws {InitializationError} If the session is not initialized or transport is not available.
-   * @throws {SigningError} If the signature request fails.
-   */
-  private async _requestSignature(
-    action: (typeof RequestActionType)['SIGN_MESSAGE' | 'SIGN_TYPED_DATA'],
-    payload: SignMessagePayload | SignTypedDataPayload,
-  ): Promise<void> {
-    if (!this.isInitialized || !this.walletAddress) {
-      throw new InitializationError('Session not initialized. Cannot request signature.')
-    }
-    if (!this.transport) {
-      throw new InitializationError('Transport is not available.')
-    }
-
-    try {
-      if (this.transport.mode === TransportMode.REDIRECT) {
-        await this.sequenceStorage.savePendingRequest({
-          action,
-          payload,
-          chainId: this.chainId,
-        })
-        await this.sequenceStorage.setPendingRedirectRequest(true)
-        await this.transport.sendRequest(action, this.redirectUrl, payload, {
-          path: '/request/sign',
-        })
-      } else {
-        const response = await this.transport.sendRequest<SignatureResponse>(action, this.redirectUrl, payload, {
-          path: '/request/sign',
-        })
-        this.emit('signatureResponse', { action, response })
-      }
-    } catch (err) {
-      const error = new SigningError(err instanceof Error ? err.message : String(err))
-      this.emit('signatureResponse', { action, error })
-      throw error
-    } finally {
-      if (this.transport.mode === TransportMode.POPUP) {
-        this.transport.closeWallet()
-      }
-    }
   }
 
   /**
