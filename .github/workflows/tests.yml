@@ -1,18 +1,17 @@
 on: [push]
 
 name: tests
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-  # ... other steps ...
+      # ... other steps ...
     - name: Install pnpm
       run: npm install -g pnpm
 
     - name: Install dependencies
       run: pnpm install
-      working-directory: ./app
+      # Remove: working-directory: ./app
 
     - name: Start local blockchain node
       run: npx hardhat node &
