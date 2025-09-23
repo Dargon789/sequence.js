@@ -1,4 +1,4 @@
-import { Signers as CoreSigners, Envelope } from '@0xsequence/wallet-core'
+import { Envelope, type ExplicitSession } from '@0xsequence/wallet-core'
 import {
   Attestation,
   Config,
@@ -13,13 +13,7 @@ import { AuthCodePkceHandler } from './handlers/authcode-pkce.js'
 import { IdentityHandler, identityTypeToHex } from './handlers/identity.js'
 import { ManagerOptionsDefaults, Shared } from './manager.js'
 import { Actions } from './types/signature-request.js'
-import { Kinds, Module } from './types/index.js'
-import { Handler } from './handlers/index.js'
-
-export type AuthorizeImplicitSessionArgs = {
-  target: string
-  applicationData?: Hex.Hex
-}
+import { AuthorizeImplicitSessionArgs } from './types/sessions.js'
 
 export interface SessionsInterface {
   /**
@@ -92,16 +86,11 @@ export interface SessionsInterface {
    * completed using the `complete` method.
    *
    * @param walletAddress The address of the wallet to modify.
-   * @param sessionAddress The address of the key to be added as a session signer.
    * @param permissions The set of rules and limits that will govern this session key's capabilities.
    * @returns A promise that resolves to a `requestId` for the configuration update signature request.
    * @see {complete} to finalize the update after it has been signed.
    */
-  addExplicitSession(
-    walletAddress: Address.Address,
-    sessionAddress: Address.Address,
-    permissions: CoreSigners.Session.ExplicitParams,
-  ): Promise<string>
+  addExplicitSession(walletAddress: Address.Address, explicitSession: ExplicitSession): Promise<string>
 
   /**
    * Initiates an on-chain configuration update to modify an existing "explicit session".
@@ -113,7 +102,6 @@ export interface SessionsInterface {
    * Like adding a session, this requires a signed configuration update.
    *
    * @param walletAddress The address of the wallet to modify.
-   * @param sessionAddress The address of the session signer to modify.
    * @param permissions The new, complete set of rules and limits for this session key.
    * @param origin Optional string to identify the source of the request.
    * @returns A promise that resolves to a `requestId` for the configuration update.
@@ -121,8 +109,7 @@ export interface SessionsInterface {
    */
   modifyExplicitSession(
     walletAddress: Address.Address,
-    sessionAddress: Address.Address,
-    permissions: CoreSigners.Session.ExplicitParams,
+    explicitSession: ExplicitSession,
     origin?: string,
   ): Promise<string>
 
@@ -187,24 +174,17 @@ export class Sessions implements SessionsInterface {
   constructor(private readonly shared: Shared) {}
 
   async getTopology(walletAddress: Address.Address, fixMissing = false): Promise<SessionConfig.SessionsTopology> {
-    const { loginTopology, devicesTopology, modules } =
-      await this.shared.modules.wallets.getConfigurationParts(walletAddress)
+    const { loginTopology, modules } = await this.shared.modules.wallets.getConfigurationParts(walletAddress)
     const managerModule = modules.find((m) =>
       Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.sessions),
     )
     if (!managerModule) {
       if (fixMissing) {
         // Create the default session manager leaf
-        const authorizedSigners = [...Config.topologyToFlatLeaves([devicesTopology, loginTopology])].filter(
-          Config.isSignerLeaf,
-        )
-        if (authorizedSigners.length === 0) {
-          throw new Error('No signer leaves found')
+        if (!Config.isSignerLeaf(loginTopology) && !Config.isSapientSignerLeaf(loginTopology)) {
+          throw new Error('Login topology is not a signer leaf')
         }
-        let sessionsTopology = SessionConfig.emptySessionsTopology(authorizedSigners[0]!.address)
-        for (let i = 1; i < authorizedSigners.length; i++) {
-          sessionsTopology = SessionConfig.addIdentitySigner(sessionsTopology, authorizedSigners[i]!.address)
-        }
+        const sessionsTopology = SessionConfig.emptySessionsTopology(loginTopology.address)
         const sessionsConfigTree = SessionConfig.sessionsTopologyToConfigurationTree(sessionsTopology)
         this.shared.sequence.stateProvider.saveTree(sessionsConfigTree)
         const imageHash = GenericTree.hash(sessionsConfigTree)
@@ -229,133 +209,23 @@ export class Sessions implements SessionsInterface {
     return SessionConfig.configurationTreeToSessionsTopology(tree)
   }
 
-  private async updateSessionModule(
-    modules: Module[],
-    transformer: (topology: SessionConfig.SessionsTopology) => SessionConfig.SessionsTopology,
-  ) {
-    const ext = this.shared.sequence.extensions.sessions
-    const idx = modules.findIndex((m) => Address.isEqual(m.sapientLeaf.address, ext))
-    if (idx === -1) {
-      return
-    }
-
-    const sessionModule = modules[idx]
-    if (!sessionModule) {
-      throw new Error('session-module-not-found')
-    }
-
-    const genericTree = await this.shared.sequence.stateProvider.getTree(sessionModule.sapientLeaf.imageHash)
-    if (!genericTree) {
-      throw new Error('session-module-tree-not-found')
-    }
-
-    const topology = SessionConfig.configurationTreeToSessionsTopology(genericTree)
-    const nextTopology = transformer(topology)
-    const nextTree = SessionConfig.sessionsTopologyToConfigurationTree(nextTopology)
-    await this.shared.sequence.stateProvider.saveTree(nextTree)
-    if (!modules[idx]) {
-      throw new Error('session-module-not-found-(unreachable)')
-    }
-
-    modules[idx].sapientLeaf.imageHash = GenericTree.hash(nextTree)
-  }
-
-  hasSessionModule(modules: Module[]): boolean {
-    return modules.some((m) => Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.sessions))
-  }
-
-  async initSessionModule(modules: Module[], identitySigners: Address.Address[], guardTopology?: Config.NestedLeaf) {
-    if (this.hasSessionModule(modules)) {
-      throw new Error('session-module-already-initialized')
-    }
-
-    if (identitySigners.length === 0) {
-      throw new Error('No identity signers provided')
-    }
-
-    // Calculate image hash with the identity signers
-    const sessionsTopology = SessionConfig.emptySessionsTopology(
-      identitySigners as [Address.Address, ...Address.Address[]],
-    )
-    // Store this tree in the state provider
-    const sessionsConfigTree = SessionConfig.sessionsTopologyToConfigurationTree(sessionsTopology)
-    this.shared.sequence.stateProvider.saveTree(sessionsConfigTree)
-    // Prepare the configuration leaf
-    const sessionsImageHash = GenericTree.hash(sessionsConfigTree)
-    const signer = {
-      ...ManagerOptionsDefaults.defaultSessionsTopology,
-      address: this.shared.sequence.extensions.sessions,
-      imageHash: sessionsImageHash,
-    }
-    modules.push({
-      sapientLeaf: signer,
-      weight: 255n,
-      guardLeaf: guardTopology,
-    })
-  }
-
-  async addIdentitySignerToModules(modules: Module[], address: Address.Address) {
-    if (!this.hasSessionModule(modules)) {
-      throw new Error('session-module-not-enabled')
-    }
-
-    await this.updateSessionModule(modules, (topology) => {
-      const existingSigners = SessionConfig.getIdentitySigners(topology)
-      if (existingSigners?.some((s) => Address.isEqual(s, address))) {
-        return topology
-      }
-
-      return SessionConfig.addIdentitySigner(topology, address)
-    })
-  }
-
-  async removeIdentitySignerFromModules(modules: Module[], address: Address.Address) {
-    if (!this.hasSessionModule(modules)) {
-      throw new Error('session-module-not-enabled')
-    }
-
-    await this.updateSessionModule(modules, (topology) => {
-      const newTopology = SessionConfig.removeIdentitySigner(topology, address)
-      if (!newTopology) {
-        // Can't remove the last identity signer
-        throw new Error('Cannot remove the last identity signer')
-      }
-      return newTopology
-    })
-  }
-
   async prepareAuthorizeImplicitSession(
     walletAddress: Address.Address,
     sessionAddress: Address.Address,
     args: AuthorizeImplicitSessionArgs,
   ): Promise<string> {
     const topology = await this.getTopology(walletAddress)
-    const identitySigners = SessionConfig.getIdentitySigners(topology)
-    if (identitySigners.length === 0) {
-      throw new Error('No identity signers found')
+    const identitySignerAddress = SessionConfig.getIdentitySigner(topology)
+    if (!identitySignerAddress) {
+      throw new Error('No identity signer address found')
     }
-    let handler: Handler | undefined
-    let identitySignerAddress: Address.Address | undefined
-    for (const identitySigner of identitySigners) {
-      const identityKind = await this.shared.modules.signers.kindOf(walletAddress, identitySigner)
-      if (!identityKind) {
-        console.warn('No identity handler kind found for', identitySigner)
-        continue
-      }
-      if (identityKind === Kinds.LoginPasskey) {
-        console.warn('Implicit sessions do not support passkeys', identitySigner)
-        continue
-      }
-      const iHandler = this.shared.handlers.get(identityKind)
-      if (iHandler) {
-        handler = iHandler
-        identitySignerAddress = identitySigner
-        break
-      }
+    const identityKind = await this.shared.modules.signers.kindOf(walletAddress, identitySignerAddress)
+    if (!identityKind) {
+      throw new Error('No identity handler kind found')
     }
-
-    if (!handler || !identitySignerAddress) {
-      throw new Error('No identity handler or address found')
+    const handler = this.shared.handlers.get(identityKind)
+    if (!handler) {
+      throw new Error('No identity handler found')
     }
 
     // Create the attestation to sign
@@ -444,33 +314,31 @@ export class Sessions implements SessionsInterface {
 
   async addExplicitSession(
     walletAddress: Address.Address,
-    sessionAddress: Address.Address,
-    permissions: CoreSigners.Session.ExplicitParams,
+    explicitSession: ExplicitSession,
     origin?: string,
   ): Promise<string> {
     const topology = await this.getTopology(walletAddress, true)
     const newTopology = SessionConfig.addExplicitSession(topology, {
-      ...permissions,
-      signer: sessionAddress,
+      ...explicitSession,
+      signer: explicitSession.sessionAddress,
     })
     return this.prepareSessionUpdate(walletAddress, newTopology, origin)
   }
 
   async modifyExplicitSession(
     walletAddress: Address.Address,
-    sessionAddress: Address.Address,
-    permissions: CoreSigners.Session.ExplicitParams,
+    explicitSession: ExplicitSession,
     origin?: string,
   ): Promise<string> {
     // This will add the session manager if it's missing
     const topology = await this.getTopology(walletAddress, true)
-    const intermediateTopology = SessionConfig.removeExplicitSession(topology, sessionAddress)
+    const intermediateTopology = SessionConfig.removeExplicitSession(topology, explicitSession.sessionAddress)
     if (!intermediateTopology) {
       throw new Error('Incomplete session topology')
     }
     const newTopology = SessionConfig.addExplicitSession(intermediateTopology, {
-      ...permissions,
-      signer: sessionAddress,
+      ...explicitSession,
+      signer: explicitSession.sessionAddress,
     })
     return this.prepareSessionUpdate(walletAddress, newTopology, origin)
   }
