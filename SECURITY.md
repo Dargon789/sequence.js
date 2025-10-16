@@ -13,8 +13,6 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+We take all security vulnerabilities seriously. To report a security vulnerability, please send an email with the details to `security@sequence.xyz`.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+You can expect a response from our team within 48 hours to acknowledge receipt of your report. If the vulnerability is accepted, we will work with you to coordinate a release and public disclosure. We appreciate your efforts to responsibly disclose your findings.
