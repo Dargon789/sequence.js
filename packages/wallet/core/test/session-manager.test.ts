@@ -4,8 +4,16 @@ import { describe, expect, it } from 'vitest'
 import { Attestation, GenericTree, Payload, Permission, SessionConfig } from '../../primitives/src/index.js'
 import { Envelope, Signers, State, Utils, Wallet } from '../src/index.js'
 
-import { EMITTER_FUNCTIONS, EMITTER_ADDRESS, EMITTER_EVENT_TOPICS, LOCAL_RPC_URL, USDC_ADDRESS } from './constants'
+import {
+  EMITTER_FUNCTIONS,
+  EMITTER_ADDRESS1,
+  EMITTER_ADDRESS2,
+  EMITTER_EVENT_TOPICS,
+  LOCAL_RPC_URL,
+  USDC_ADDRESS,
+} from './constants'
 import { Extensions } from '@0xsequence/wallet-primitives'
+import { ExplicitSessionConfig } from '../../wdk/src/sequence/types/sessions.js'
 
 const { PermissionBuilder, ERC20PermissionBuilder } = Utils
 
@@ -45,10 +53,26 @@ for (const extension of ALL_EXTENSIONS) {
   describe(`SessionManager (${extension.name})`, () => {
     const timeout = 30000
 
-    const identityPrivateKey = Secp256k1.randomPrivateKey()
-    const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
-
-    const stateProvider = new State.Local.Provider()
+    const createImplicitSigner = async (redirectUrl: string, signingKey: Hex.Hex) => {
+      const implicitPrivateKey = Secp256k1.randomPrivateKey()
+      const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
+      const attestation: Attestation.Attestation = {
+        approvedSigner: implicitAddress,
+        identityType: new Uint8Array(4),
+        issuerHash: new Uint8Array(32),
+        audienceHash: new Uint8Array(32),
+        applicationData: new Uint8Array(),
+        authData: {
+          redirectUrl,
+          issuedAt: BigInt(Math.floor(Date.now() / 1000)),
+        },
+      }
+      const identitySignature = Secp256k1.sign({
+        payload: Attestation.hash(attestation),
+        privateKey: signingKey,
+      })
+      return new Signers.Session.Implicit(implicitPrivateKey, attestation, identitySignature, implicitAddress)
+    }
 
     it(
       'should load from state',
@@ -56,9 +80,14 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         let topology = SessionConfig.emptySessionsTopology(identityAddress)
         // Add random signer to the topology
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 1000000000000000000n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -121,7 +150,7 @@ for (const extension of ALL_EXTENSIONS) {
         const actualImageHash = await sessionManager.imageHash
         expect(actualImageHash).toBe(imageHash)
         expect(SessionConfig.isCompleteSessionsTopology(actualTopology)).toBe(true)
-        expect(SessionConfig.getIdentitySigner(actualTopology)).toBe(identityAddress)
+        expect(SessionConfig.getIdentitySigners(actualTopology)).toStrictEqual([identityAddress])
         expect(SessionConfig.getImplicitBlacklist(actualTopology)).toStrictEqual([randomBlacklistAddress])
         const actualPermissions = SessionConfig.getSessionPermissions(actualTopology, randomSigner)
         expect(actualPermissions).toStrictEqual({
@@ -137,6 +166,11 @@ for (const extension of ALL_EXTENSIONS) {
       'should create and sign with an implicit session',
       async () => {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
 
         // Create implicit signer
         const implicitPrivateKey = Secp256k1.randomPrivateKey()
@@ -171,7 +205,11 @@ for (const extension of ALL_EXTENSIONS) {
           {
             threshold: 1n,
             checkpoint: 0n,
-            topology: { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+            topology: [
+              { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+              // Include a random node leaf (bytes32) to prevent image hash collision
+              Hex.random(32),
+            ],
           },
           {
             stateProvider,
@@ -184,7 +222,7 @@ for (const extension of ALL_EXTENSIONS) {
 
         // Create a test transaction
         const call: Payload.Call = {
-          to: EMITTER_ADDRESS,
+          to: EMITTER_ADDRESS1,
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
           gasLimit: 0n,
@@ -215,24 +253,184 @@ for (const extension of ALL_EXTENSIONS) {
       timeout,
     )
 
+    it(
+      'should create and sign with a multiple implicit sessions',
+      async () => {
+        const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
+        const implicitSigner1 = await createImplicitSigner('https://example.com', identityPrivateKey)
+        const implicitSigner2 = await createImplicitSigner('https://another-example.com', identityPrivateKey)
+        const topology = SessionConfig.emptySessionsTopology(identityAddress)
+        await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const wallet = await Wallet.fromConfiguration(
+          {
+            threshold: 1n,
+            checkpoint: 0n,
+            topology: [
+              { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+              // Include a random node leaf (bytes32) to prevent image hash collision
+              Hex.random(32),
+            ],
+          },
+          {
+            stateProvider,
+          },
+        )
+        const sessionManager = new Signers.SessionManager(wallet, {
+          provider,
+          sessionManagerAddress: extension.sessions,
+        })
+          .withImplicitSigner(implicitSigner1)
+          .withImplicitSigner(implicitSigner2)
+
+        // Create a test transaction
+        const payload: Payload.Parented = {
+          type: 'call',
+          nonce: 0n,
+          space: 0n,
+          calls: [
+            {
+              to: EMITTER_ADDRESS1,
+              value: 0n,
+              data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+            {
+              to: EMITTER_ADDRESS2,
+              value: 0n,
+              data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+          ],
+          parentWallets: [wallet.address],
+        }
+
+        // Sign the transaction
+        const chainId = Number(await provider.request({ method: 'eth_chainId' }))
+        const signature = await sessionManager.signSapient(wallet.address, chainId, payload, imageHash)
+
+        expect(signature.type).toBe('sapient')
+        expect(signature.address).toBe(sessionManager.address)
+        expect(signature.data).toBeDefined()
+
+        // Check if the signature is valid
+        const isValid = await sessionManager.isValidSapientSignature(wallet.address, chainId, payload, signature)
+        expect(isValid).toBe(true)
+      },
+      timeout,
+    )
+
+    it(
+      'should fail to sign with a multiple implicit sessions with different identity signers',
+      async () => {
+        const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
+        const identityPrivateKey2 = Secp256k1.randomPrivateKey()
+        const identityAddress2 = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey2 }))
+
+        const implicitSigner1 = await createImplicitSigner('https://example.com', identityPrivateKey)
+        const implicitSigner2 = await createImplicitSigner('https://another-example.com', identityPrivateKey2)
+        let topology = SessionConfig.emptySessionsTopology(identityAddress)
+        topology = SessionConfig.addIdentitySigner(topology, identityAddress2)
+        await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const wallet = await Wallet.fromConfiguration(
+          {
+            threshold: 1n,
+            checkpoint: 0n,
+            topology: [
+              { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+              // Include a random node leaf (bytes32) to prevent image hash collision
+              Hex.random(32),
+            ],
+          },
+          {
+            stateProvider,
+          },
+        )
+        const sessionManager = new Signers.SessionManager(wallet, {
+          provider,
+          sessionManagerAddress: extension.sessions,
+        })
+          .withImplicitSigner(implicitSigner1)
+          .withImplicitSigner(implicitSigner2)
+
+        // Create a test transaction
+        const payload: Payload.Parented = {
+          type: 'call',
+          nonce: 0n,
+          space: 0n,
+          calls: [
+            {
+              to: EMITTER_ADDRESS1,
+              value: 0n,
+              data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+            {
+              to: EMITTER_ADDRESS2,
+              value: 0n,
+              data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+          ],
+          parentWallets: [wallet.address],
+        }
+
+        // Sign the transaction
+        const chainId = Number(await provider.request({ method: 'eth_chainId' }))
+        await expect(sessionManager.signSapient(wallet.address, chainId, payload, imageHash)).rejects.toThrow(
+          'Multiple implicit signers with different identity signers',
+        )
+      },
+      timeout,
+    )
+
     const shouldCreateAndSignWithExplicitSession = async (useChainId: boolean) => {
       const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
       const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+      // Create unique identity and state provider for this test
+      const identityPrivateKey = Secp256k1.randomPrivateKey()
+      const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+      const stateProvider = new State.Local.Provider()
+
       // Create explicit signer
       const explicitPrivateKey = Secp256k1.randomPrivateKey()
-      const explicitPermissions: Signers.Session.ExplicitParams = {
+      const explicitPermissions: ExplicitSessionConfig = {
         chainId: useChainId ? chainId : 0,
         valueLimit: 1000000000000000000n, // 1 ETH
         deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
-        permissions: [PermissionBuilder.for(EMITTER_ADDRESS).allowAll().build()],
+        permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
       }
       const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
       // Create the topology and wallet
       const topology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
         ...explicitPermissions,
         signer: explicitSigner.address,
-        chainId,
       })
       await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
       const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
@@ -240,7 +438,11 @@ for (const extension of ALL_EXTENSIONS) {
         {
           threshold: 1n,
           checkpoint: 0n,
-          topology: { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+          topology: [
+            { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+            // Include a random node leaf (bytes32) to prevent image hash collision
+            Hex.random(32),
+          ],
         },
         {
           stateProvider,
@@ -254,7 +456,7 @@ for (const extension of ALL_EXTENSIONS) {
 
       // Create a test transaction within permissions
       const call: Payload.Call = {
-        to: EMITTER_ADDRESS,
+        to: EMITTER_ADDRESS1,
         value: 0n,
         data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
         gasLimit: 0n,
@@ -293,6 +495,75 @@ for (const extension of ALL_EXTENSIONS) {
       'should create and sign with an explicit session with 0 chainId',
       async () => {
         await shouldCreateAndSignWithExplicitSession(false)
+      },
+      timeout,
+    )
+
+    it(
+      'should fail to sign with an expired explicit session',
+      async () => {
+        const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
+        const chainId = 0
+
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const explicitPermissions: Signers.Session.ExplicitParams = {
+          chainId,
+          valueLimit: 1000000000000000000n, // 1 ETH
+          deadline: BigInt(Math.floor(Date.now() / 1000) - 3600), // 1 hour ago
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
+        }
+        const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
+        // Create the topology and wallet
+        const topology = SessionConfig.addExplicitSession(SessionConfig.emptySessionsTopology(identityAddress), {
+          ...explicitPermissions,
+          signer: explicitSigner.address,
+          chainId,
+        })
+        await stateProvider.saveTree(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const imageHash = GenericTree.hash(SessionConfig.sessionsTopologyToConfigurationTree(topology))
+        const wallet = await Wallet.fromConfiguration(
+          {
+            threshold: 1n,
+            checkpoint: 0n,
+            topology: { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+          },
+          {
+            stateProvider,
+          },
+        )
+        // Create the session manager
+        const sessionManager = new Signers.SessionManager(wallet, {
+          provider,
+          sessionManagerAddress: extension.sessions,
+        }).withExplicitSigner(explicitSigner)
+
+        // Create a test transaction within permissions
+        const call: Payload.Call = {
+          to: EMITTER_ADDRESS1,
+          value: 0n,
+          data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
+          gasLimit: 0n,
+          delegateCall: false,
+          onlyFallback: false,
+          behaviorOnError: 'revert',
+        }
+        const payload: Payload.Calls = {
+          type: 'call',
+          nonce: 0n,
+          space: 0n,
+          calls: [call],
+        }
+
+        // Sign the transaction
+        expect(sessionManager.signSapient(wallet.address, chainId, payload, imageHash)).rejects.toThrow(
+          `Signer supporting call is expired: ${explicitSigner.address}`,
+        )
       },
       timeout,
     )
@@ -367,6 +638,11 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create an implicit signer
         const implicitPrivateKey = Secp256k1.randomPrivateKey()
         const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
@@ -417,7 +693,7 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
-          to: EMITTER_ADDRESS,
+          to: EMITTER_ADDRESS1,
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
           gasLimit: 0n,
@@ -439,13 +715,18 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
-          permissions: [PermissionBuilder.for(EMITTER_ADDRESS).allowAll().build()],
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
         }
         const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
         // Test manually building the session topology
@@ -485,7 +766,7 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
-          to: EMITTER_ADDRESS,
+          to: EMITTER_ADDRESS1,
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
           gasLimit: 0n,
@@ -507,13 +788,18 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 0n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
-          permissions: [PermissionBuilder.for(EMITTER_ADDRESS).forFunction(EMITTER_FUNCTIONS[0]).onlyOnce().build()],
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).forFunction(EMITTER_FUNCTIONS[0]).onlyOnce().build()],
         }
         const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
         // Test manually building the session topology
@@ -553,7 +839,7 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
-          to: EMITTER_ADDRESS,
+          to: EMITTER_ADDRESS1,
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
           gasLimit: 0n,
@@ -594,11 +880,16 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
         const approveAmount = 10000000n // 10 USDC
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 0n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -692,10 +983,15 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -797,10 +1093,15 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -916,10 +1217,15 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+        // Create unique identity and state provider for this test
+        const identityPrivateKey = Secp256k1.randomPrivateKey()
+        const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+        const stateProvider = new State.Local.Provider()
+
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
-        const sessionPermission: Signers.Session.ExplicitParams = {
+        const sessionPermission: ExplicitSessionConfig = {
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now

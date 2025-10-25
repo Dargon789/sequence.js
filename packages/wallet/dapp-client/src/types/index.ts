@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Relayer } from '@0xsequence/relayer'
+import { ExplicitSession } from '@0xsequence/wallet-core'
 import { Attestation, Payload } from '@0xsequence/wallet-primitives'
-import { Signers } from '@0xsequence/wallet-core'
 import { Address, Hex } from 'ox'
 import type { TypedData } from 'ox/TypedData'
 
 // --- Public Interfaces and Constants ---
+
+export type FeeToken = Relayer.FeeToken
+export type FeeOption = Relayer.FeeOption
+export type OperationFailedStatus = Relayer.OperationFailedStatus
+export type OperationStatus = Relayer.OperationStatus
 
 export const RequestActionType = {
   CREATE_NEW_SESSION: 'createNewSession',
@@ -25,25 +31,22 @@ export interface GuardConfig {
 // --- Payloads for Transport ---
 
 export interface CreateNewSessionPayload {
-  sessionAddress: Address.Address
-  origin: string
-  permissions?: Signers.Session.ExplicitParams
+  origin?: string
+  session?: ExplicitSession
   includeImplicitSession?: boolean
   preferredLoginMethod?: LoginMethod
   email?: string
 }
 
 export interface AddExplicitSessionPayload {
-  sessionAddress: Address.Address
-  permissions: Signers.Session.ExplicitParams
+  session: ExplicitSession
   preferredLoginMethod?: LoginMethod
   email?: string
 }
 
-export interface ModifySessionPayload {
+export interface ModifyExplicitSessionPayload {
   walletAddress: Address.Address
-  sessionAddress: Address.Address
-  permissions: Signers.Session.ExplicitParams
+  session: ExplicitSession
 }
 
 export interface SignMessagePayload {
@@ -58,6 +61,12 @@ export interface SignTypedDataPayload {
   chainId: number
 }
 
+export interface SendWalletTransactionPayload {
+  address: Address.Address
+  transactionRequest: TransactionRequest
+  chainId: number
+}
+
 export type TransactionRequest = {
   to: Address.Address
   value?: bigint
@@ -65,13 +74,7 @@ export type TransactionRequest = {
   gasLimit?: bigint
 }
 
-export interface SendWalletTransactionPayload {
-  address: Address.Address
-  transactionRequest: TransactionRequest
-  chainId: number
-}
-
-export interface ConnectSuccessResponsePayload {
+export interface CreateNewSessionResponse {
   walletAddress: string
   attestation?: Attestation.Attestation
   signature?: Hex.Hex
@@ -80,27 +83,22 @@ export interface ConnectSuccessResponsePayload {
   guard?: GuardConfig
 }
 
-export interface AddExplicitSessionSuccessResponsePayload {
-  walletAddress: string
-  sessionAddress: string
-}
-
-export interface ModifySessionSuccessResponsePayload {
-  walletAddress: string
-  sessionAddress: string
-}
-
-export interface SignatureSuccessResponse {
+export interface SignatureResponse {
   signature: Hex.Hex
   walletAddress: string
 }
 
-export interface SendWalletTransactionSuccessResponse {
+export interface SendWalletTransactionResponse {
   transactionHash: Hex.Hex
   walletAddress: string
 }
 
-export type WalletActionResponse = SignatureSuccessResponse | SendWalletTransactionSuccessResponse
+export type WalletActionResponse = SignatureResponse | SendWalletTransactionResponse
+
+export interface SessionResponse {
+  walletAddress: string
+  sessionAddress: string
+}
 
 // --- Dapp-facing Types ---
 
@@ -114,20 +112,11 @@ export type Transaction =
     // All other properties from Payload.Call, but optional
     Partial<Omit<Payload.Call, RequiredKeys>>
 
-export type Session = {
-  address: Address.Address
-  isImplicit: boolean
-  permissions?: Signers.Session.ExplicitParams
-  chainId?: number
-}
-
 // --- Event Types ---
-
-export type ChainSessionManagerEvent = 'sessionsUpdated' | 'explicitSessionResponse'
 
 export type ExplicitSessionEventListener = (data: {
   action: (typeof RequestActionType)['ADD_EXPLICIT_SESSION' | 'MODIFY_EXPLICIT_SESSION']
-  response?: AddExplicitSessionSuccessResponsePayload | ModifySessionSuccessResponsePayload
+  response?: SessionResponse
   error?: any
 }) => void
 
@@ -143,7 +132,7 @@ export type DappClientWalletActionEventListener = (data: {
 
 export type DappClientExplicitSessionEventListener = (data: {
   action: (typeof RequestActionType)['ADD_EXPLICIT_SESSION' | 'MODIFY_EXPLICIT_SESSION']
-  response?: AddExplicitSessionSuccessResponsePayload | ModifySessionSuccessResponsePayload
+  response?: SessionResponse
   error?: any
   chainId: number
 }) => void
@@ -182,24 +171,6 @@ export interface TransportMessage<T = any> {
   error?: any
 }
 
-export interface BaseRequest {
-  type: string
-}
-
-export interface MessageSignatureRequest extends BaseRequest {
-  type: 'message_signature'
-  message: string
-  address: Address.Address
-  chainId: number
-}
-
-export interface TypedDataSignatureRequest extends BaseRequest {
-  type: 'typed_data_signature'
-  typedData: unknown
-  address: Address.Address
-  chainId: number
-}
-
 export const WalletSize = {
   width: 380,
   height: 600,
@@ -211,8 +182,13 @@ export interface PendingRequest {
   timer: number
   action: string
 }
-
 export interface SendRequestOptions {
   timeout?: number
   path?: string
+}
+
+export type GetFeeTokensResponse = {
+  isFeeRequired: boolean
+  tokens?: FeeToken[]
+  paymentAddress?: Address.Address
 }

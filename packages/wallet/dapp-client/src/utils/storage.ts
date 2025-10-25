@@ -1,16 +1,17 @@
-import { Attestation } from '@0xsequence/wallet-primitives'
 import { Address, Hex } from 'ox'
 import { jsonReplacers, jsonRevivers } from './index.js'
 import {
-  AddExplicitSessionPayload,
-  CreateNewSessionPayload,
-  ModifySessionPayload,
   LoginMethod,
   SignMessagePayload,
   SignTypedDataPayload,
   GuardConfig,
   SendWalletTransactionPayload,
+  ModifyExplicitSessionPayload,
+  CreateNewSessionPayload,
+  AddExplicitSessionPayload,
 } from '../types/index.js'
+
+import { Attestation } from '../index.js'
 
 export interface ExplicitSessionData {
   pk: Hex.Hex
@@ -32,10 +33,17 @@ export interface ImplicitSessionData {
   guard?: GuardConfig
 }
 
+export interface SessionlessConnectionData {
+  walletAddress: Address.Address
+  loginMethod?: LoginMethod
+  userEmail?: string
+  guard?: GuardConfig
+}
+
 export type PendingPayload =
   | CreateNewSessionPayload
   | AddExplicitSessionPayload
-  | ModifySessionPayload
+  | ModifyExplicitSessionPayload
   | SignMessagePayload
   | SignTypedDataPayload
   | SendWalletTransactionPayload
@@ -65,6 +73,14 @@ export interface SequenceStorage {
   getImplicitSession(): Promise<ImplicitSessionData | null>
   clearImplicitSession(): Promise<void>
 
+  saveSessionlessConnection(sessionData: SessionlessConnectionData): Promise<void>
+  getSessionlessConnection(): Promise<SessionlessConnectionData | null>
+  clearSessionlessConnection(): Promise<void>
+
+  saveSessionlessConnectionSnapshot?(sessionData: SessionlessConnectionData): Promise<void>
+  getSessionlessConnectionSnapshot?(): Promise<SessionlessConnectionData | null>
+  clearSessionlessConnectionSnapshot?(): Promise<void>
+
   clearAllData(): Promise<void>
 }
 
@@ -73,6 +89,8 @@ const DB_VERSION = 1
 const STORE_NAME = 'userKeys'
 const IMPLICIT_SESSIONS_IDB_KEY = 'SequenceImplicitSession'
 const EXPLICIT_SESSIONS_IDB_KEY = 'SequenceExplicitSession'
+const SESSIONLESS_CONNECTION_IDB_KEY = 'SequenceSessionlessConnection'
+const SESSIONLESS_CONNECTION_SNAPSHOT_IDB_KEY = 'SequenceSessionlessConnectionSnapshot'
 
 const PENDING_REDIRECT_REQUEST_KEY = 'SequencePendingRedirect'
 const TEMP_SESSION_PK_KEY = 'SequencePendingTempSessionPk'
@@ -254,6 +272,60 @@ export class WebStorage implements SequenceStorage {
     }
   }
 
+  async saveSessionlessConnection(sessionData: SessionlessConnectionData): Promise<void> {
+    try {
+      await this.setIDBItem(SESSIONLESS_CONNECTION_IDB_KEY, sessionData)
+    } catch (error) {
+      console.error('Failed to save sessionless connection:', error)
+      throw error
+    }
+  }
+
+  async getSessionlessConnection(): Promise<SessionlessConnectionData | null> {
+    try {
+      return (await this.getIDBItem<SessionlessConnectionData>(SESSIONLESS_CONNECTION_IDB_KEY)) ?? null
+    } catch (error) {
+      console.error('Failed to retrieve sessionless connection:', error)
+      return null
+    }
+  }
+
+  async clearSessionlessConnection(): Promise<void> {
+    try {
+      await this.deleteIDBItem(SESSIONLESS_CONNECTION_IDB_KEY)
+    } catch (error) {
+      console.error('Failed to clear sessionless connection:', error)
+      throw error
+    }
+  }
+
+  async saveSessionlessConnectionSnapshot(sessionData: SessionlessConnectionData): Promise<void> {
+    try {
+      await this.setIDBItem(SESSIONLESS_CONNECTION_SNAPSHOT_IDB_KEY, sessionData)
+    } catch (error) {
+      console.error('Failed to save sessionless connection snapshot:', error)
+      throw error
+    }
+  }
+
+  async getSessionlessConnectionSnapshot(): Promise<SessionlessConnectionData | null> {
+    try {
+      return (await this.getIDBItem<SessionlessConnectionData>(SESSIONLESS_CONNECTION_SNAPSHOT_IDB_KEY)) ?? null
+    } catch (error) {
+      console.error('Failed to retrieve sessionless connection snapshot:', error)
+      return null
+    }
+  }
+
+  async clearSessionlessConnectionSnapshot(): Promise<void> {
+    try {
+      await this.deleteIDBItem(SESSIONLESS_CONNECTION_SNAPSHOT_IDB_KEY)
+    } catch (error) {
+      console.error('Failed to clear sessionless connection snapshot:', error)
+      throw error
+    }
+  }
+
   async clearAllData(): Promise<void> {
     try {
       // Clear all session storage items
@@ -264,6 +336,8 @@ export class WebStorage implements SequenceStorage {
       // Clear all IndexedDB items
       await this.clearExplicitSessions()
       await this.clearImplicitSession()
+      await this.clearSessionlessConnection()
+      await this.clearSessionlessConnectionSnapshot()
     } catch (error) {
       console.error('Failed to clear all data:', error)
       throw error

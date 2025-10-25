@@ -3,15 +3,16 @@ import {
   Extensions,
   Payload,
   Signature as SequenceSignature,
+  SessionConfig,
   SessionSignature,
 } from '@0xsequence/wallet-primitives'
 import { AbiFunction, Address, Bytes, Hex, Provider, Secp256k1, Signature } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
-import { SessionSigner } from './session.js'
+import { ImplicitSessionSigner, SessionSignerValidity } from './session.js'
 
 export type AttestationParams = Omit<Attestation.Attestation, 'approvedSigner'>
 
-export class Implicit implements SessionSigner {
+export class Implicit implements ImplicitSessionSigner {
   private readonly _privateKey: PkStore
   private readonly _identitySignature: SequenceSignature.RSY
   public readonly address: Address.Address
@@ -39,6 +40,19 @@ export class Implicit implements SessionSigner {
     const attestationHash = Attestation.hash(this._attestation)
     const identityPubKey = Secp256k1.recoverPublicKey({ payload: attestationHash, signature: this._identitySignature })
     return Address.fromPublicKey(identityPubKey)
+  }
+
+  isValid(sessionTopology: SessionConfig.SessionsTopology, _chainId: number): SessionSignerValidity {
+    const implicitSigners = SessionConfig.getIdentitySigners(sessionTopology)
+    const thisIdentitySigner = this.identitySigner
+    if (!implicitSigners.some((s) => Address.isEqual(s, thisIdentitySigner))) {
+      return { isValid: false, invalidReason: 'Identity signer not found' }
+    }
+    const blacklist = SessionConfig.getImplicitBlacklist(sessionTopology)
+    if (blacklist?.some((b) => Address.isEqual(b, this.address))) {
+      return { isValid: false, invalidReason: 'Blacklisted' }
+    }
+    return { isValid: true }
   }
 
   async supportedCall(

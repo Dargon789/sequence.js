@@ -3,13 +3,14 @@ import {
   SendMetaTxnReturn as RpcSendMetaTxnReturn,
   MetaTxn as RpcMetaTxn,
   FeeTokenType,
+  FeeToken as RpcFeeToken,
   IntentPrecondition,
+  ETHTxnStatus,
 } from './relayer.gen.js'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../../relayer.js'
 import { Address, Hex, Bytes, AbiFunction } from 'ox'
-import { Constants, Payload } from '@0xsequence/wallet-primitives'
-import { ETHTxnStatus, FeeToken as RpcFeeToken } from './relayer.gen.js'
-import { decodePrecondition } from '../../../preconditions/index.js'
+import { Constants, Payload, Network } from '@0xsequence/wallet-primitives'
+import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../index.js'
+import { decodePrecondition } from '../../preconditions/index.js'
 import {
   erc20BalanceOf,
   erc20Allowance,
@@ -17,20 +18,61 @@ import {
   erc721GetApproved,
   erc1155BalanceOf,
   erc1155IsApprovedForAll,
-} from '../abi.js'
+} from '../standard/abi.js'
 import { PublicClient, createPublicClient, http, Chain } from 'viem'
 import * as chains from 'viem/chains'
 
-export * from './relayer.gen.js'
-
 export type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>
 
+/**
+ * Convert a Sequence Network to a viem Chain
+ */
+const networkToChain = (network: Network.Network): Chain => {
+  return {
+    id: network.chainId,
+    name: network.title || network.name,
+    nativeCurrency: {
+      name: network.nativeCurrency.name,
+      symbol: network.nativeCurrency.symbol,
+      decimals: network.nativeCurrency.decimals,
+    },
+    rpcUrls: {
+      default: {
+        http: [network.rpcUrl],
+      },
+    },
+    blockExplorers: network.blockExplorer
+      ? {
+          default: {
+            name: network.blockExplorer.name || 'Explorer',
+            url: network.blockExplorer.url,
+          },
+        }
+      : undefined,
+    contracts: network.ensAddress
+      ? {
+          ensUniversalResolver: {
+            address: network.ensAddress as `0x${string}`,
+          },
+        }
+      : undefined,
+  } as Chain
+}
+
 export const getChain = (chainId: number): Chain => {
-  const chain = Object.values(chains).find((c: any) => typeof c === 'object' && 'id' in c && c.id === chainId)
-  if (!chain) {
-    throw new Error(`Chain with id ${chainId} not found`)
+  // First try to get the chain from Sequence's network configurations
+  const sequenceNetwork = Network.getNetworkFromChainId(chainId)
+  if (sequenceNetwork) {
+    return networkToChain(sequenceNetwork)
   }
-  return chain as Chain
+
+  // Fall back to viem's built-in chains
+  const viemChain = Object.values(chains).find((c: any) => typeof c === 'object' && 'id' in c && c.id === chainId)
+  if (viemChain) {
+    return viemChain as Chain
+  }
+
+  throw new Error(`Chain with id ${chainId} not found in Sequence networks or viem chains`)
 }
 
 export class RpcRelayer implements Relayer {
@@ -41,10 +83,12 @@ export class RpcRelayer implements Relayer {
   private client: GenRelayer
   private fetch: Fetch
   private provider: PublicClient
+  private readonly projectAccessKey?: string
 
-  constructor(hostname: string, chainId: number, rpcUrl: string, fetchImpl?: Fetch) {
+  constructor(hostname: string, chainId: number, rpcUrl: string, fetchImpl?: Fetch, projectAccessKey?: string) {
     this.id = `rpc:${hostname}`
     this.chainId = chainId
+    this.projectAccessKey = projectAccessKey
     const effectiveFetch = fetchImpl || (typeof window !== 'undefined' ? window.fetch.bind(window) : undefined)
     if (!effectiveFetch) {
       throw new Error('Fetch implementation is required but not available in this environment.')
@@ -66,6 +110,27 @@ export class RpcRelayer implements Relayer {
     return Promise.resolve(this.chainId === chainId)
   }
 
+  async feeTokens(): Promise<{ isFeeRequired: boolean; tokens?: RpcFeeToken[]; paymentAddress?: Address.Address }> {
+    try {
+      const { isFeeRequired, tokens, paymentAddress } = await this.client.feeTokens()
+      if (isFeeRequired) {
+        Address.assert(paymentAddress)
+        return {
+          isFeeRequired,
+          tokens,
+          paymentAddress,
+        }
+      }
+      // Not required
+      return {
+        isFeeRequired,
+      }
+    } catch (e) {
+      console.warn('RpcRelayer.feeTokens failed:', e)
+      return { isFeeRequired: false }
+    }
+  }
+
   async feeOptions(
     wallet: Address.Address,
     chainId: number,
@@ -75,11 +140,14 @@ export class RpcRelayer implements Relayer {
     const data = Payload.encode(callsStruct)
 
     try {
-      const result = await this.client.feeOptions({
-        wallet: wallet,
-        to: wallet,
-        data: Bytes.toHex(data),
-      })
+      const result = await this.client.feeOptions(
+        {
+          wallet: wallet,
+          to: wallet,
+          data: Bytes.toHex(data),
+        },
+        { ...(this.projectAccessKey ? { 'X-Access-Key': this.projectAccessKey } : undefined) },
+      )
 
       const quote = result.quote ? ({ _tag: 'FeeQuote', _quote: result.quote } as FeeQuote) : undefined
       const options = result.options.map((option) => ({
@@ -114,11 +182,14 @@ export class RpcRelayer implements Relayer {
       input: data,
     }
 
-    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn({
-      call: rpcCall,
-      quote: quote ? JSON.stringify(quote._quote) : undefined,
-      preconditions: preconditions,
-    })
+    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn(
+      {
+        call: rpcCall,
+        quote: quote ? JSON.stringify(quote._quote) : undefined,
+        preconditions: preconditions,
+      },
+      { ...(this.projectAccessKey ? { 'X-Access-Key': this.projectAccessKey } : undefined) },
+    )
 
     if (!result.status) {
       console.error('RpcRelayer.relay failed', result)
@@ -142,11 +213,14 @@ export class RpcRelayer implements Relayer {
       input: data,
     }
 
-    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn({
-      call: rpcCall,
-      quote: quote ? JSON.stringify(quote._quote) : undefined,
-      preconditions: preconditions,
-    })
+    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn(
+      {
+        call: rpcCall,
+        quote: quote ? JSON.stringify(quote._quote) : undefined,
+        preconditions: preconditions,
+      },
+      { ...(this.projectAccessKey ? { 'X-Access-Key': this.projectAccessKey } : undefined) },
+    )
 
     if (!result.status) {
       console.error('RpcRelayer.relay failed', result)
