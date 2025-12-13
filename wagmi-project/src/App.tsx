@@ -13,7 +13,7 @@ function App() {
         <div>
           status: {account.status}
           <br />
-          addresses: {JSON.stringify(account.addresses)}
+          addresses: {account.addresses?.map(addr => <div key={addr}>{addr}</div>)}
           <br />
           chainId: {account.chainId}
         </div>
