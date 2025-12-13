@@ -1,5 +1,45 @@
 # @0xsequence/relayer
 
+## 3.0.0-beta.5
+
+### Patch Changes
+
+- Beta release for v3
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.5
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.4
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.3
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.2
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.1
+
 ## 2.3.8
 
 ### Patch Changes
@@ -2476,7 +2516,6 @@
 - relayer: fix Relayer.wait() interface
 
   The interface for calling Relayer.wait() has changed. Instead of a single optional ill-defined timeout/delay parameter, there are three optional parameters, in order:
-
   - timeout: the maximum time to wait for the transaction receipt
   - delay: the polling interval, i.e. the time to wait between requests
   - maxFails: the maximum number of hard failures to tolerate before giving up
@@ -3139,7 +3178,6 @@
 ### Minor Changes
 
 - major architectural changes in Sequence design
-
   - only one API instance, API is no longer a per-chain service
   - separate per-chain indexer service, API no longer handles indexing
   - single contract metadata service, API no longer serves metadata

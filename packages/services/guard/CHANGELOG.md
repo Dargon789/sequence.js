@@ -1,5 +1,35 @@
 # @0xsequence/guard
 
+## 3.0.0-beta.5
+
+### Patch Changes
+
+- Beta release for v3
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
+
 ## 2.3.8
 
 ### Patch Changes
@@ -2302,7 +2332,6 @@
 - relayer: fix Relayer.wait() interface
 
   The interface for calling Relayer.wait() has changed. Instead of a single optional ill-defined timeout/delay parameter, there are three optional parameters, in order:
-
   - timeout: the maximum time to wait for the transaction receipt
   - delay: the polling interval, i.e. the time to wait between requests
   - maxFails: the maximum number of hard failures to tolerate before giving up
