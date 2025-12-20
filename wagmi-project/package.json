@@ -24,6 +24,6 @@
     "@wagmi/cli": "~0.x.x",
     "buffer": "^6.0.3",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "vite": "^7.2.4"
   }
 }
