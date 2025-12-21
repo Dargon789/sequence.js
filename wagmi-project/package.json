@@ -21,7 +21,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "@wagmi/cli": "~0.x.x",
+    "@wagmi/cli": "^2.0.0",
     "buffer": "^6.0.3",
     "typescript": "^5.4.5",
     "vite": "^5.2.11"
