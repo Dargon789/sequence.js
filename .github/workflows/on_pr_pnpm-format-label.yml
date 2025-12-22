@@ -1,5 +1,9 @@
 name: pnpm-format-label
 
+permissions:
+  contents: read
+  issues: write
+
 on:
   pull_request:
     types: [labeled]
