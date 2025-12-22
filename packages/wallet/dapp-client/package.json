@@ -1,0 +1,39 @@
+{
+  "name": "@0xsequence/dapp-client",
+  "version": "3.0.0-beta.6",
+  "license": "Apache-2.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:^",
+    "@types/node": "^25.0.2",
+    "@vitest/coverage-v8": "^4.0.15",
+    "dotenv": "^17.2.3",
+    "fake-indexeddb": "^6.2.5",
+    "happy-dom": "^20.0.11",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "dependencies": {
+    "@0xsequence/guard": "workspace:^",
+    "@0xsequence/relayer": "workspace:^",
+    "@0xsequence/wallet-core": "workspace:^",
+    "@0xsequence/wallet-primitives": "workspace:^",
+    "ox": "^0.9.17"
+  }
+}
