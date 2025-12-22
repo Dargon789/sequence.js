@@ -319,7 +319,7 @@ describe('Wallets', () => {
       Config.findSignerLeaf(config.raw.guardTopology!, Constants.PlaceholderAddress as Address.Address),
     ).toBeUndefined()
 
-    const sessionsModule = config.raw.modules.find((m: any) =>
+    const sessionsModule = config.raw.modules.find((m: { sapientLeaf: { address: Address.Address } }) =>
       Address.isEqual(m.sapientLeaf.address, sessionsModuleAddress),
     )
     expect(sessionsModule?.guardLeaf).toBeDefined()
