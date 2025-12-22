@@ -362,7 +362,7 @@ describe('Wallets', () => {
     ).toBeUndefined()
 
     const sessionsModuleAddress = (manager as any).shared.sequence.extensions.sessions
-    const sessionsModule = config.raw.modules.find((m: any) =>
+    const sessionsModule = config.raw.modules.find((m: { sapientLeaf: { address: Address.Address } }) =>
       Address.isEqual(m.sapientLeaf.address, sessionsModuleAddress),
     )
     expect(sessionsModule?.guardLeaf).toBeDefined()
