@@ -130,13 +130,20 @@ const App = () => {
 
   useEffect(() => {
     // Wallet events
-    wallet.client.onOpen(() => {
+    const onOpen = () => {
       console.log('wallet window opened')
-    })
+    }
+    wallet.client.on('open', onOpen)
 
-    wallet.client.onClose(() => {
+    const onClose = () => {
       console.log('wallet window closed')
-    })
+    }
+    wallet.client.on('close', onClose)
+
+    return () => {
+      wallet.client.off('open', onOpen)
+      wallet.client.off('close', onClose)
+    }
   }, [wallet])
 
   const defaultConnectOptions: ConnectOptions = {
