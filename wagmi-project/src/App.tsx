@@ -109,11 +109,15 @@ const App = () => {
   const [isOpen, toggleModal] = useState(false)
   const [warning, setWarning] = useState(false)
 
-  useMemo(() => {
-    wallet.on('chainChanged', (chainId: string) => {
+  useEffect(() => {
+    const handleChainChanged = (chainId: string) => {
       setShowChainId(Number(BigInt(chainId)))
-    })
-  }, [])
+    }
+    wallet.on('chainChanged', handleChainChanged)
+    return () => {
+      wallet.off('chainChanged', handleChainChanged)
+    }
+  }, [wallet])
 
   useEffect(() => {
     setIsWalletConnected(wallet.isConnected())
