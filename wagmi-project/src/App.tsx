@@ -181,7 +181,7 @@ const App = () => {
       const connectDetails = await wallet.connect(connectOptions)
 
       // Example of how to verify using ETHAuth via Sequence API
-      if (connectOptions.authorize && connectDetails.connected) {
+      if (connectOptions.authorize && connectDetails.connected && connectDetails.proof) {
         let apiUrl = urlParams.get('apiUrl')
 
         if (!apiUrl || apiUrl.length === 0) {
@@ -195,7 +195,7 @@ const App = () => {
         const { isValid } = await api.isValidETHAuthProof({
           chainId: connectDetails.chainId,
           walletAddress: connectDetails.session.accountAddress,
-          ethAuthProofString: connectDetails.proof!.proofString
+          ethAuthProofString: connectDetails.proof.proofString
         })
 
         appendConsoleLine(`isValid (API)?: ${isValid}`)
