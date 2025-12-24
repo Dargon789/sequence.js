@@ -137,10 +137,11 @@ const rpcMethods: Record<string, (params: any) => Promise<any>> = {
     return result
   },
   async session_encodeCallSignatures(params) {
-    const { sessionTopology, callSignatures, explicitSigners, implicitSigners } = params
+    const { sessionTopology, callSignatures, explicitSigners, implicitSigners, identitySigner } = params
     const result = await session.doEncodeSessionCallSignatures(
       JSON.stringify(sessionTopology),
       callSignatures.map(JSON.stringify),
+      identitySigner,
       explicitSigners,
       implicitSigners,
     )
@@ -326,7 +327,8 @@ async function handleHttpRequest(req: IncomingMessage, res: ServerResponse, debu
   } catch (error) {
     if (!silent) console.log(`[${new Date().toISOString()}] JSON parse error:`, error)
     res.statusCode = 400
-    res.end(JSON.stringify(errorResponse(undefined, -32700, 'Parse error', String(error))))
+    // Return a generic parse error without exposing internal error details to the client
+    res.end(JSON.stringify(errorResponse(undefined, -32700, 'Parse error')))
     return
   }
 
