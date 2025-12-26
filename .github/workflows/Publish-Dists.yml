@@ -76,7 +76,11 @@ jobs:
                 }
               };
 
-              rewrite(pkg.dependencies);
+              ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'].forEach((field) => {
+                if (pkg[field]) {
+                  rewrite(pkg[field]);
+                }
+              });
               fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
             '
 
