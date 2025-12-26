@@ -33,9 +33,8 @@ jobs:
 
             echo "📦 Publishing $PACKAGE to $BRANCH"
 
-            mkdir -p /tmp/$PACKAGE
-            shopt -s dotglob
-            cp -r $PKG_DIR/* /tmp/$PACKAGE || true
+            mkdir -p "/tmp/$PACKAGE"
+            cp -r "$PKG_DIR"/. "/tmp/$PACKAGE" || true
 
             cd /tmp/$PACKAGE
             git init
