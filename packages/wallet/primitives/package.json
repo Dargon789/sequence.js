@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/wallet-primitives",
-  "version": "3.0.0-beta.3",
+  "version": "3.0.0-beta.6",
   "license": "Apache-2.0",
   "type": "module",
   "publishConfig": {
@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
-    "@vitest/coverage-v8": "^4.0.14",
+    "@vitest/coverage-v8": "^4.0.15",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.15"
   },
   "dependencies": {
     "ox": "^0.9.17"
