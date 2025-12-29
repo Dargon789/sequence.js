@@ -128,6 +128,6 @@
     "@tanstack/react-query": "^5.51.21",
     "geth": "^0.4.0",
     "viem": "2.x",
-    "wagmi": "0.0.0-canary-20240806164344"
+    "wagmi": "0.0.1"
   }
 }
