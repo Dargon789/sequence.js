@@ -1,5 +1,41 @@
 # @0xsequence/guard
 
+## 3.0.0-beta.6
+
+### Patch Changes
+
+- Fix signer 404 error, minor fixes
+
+## 3.0.0-beta.5
+
+### Patch Changes
+
+- Beta release for v3
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
+
 ## 2.3.8
 
 ### Patch Changes
@@ -715,6 +751,20 @@
   - @0xsequence/core@1.10.15
   - @0xsequence/signhub@1.10.15
   - @0xsequence/utils@1.10.15
+
+## 2.0.0
+
+### Major Changes
+
+- changeset
+
+### Patch Changes
+
+- Updated dependencies
+  - @0xsequence/core@2.0.0
+  - @0xsequence/indexer@2.0.0
+  - @0xsequence/relayer@2.0.0
+  - @0xsequence/utils@2.0.0
 
 ## 1.10.14
 

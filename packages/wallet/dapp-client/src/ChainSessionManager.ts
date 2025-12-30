@@ -114,7 +114,8 @@ export class ChainSessionManager {
     const rpcUrl = getRpcUrl(chainId, nodesUrl, projectAccessKey)
     this.chainId = chainId
 
-    if (canUseIndexedDb) {
+    const canUseIndexedDbInEnv = canUseIndexedDb && typeof indexedDB !== 'undefined'
+    if (canUseIndexedDbInEnv) {
       this.stateProvider = new State.Cached({
         source: new State.Sequence.Provider(keyMachineUrl),
         cache: new State.Local.Provider(new State.Local.IndexedDbStore(CACHE_DB_NAME)),
@@ -221,7 +222,7 @@ export class ChainSessionManager {
       stateProvider: this.stateProvider,
     })
     this.sessionManager = new Signers.SessionManager(this.wallet, {
-      sessionManagerAddress: Extensions.Rc3.sessions,
+      sessionManagerAddress: Extensions.Rc5.sessions,
       provider: this.provider!,
     })
     this.isInitialized = true
@@ -537,7 +538,7 @@ export class ChainSessionManager {
       const { userEmail, loginMethod, guard } = connectResponse
       const savedRequest = await this.sequenceStorage.peekPendingRequest()
       const savedPayload = savedRequest?.payload as CreateNewSessionPayload | undefined
-      const explicitSessionRequested = !!savedPayload?.session
+      const explicitSessionRequested = (savedPayload?.session?.permissions?.length ?? 0) > 0
       const implicitSessionRequested = savedPayload?.includeImplicitSession ?? false
       const needsTempPk = explicitSessionRequested || implicitSessionRequested
       const tempPk = needsTempPk ? await this.sequenceStorage.getAndClearTempSessionPk() : null
@@ -730,7 +731,7 @@ export class ChainSessionManager {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const tempManager = new Signers.SessionManager(this.wallet, {
-          sessionManagerAddress: Extensions.Rc3.sessions,
+          sessionManagerAddress: Extensions.Rc5.sessions,
           provider: this.provider,
         })
         const topology = await tempManager.getTopology()

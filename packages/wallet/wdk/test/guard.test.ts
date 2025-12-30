@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { Manager } from '../src/sequence'
-import { GuardHandler } from '../src/sequence/handlers/guard'
+import { Manager } from '../src/sequence/index.js'
+import { GuardHandler } from '../src/sequence/handlers/guard.js'
 import { Address, Bytes, Hex, TypedData } from 'ox'
-import { Network, Payload } from '@0xsequence/wallet-primitives'
-import { Kinds } from '../src/sequence/types/signer'
-import { newManager } from './constants'
-import { GuardRole, Guards } from '../src/sequence/guards'
+import { Config, Constants, Network, Payload } from '@0xsequence/wallet-primitives'
+import { Kinds } from '../src/sequence/types/signer.js'
+import { newManager } from './constants.js'
+import { GuardRole, Guards } from '../src/sequence/guards.js'
 
 // Mock fetch globally for guard API calls
 const mockFetch = vi.fn()
@@ -163,7 +163,7 @@ describe('GuardHandler', () => {
       expect(result).toBe(true)
       expect(mockAddSignature).toHaveBeenCalledOnce()
 
-      const [requestId, signatureData] = mockAddSignature.mock.calls[0]
+      const [requestId, signatureData] = mockAddSignature.mock.calls[0]!
       expect(requestId).toBe('test-request-id')
       expect(signatureData.address).toBe(guards.getByRole('wallet').address)
       expect(signatureData.signature).toBeDefined()
@@ -223,7 +223,7 @@ describe('GuardHandler', () => {
       const mockAddSignature = vi.fn()
       signatures.addSignature = mockAddSignature
 
-      const mockCallback = vi.fn().mockImplementation(async (codeType, respond) => {
+      const mockCallback = vi.fn().mockImplementation(async (request, codeType, respond) => {
         expect(codeType).toBe('TOTP')
         await respond('123456')
       })
@@ -247,7 +247,7 @@ describe('GuardHandler', () => {
       expect(mockCallback).toHaveBeenCalledOnce()
       expect(mockAddSignature).toHaveBeenCalledOnce()
 
-      const [requestId, signatureData] = mockAddSignature.mock.calls[0]
+      const [requestId, signatureData] = mockAddSignature.mock.calls[0]!
       expect(requestId).toBe('test-request-id')
       expect(signatureData.address).toBe(guards.getByRole('wallet').address)
       expect(signatureData.signature).toBeDefined()
@@ -300,7 +300,7 @@ describe('GuardHandler', () => {
         signatures: [],
       })
 
-      expect(mockFetch.mock.calls[0][0]).toContain(customGuardUrl)
+      expect(mockFetch.mock.calls[0]![0]).toContain(customGuardUrl)
 
       await customManager.stop()
     })
@@ -313,6 +313,62 @@ describe('GuardHandler', () => {
       const sharedConfig = (manager as any).shared.sequence
       expect(sharedConfig.guardUrl).toBeDefined()
       expect(sharedConfig.guardAddresses).toBeDefined()
+    })
+  })
+
+  describe('Guard Topology', () => {
+    it('should replace the placeholder guard address', () => {
+      const guardAddress = (manager as any).shared.sequence.guardAddresses.wallet
+      const defaultTopology = (manager as any).shared.sequence.defaultGuardTopology
+
+      const topology = guards.topology('wallet')
+
+      expect(topology).toBeDefined()
+      expect(Config.findSignerLeaf(topology!, guardAddress)).toBeDefined()
+      expect(Config.findSignerLeaf(topology!, Constants.PlaceholderAddress as Address.Address)).toBeUndefined()
+      expect(Config.findSignerLeaf(defaultTopology, guardAddress)).toBeUndefined()
+      expect(Config.hashConfiguration(topology!)).not.toEqual(Config.hashConfiguration(defaultTopology))
+    })
+
+    it('should throw when the placeholder is missing in the default topology', async () => {
+      const customManager = newManager(
+        {
+          defaultGuardTopology: {
+            type: 'signer',
+            address: '0x0000000000000000000000000000000000000001',
+            weight: 1n,
+          },
+        },
+        undefined,
+        `guard_topology_${Date.now()}`,
+      )
+
+      const customGuards = (customManager as any).shared.modules.guards as Guards
+
+      try {
+        expect(() => customGuards.topology('wallet')).toThrow('Guard address replacement failed for role wallet')
+      } finally {
+        await customManager.stop()
+      }
+    })
+
+    it('should return undefined when no guard address is set for a role', async () => {
+      const defaultWalletGuard = (manager as any).shared.sequence.guardAddresses.wallet
+      const customManager = newManager(
+        {
+          guardAddresses: {
+            wallet: defaultWalletGuard,
+          } as any,
+        },
+        undefined,
+        `guard_missing_${Date.now()}`,
+      )
+
+      const customGuards = (customManager as any).shared.modules.guards as Guards
+
+      expect(customGuards.topology('sessions')).toBeUndefined()
+
+      await customManager.stop()
     })
   })
 })

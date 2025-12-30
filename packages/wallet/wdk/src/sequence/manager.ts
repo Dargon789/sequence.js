@@ -27,14 +27,17 @@ import { Signers } from './signers.js'
 import { Transactions, TransactionsInterface } from './transactions.js'
 import { Kinds } from './types/signer.js'
 import { Wallets, WalletsInterface } from './wallets.js'
-import { GuardHandler } from './handlers/guard.js'
+import { GuardHandler, PromptCodeHandler } from './handlers/guard.js'
 import { PasskeyCredential } from '../dbs/index.js'
+import { PromptMnemonicHandler } from './handlers/mnemonic.js'
+import { PromptOtpHandler } from './handlers/otp.js'
 
 export type ManagerOptions = {
   verbose?: boolean
 
   extensions?: Extensions.Extensions
   context?: Context.Context
+  context4337?: Context.Context
   guest?: Address.Address
 
   encryptedPksDb?: CoreSigners.Pk.Encrypted.EncryptedPksDb
@@ -56,7 +59,10 @@ export type ManagerOptions = {
   guardUrl?: string
   guardAddresses?: Record<GuardRole, Address.Address>
 
-  defaultGuardTopology?: Config.SignerLeaf
+  nonWitnessableSigners?: Address.Address[]
+
+  // The default guard topology MUST have a placeholder address for the guard address
+  defaultGuardTopology?: Config.Topology
   defaultRecoverySettings?: RecoverySettings
 
   // EIP-6963 support
@@ -79,15 +85,22 @@ export type ManagerOptions = {
       enabled: boolean
       clientId: string
     }
+    customProviders?: {
+      kind: `custom-${string}`
+      authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
+      issuer: string
+      oauthUrl: string
+      clientId: string
+    }[]
   }
 }
 
 export const ManagerOptionsDefaults = {
   verbose: false,
 
-  extensions: Extensions.Rc3,
-  context: Context.Rc3,
-  context4337: Context.Rc3_4337,
+  extensions: Extensions.Rc5,
+  context: Context.Rc5,
+  context4337: Context.Rc5_4337,
   guest: Constants.DefaultGuestAddress,
 
   encryptedPksDb: new CoreSigners.Pk.Encrypted.EncryptedPksDb(),
@@ -104,24 +117,42 @@ export const ManagerOptionsDefaults = {
 
   stateProvider: new State.Sequence.Provider(),
   networks: Network.ALL,
-  relayers: () => [Relayer.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined),
+  relayers: () => {
+    if (typeof window !== 'undefined') {
+      return [Relayer.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined)
+    }
+    return []
+  },
   bundlers: [],
 
-  guardUrl: 'https://dev-guard.sequence.app',
+  nonWitnessableSigners: [] as Address.Address[],
+
+  guardUrl: 'https://guard.sequence.app',
   guardAddresses: {
-    wallet: '0xa2e70CeaB3Eb145F32d110383B75B330fA4e288a',
-    sessions: '0x18002Fc09deF9A47437cc64e270843dE094f5984',
-  } as Record<GuardRole, Address.Address>, // TODO: change to the actual guard address
+    wallet: '0x26f3D30F41FA897309Ae804A2AFf15CEb1dA5742',
+    sessions: '0xF6Bc87F5F2edAdb66737E32D37b46423901dfEF1',
+  } as Record<GuardRole, Address.Address>,
 
   defaultGuardTopology: {
-    // TODO: Move this somewhere else
-    type: 'signer',
-    address: '0x0000000000000000000000000000000000000000', // will be replaced by the actual guard address
+    type: 'nested',
     weight: 1n,
-  } as Config.SignerLeaf,
+    threshold: 1n,
+    tree: [
+      {
+        type: 'signer',
+        address: Constants.PlaceholderAddress,
+        weight: 1n,
+      },
+      {
+        type: 'signer',
+        // Sequence dev multisig, as recovery guard signer
+        address: '0x007a47e6BF40C1e0ed5c01aE42fDC75879140bc4',
+        weight: 1n,
+      },
+    ],
+  } as Config.NestedLeaf,
 
   defaultSessionsTopology: {
-    // TODO: Move this somewhere else
     type: 'sapient-signer',
     weight: 1n,
   } as Omit<Config.SapientSignerLeaf, 'imageHash' | 'address'>,
@@ -134,9 +165,8 @@ export const ManagerOptionsDefaults = {
   multiInjectedProviderDiscovery: true,
 
   identity: {
-    // TODO: change to prod url once deployed
-    url: 'https://dev-identity.sequence-dev.app',
-    fetch: window.fetch,
+    url: 'https://identity.sequence.app',
+    fetch: typeof window !== 'undefined' ? window.fetch : undefined,
     verifyAttestation: true,
     email: {
       enabled: false,
@@ -157,11 +187,41 @@ export const CreateWalletOptionsDefaults = {
 }
 
 export function applyManagerOptionsDefaults(options?: ManagerOptions) {
-  return {
+  const merged = {
     ...ManagerOptionsDefaults,
     ...options,
     identity: { ...ManagerOptionsDefaults.identity, ...options?.identity },
   }
+
+  // Merge and normalize non-witnessable signers.
+  // We always include the sessions extension address for the active extensions set.
+  const nonWitnessable = new Set<string>()
+  for (const address of ManagerOptionsDefaults.nonWitnessableSigners ?? []) {
+    nonWitnessable.add(address.toLowerCase())
+  }
+  for (const address of options?.nonWitnessableSigners ?? []) {
+    nonWitnessable.add(address.toLowerCase())
+  }
+  nonWitnessable.add(merged.extensions.sessions.toLowerCase())
+
+  // Include static signer leaves from the guard topology (e.g. recovery guard signer),
+  // but ignore the placeholder address that is later replaced per-role.
+  if (merged.defaultGuardTopology) {
+    const guardTopologySigners = Config.getSigners(merged.defaultGuardTopology)
+    for (const signer of guardTopologySigners.signers) {
+      if (Address.isEqual(signer, Constants.PlaceholderAddress)) {
+        continue
+      }
+      nonWitnessable.add(signer.toLowerCase())
+    }
+    for (const signer of guardTopologySigners.sapientSigners) {
+      nonWitnessable.add(signer.address.toLowerCase())
+    }
+  }
+
+  merged.nonWitnessableSigners = Array.from(nonWitnessable) as Address.Address[]
+
+  return merged
 }
 
 export type RecoverySettings = {
@@ -195,7 +255,9 @@ export type Sequence = {
   readonly relayers: Relayer.Relayer[]
   readonly bundlers: Bundler.Bundler[]
 
-  readonly defaultGuardTopology: Config.SignerLeaf
+  readonly nonWitnessableSigners: ReadonlySet<Address.Address>
+
+  readonly defaultGuardTopology: Config.Topology
   readonly defaultRecoverySettings: RecoverySettings
 
   readonly guardUrl: string
@@ -382,6 +444,10 @@ export class Manager {
         relayers,
         bundlers: ops.bundlers,
 
+        nonWitnessableSigners: new Set(
+          (ops.nonWitnessableSigners ?? []).map((address) => address.toLowerCase() as Address.Address),
+        ),
+
         defaultGuardTopology: ops.defaultGuardTopology,
         defaultRecoverySettings: ops.defaultRecoverySettings,
 
@@ -466,6 +532,7 @@ export class Manager {
         new AuthCodePkceHandler(
           'google-pkce',
           'https://accounts.google.com',
+          'https://accounts.google.com/o/oauth2/v2/auth',
           ops.identity.google.clientId,
           identityInstrument,
           modules.signatures,
@@ -480,6 +547,7 @@ export class Manager {
         new AuthCodeHandler(
           'apple',
           'https://appleid.apple.com',
+          'https://appleid.apple.com/auth/authorize',
           ops.identity.apple.clientId,
           identityInstrument,
           modules.signatures,
@@ -487,6 +555,46 @@ export class Manager {
           shared.databases.authKeys,
         ),
       )
+    }
+    if (ops.identity.customProviders?.length) {
+      for (const provider of ops.identity.customProviders) {
+        switch (provider.authMethod) {
+          case 'id-token':
+            throw new Error('id-token is not supported yet')
+          case 'authcode':
+            shared.handlers.set(
+              provider.kind,
+              new AuthCodeHandler(
+                provider.kind,
+                provider.issuer,
+                provider.oauthUrl,
+                provider.clientId,
+                identityInstrument,
+                modules.signatures,
+                shared.databases.authCommitments,
+                shared.databases.authKeys,
+              ),
+            )
+            break
+          case 'authcode-pkce':
+            shared.handlers.set(
+              provider.kind,
+              new AuthCodePkceHandler(
+                provider.kind,
+                provider.issuer,
+                provider.oauthUrl,
+                provider.clientId,
+                identityInstrument,
+                modules.signatures,
+                shared.databases.authCommitments,
+                shared.databases.authKeys,
+              ),
+            )
+            break
+          default:
+            throw new Error('unsupported auth method')
+        }
+      }
     }
 
     shared.modules = modules
@@ -500,18 +608,16 @@ export class Manager {
     }
   }
 
-  public registerMnemonicUI(onPromptMnemonic: (respond: (mnemonic: string) => Promise<void>) => Promise<void>) {
+  public registerMnemonicUI(onPromptMnemonic: PromptMnemonicHandler) {
     return this.mnemonicHandler.registerUI(onPromptMnemonic)
   }
 
-  public registerOtpUI(onPromptOtp: (recipient: string, respond: (otp: string) => Promise<void>) => Promise<void>) {
+  public registerOtpUI(onPromptOtp: PromptOtpHandler) {
     return this.otpHandler?.registerUI(onPromptOtp) || (() => {})
   }
 
-  public registerGuardUI(
-    onPromptOtp: (codeType: 'TOTP' | 'PIN', respond: (otp: string) => Promise<void>) => Promise<void>,
-  ) {
-    return this.guardHandler?.registerUI(onPromptOtp) || (() => {})
+  public registerGuardUI(onPromptCode: PromptCodeHandler) {
+    return this.guardHandler?.registerUI(onPromptCode) || (() => {})
   }
 
   public async setRedirectPrefix(prefix: string) {
