@@ -6,7 +6,6 @@
 
 - network: add xr-sepolia
 - Updated dependencies
-  - @0xsequence/network@1.9.17
   - @0xsequence/abi@1.9.17
   - @0xsequence/account@1.9.17
   - @0xsequence/api@1.9.17
@@ -17,6 +16,7 @@
   - @0xsequence/metadata@1.9.17
   - @0xsequence/migration@1.9.17
   - @0xsequence/multicall@1.9.17
+  - @0xsequence/network@1.9.17
   - @0xsequence/provider@1.9.17
   - @0xsequence/relayer@1.9.17
   - @0xsequence/sessions@1.9.17
