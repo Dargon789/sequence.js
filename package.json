@@ -1,133 +1,60 @@
 {
-  "name": "0xsequence",
-  "private": true,
+  "name": "sequence-core",
   "license": "Apache-2.0",
-  "scripts": {
-    "build": "pnpm dev && pnpm typecheck && preconstruct build && node scripts/fix-mocha-ref.js",
-    "watch": "preconstruct watch",
-    "clean": "rimraf ./node_modules",
-    "changeset": "changeset",
-    "version-packages": "changeset version && pnpm update-version",
-    "release": "pnpm build && changeset publish",
-    "snapshot": "changeset && changeset version --snapshot && pnpm i && pnpm build && changeset publish --tag snapshot && git tag | grep '0\\.0\\.0' | xargs git tag -d && echo && echo -n 'Published sequence.js snapshot ' && grep '^## ' packages/0xsequence/CHANGELOG.md | head -n 1 | cut -c 4-",
-    "update-version": "node ./scripts/update-version",
-    "test": "pnpm -r --workspace-concurrency=1 test",
-    "test:parallel": "pnpm -r test",
-    "lint": "eslint -c .eslintrc.js 'packages/**/src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint -c .eslintrc.js --fix 'packages/**/src/**/*.{ts,tsx}'",
-    "lint:tests": "eslint -c .eslintrc.js 'packages/**/tests/**/*.{ts,tsx}'",
-    "lint:tests:fix": "eslint -c .eslintrc.js --fix 'packages/**/tests/**/*.{ts,tsx}'",
-    "format": "prettier --write \"packages/**/src/**/*.ts\" \"packages/**/tests/**/*.ts\"",
-    "audit:fix": "pnpm audit --fix",
-    "typecheck": "tsc --noEmit",
-    "dev": "preconstruct dev",
-    "postinstall": "preconstruct dev",
-    "coverage": "rimraf ./coverage && rimraf ./.nyc_output && nyc pnpm test",
-    "prepare": "husky install"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm lint",
-      "pre-push": "pnpm lint && pnpm build && pnpm test:parallel"
-    }
-  },
+  "private": true,
   "devDependencies": {
-    "@0xsequence/abi": "workspace:*",
-    "@0xsequence/api": "workspace:*",
-    "@0xsequence/auth": "workspace:*",
-    "@0xsequence/deployer": "workspace:*",
-    "@0xsequence/estimator": "workspace:*",
-    "@0xsequence/guard": "workspace:*",
-    "@0xsequence/indexer": "workspace:*",
-    "@0xsequence/metadata": "workspace:*",
-    "@0xsequence/multicall": "workspace:*",
-    "@0xsequence/network": "workspace:*",
-    "@0xsequence/provider": "workspace:*",
-    "@0xsequence/relayer": "workspace:*",
-    "@0xsequence/simulator": "workspace:*",
-    "@0xsequence/utils": "workspace:*",
-    "@0xsequence/wallet": "workspace:*",
-    "@babel/core": "^7.21.4",
-    "@babel/plugin-transform-class-properties": "^7.23.3",
-    "@babel/preset-env": "^7.21.4",
-    "@babel/preset-typescript": "^7.21.4",
-    "@babel/runtime": "^7.28.4",
-    "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.26.1",
-    "@preconstruct/cli": "^2.8.1",
-    "@types/chai": "^4.3.11",
-    "@types/chai-as-promised": "^7.1.8",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "ava": "^6.0.1",
-    "chai": "^4.3.10",
-    "chai-as-promised": "^7.1.1",
-    "concurrently": "^8.2.2",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-prettier": "^5.0.1",
-    "ethers": "^5.7.2",
-    "express": "^4.18.2",
-    "hardhat": "^2.22.7",
-    "husky": "^8.0.0",
-    "mocha": "^10.1.0",
-    "nyc": "^15.1.0",
-    "prettier": "^3.0.0",
-    "puppeteer": "^21.11.0",
-    "rimraf": "^5.0.5",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.6.2",
-    "typescript": "~5.3.3",
-    "vitest": "^2.0.5",
-    "wait-on": "^7.2.0"
+    "@changesets/cli": "^2.29.7",
+    "lefthook": "^1.13.6",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.1.0",
+    "turbo": "^2.6.1",
+    "typescript": "5.8.3"
   },
-  "resolutions": {},
-  "workspaces": [
-    "packages/*"
-  ],
-  "preconstruct": {
-    "packages": [
-      "packages/*"
-    ],
-    "globals": {
-      "ethers": "ethers"
-    }
-  },
-  "pnpm": {
-    "overrides": {
-      "node-forge@<1.0.0": ">=1.0.0",
-      "node-forge@<1.3.0": ">=1.3.0",
-      "got@<11.8.5": ">=11.8.5",
-      "glob-parent@<5.1.2": ">=5.1.2",
-      "semver@<5.7.2": ">=5.7.2",
-      "webpack-dev-middleware@<=5.3.3": ">=5.3.4",
-      "tar@<6.2.1": ">=6.2.1",
-      "tough-cookie@<4.1.3": ">=4.1.3",
-      "braces@<3.0.3": ">=3.0.3",
-      "ws@>=8.0.0 <8.17.1": ">=8.17.1",
-      "ws@>=7.0.0 <7.5.10": ">=7.5.10",
-      "ws@>=2.1.0 <5.2.4": ">=5.2.4"
-    },
-    "onlyBuiltDependencies": [
-      "bufferutil",
-      "es5-ext",
-      "esbuild",
-      "keccak",
-      "puppeteer",
-      "secp256k1",
-      "utf-8-validate",
-      "web3",
-      "web3-bzz",
-      "web3-shh"
-    ]
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.51.21",
-    "geth": "^0.4.0",
-    "viem": "2.x",
-    "wagmi": "0.0.1"
+    "0xsequence": "^2.3.33",
+    "@0xsequence/connect": "0.0.0-20250924112110",
+    "@0xsequence/waas": "^2.3.33",
+    "@0xsequence/wallet": "~2.3.33",
+    "@0xsequence/wallet-contracts": "~3.0.1",
+    "@0xsequence/wallet-primitives": "0.0.0-20250915145821",
+    "@vercel/analytics": "^1.5.0",
+    "ethers": "^6.15.0",
+    "flag": "^5.0.1",
+    "prettier-plugin-solidity": "^2.2.0",
+    "vercel": "^48.10.2"
+  },
+  "version": "1.0.0",
+  "description": "**NOTE: please see [v2](https://github.com/0xsequence/sequence.js/tree/v2) branch for sequence.js 2.x.x**",
+  "main": "sequence.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dargon789/sequence.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Dargon789/sequence.js/issues"
+  },
+  "homepage": "https://github.com/Dargon789/sequence.js#readme",
+  "scripts": {
+    "build:all": "turbo build",
+    "build:packages": "turbo build --filter=\"./packages/**/*\"",
+    "build": "pnpm build:packages",
+    "dev": "turbo dev",
+    "test": "turbo test --concurrency=1",
+    "lint": "turbo lint",
+    "format": "prettier --list-different --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo typecheck",
+    "postinstall": "lefthook install",
+    "dev:server": "node packages/wallet/primitives-cli/dist/index.js server",
+    "reinstall": "rimraf -g ./**/node_modules && pnpm install",
+    "test:anvil": "anvil --fork-url https://nodes.sequence.app/arbitrum",
+    "clean": "turbo clean"
   }
 }

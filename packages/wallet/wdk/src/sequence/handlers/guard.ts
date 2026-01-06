@@ -1,30 +1,25 @@
 import { Address, Hex } from 'ox'
 import * as Guard from '@0xsequence/guard'
-import { Signers } from '@0xsequence/wallet-core'
 import { Handler } from './handler.js'
 import { BaseSignatureRequest, SignerUnavailable, SignerReady, SignerActionable, Kinds } from '../types/index.js'
 import { Signatures } from '../signatures.js'
-import { Guards } from '../guards.js'
-
-type RespondFn = (token: Signers.GuardToken) => Promise<void>
-
-export type PromptCodeHandler = (
-  request: BaseSignatureRequest,
-  codeType: 'TOTP' | 'PIN',
-  respond: RespondFn,
-) => Promise<void>
+import { GuardRole, Guards } from '../guards.js'
 
 export class GuardHandler implements Handler {
   kind = Kinds.Guard
 
-  private onPromptCode: undefined | PromptCodeHandler
+  private onPromptCode:
+    | undefined
+    | ((codeType: 'TOTP' | 'PIN', respond: (code: string) => Promise<void>) => Promise<void>)
 
   constructor(
     private readonly signatures: Signatures,
     private readonly guards: Guards,
   ) {}
 
-  public registerUI(onPromptCode: PromptCodeHandler) {
+  public registerUI(
+    onPromptCode: (codeType: 'TOTP' | 'PIN', respond: (code: string) => Promise<void>) => Promise<void>,
+  ) {
     this.onPromptCode = onPromptCode
     return () => {
       this.onPromptCode = undefined
@@ -95,13 +90,17 @@ export class GuardHandler implements Handler {
             resolve(true)
           } catch (e) {
             if (e instanceof Guard.AuthRequiredError) {
-              const respond: RespondFn = async (token) => {
-                const signature = await guard.signEnvelope(request.envelope, token)
-                await this.signatures.addSignature(request.id, signature)
-                resolve(true)
+              const respond = async (code: string) => {
+                try {
+                  const signature = await guard.signEnvelope(request.envelope, { id: e.id, code })
+                  await this.signatures.addSignature(request.id, signature)
+                  resolve(true)
+                } catch (e) {
+                  reject(e)
+                }
               }
 
-              await onPromptCode(request, e.id, respond)
+              await onPromptCode(e.id, respond)
             } else {
               reject(e)
             }
