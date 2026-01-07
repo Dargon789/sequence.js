@@ -422,39 +422,6 @@
   - @0xsequence/signhub@1.9.17
   - @0xsequence/utils@1.9.17
 
-## 1.9.19
-
-### Patch Changes
-
-- waas update
-- Updated dependencies
-  - @0xsequence/core@1.9.19
-  - @0xsequence/indexer@1.9.19
-  - @0xsequence/relayer@1.9.19
-  - @0xsequence/utils@1.9.19
-
-## 1.9.18
-
-### Patch Changes
-
-- provider: prohibit dangerous functions
-- Updated dependencies
-  - @0xsequence/core@1.9.18
-  - @0xsequence/indexer@1.9.18
-  - @0xsequence/relayer@1.9.18
-  - @0xsequence/utils@1.9.18
-
-## 1.9.17
-
-### Patch Changes
-
-- network: add xr-sepolia
-- Updated dependencies
-  - @0xsequence/core@1.9.17
-  - @0xsequence/indexer@1.9.17
-  - @0xsequence/relayer@1.9.17
-  - @0xsequence/utils@1.9.17
-
 ## 1.9.16
 
 ### Patch Changes

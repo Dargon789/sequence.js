@@ -228,24 +228,6 @@
 
 - network: add xr-sepolia
 
-## 1.9.19
-
-### Patch Changes
-
-- waas update
-
-## 1.9.18
-
-### Patch Changes
-
-- provider: prohibit dangerous functions
-
-## 1.9.17
-
-### Patch Changes
-
-- network: add xr-sepolia
-
 ## 1.9.16
 
 ### Patch Changes

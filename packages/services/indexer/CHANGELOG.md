@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:wagmi-project/packages/sequence-core-1.0.0/packages/services/metadata/CHANGELOG.md
+# @0xsequence/metadata
+========
 # @0xsequence/indexer
+>>>>>>>> master:packages/services/indexer/CHANGELOG.md
 
 ## 2.3.8
 
@@ -595,24 +599,6 @@
 ### Patch Changes
 
 - api client bindings update
-
-## 1.9.19
-
-### Patch Changes
-
-- waas update
-
-## 1.9.18
-
-### Patch Changes
-
-- provider: prohibit dangerous functions
-
-## 1.9.17
-
-### Patch Changes
-
-- network: add xr-sepolia
 
 ## 1.9.19
 
@@ -1761,6 +1747,12 @@
 
 - - upgrade deps
 
+## 0.31.3
+
+### Patch Changes
+
+- update metadata bindings
+
 ## 0.31.0
 
 ### Minor Changes
@@ -1779,11 +1771,21 @@
 
 - update api
 
+<<<<<<<< HEAD:wagmi-project/packages/sequence-core-1.0.0/packages/services/metadata/CHANGELOG.md
+## 0.29.1
+
+### Patch Changes
+
+- metadata: ContractInfo.decimals is now optional, i.e. may be undefined
+
+  api: new APIs for user storage and isUsingGoogleMail
+========
 ## 0.29.3
 
 ### Patch Changes
 
 - indexer: add bridge contract types
+>>>>>>>> master:packages/services/indexer/CHANGELOG.md
 
 ## 0.29.0
 
