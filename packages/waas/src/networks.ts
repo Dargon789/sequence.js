@@ -25,9 +25,10 @@ export function isSimpleNetwork(network: any): network is SimpleNetwork {
 }
 
 export function toNetworkID(network: SimpleNetwork): keyof IdToNameType {
-  const networkNumber = typeof network === 'number' ? network : parseInt(network)
-  if (networkNumber in idToName) {
+  const networkNumber = typeof network === 'number' ? network : Number(network)
+  if (!isNaN(networkNumber) && networkNumber in idToName) {
     return networkNumber
+  }
   }
 
   const networkLower = network.toString().toLowerCase()
