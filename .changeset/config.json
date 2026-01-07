@@ -1,11 +1,19 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "$schema": "https://unpkg.com/@changesets/config@1.4.0/schema.json",
+  "changelog": [
+    "@changesets/cli/changelog",
+    { "repo": "0xsequence/sequence.js" }
+  ],
   "commit": false,
-  "fixed": [],
-  "linked": [],
-  "access": "restricted",
+  "linked": [
+    [
+      "@0xsequence/*"
+    ]
+  ],
+  "access": "public",
   "baseBranch": "master",
-  "updateInternalDependencies": "patch",
-  "ignore": ["@0xsequence/wallet-primitives-cli", "docs", "web"]
+  "ignore": [],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "updateInternalDependents": "always"
+  }
 }
