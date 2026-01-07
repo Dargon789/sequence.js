@@ -49,8 +49,8 @@ export class AuthCodeHandler extends IdentityHandler implements Handler {
       client_id: this.audience,
       redirect_uri: this.redirectUri,
       response_type: 'code',
-      scope: 'openid profile email',
       state,
+      ...(this.signupKind === 'apple' ? {} : { scope: 'openid profile email' }),
     })
 
     return `${this.oauthUrl}?${searchParams.toString()}`
