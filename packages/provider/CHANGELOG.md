@@ -1,17 +1,49 @@
 # @0xsequence/provider
 
+## 1.9.19
+
+### Patch Changes
+
+- waas update
+- Updated dependencies
+  - @0xsequence/abi@1.9.19
+  - @0xsequence/account@1.9.19
+  - @0xsequence/auth@1.9.19
+  - @0xsequence/core@1.9.19
+  - @0xsequence/migration@1.9.19
+  - @0xsequence/network@1.9.19
+  - @0xsequence/relayer@1.9.19
+  - @0xsequence/utils@1.9.19
+  - @0xsequence/wallet@1.9.19
+
+## 1.9.18
+
+### Patch Changes
+
+- provider: prohibit dangerous functions
+- Updated dependencies
+  - @0xsequence/abi@1.9.18
+  - @0xsequence/account@1.9.18
+  - @0xsequence/auth@1.9.18
+  - @0xsequence/core@1.9.18
+  - @0xsequence/migration@1.9.18
+  - @0xsequence/network@1.9.18
+  - @0xsequence/relayer@1.9.18
+  - @0xsequence/utils@1.9.18
+  - @0xsequence/wallet@1.9.18
+
 ## 1.9.17
 
 ### Patch Changes
 
 - network: add xr-sepolia
 - Updated dependencies
+  - @0xsequence/network@1.9.17
   - @0xsequence/abi@1.9.17
   - @0xsequence/account@1.9.17
   - @0xsequence/auth@1.9.17
   - @0xsequence/core@1.9.17
   - @0xsequence/migration@1.9.17
-  - @0xsequence/network@1.9.17
   - @0xsequence/relayer@1.9.17
   - @0xsequence/utils@1.9.17
   - @0xsequence/wallet@1.9.17
