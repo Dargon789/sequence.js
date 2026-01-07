@@ -1,5 +1,8 @@
 name: Publish Dists for Packages
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
