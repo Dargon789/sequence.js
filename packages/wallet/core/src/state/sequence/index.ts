@@ -14,7 +14,7 @@ import { Sessions, SignatureType } from './sessions.gen.js'
 export class Provider implements ProviderInterface {
   private readonly service: Sessions
 
-  constructor(host = 'https://keymachine.sequence.app') {
+  constructor(host = 'https://v3-keymachine.sequence-dev.app') {
     this.service = new Sessions(host, fetch)
   }
 
@@ -364,13 +364,9 @@ export class Provider implements ProviderInterface {
   }
 }
 
-const passkeySigners = [
-  Extensions.Dev1.passkeys,
-  Extensions.Dev2.passkeys,
-  Extensions.Rc3.passkeys,
-  Extensions.Rc4.passkeys,
-  Extensions.Rc5.passkeys,
-].map(Address.checksum)
+const passkeySigners = [Extensions.Dev1.passkeys, Extensions.Dev2.passkeys, Extensions.Rc3.passkeys].map(
+  Address.checksum,
+)
 
 const recoverSapientSignatureCompactSignature =
   'function recoverSapientSignatureCompact(bytes32 _digest, bytes _signature) view returns (bytes32)'
@@ -378,14 +374,10 @@ const recoverSapientSignatureCompactSignature =
 const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSignatureCompactSignature)
 
 class PasskeySignatureValidator implements oxProvider.Provider {
-  request: oxProvider.Provider['request'] = (async (request) => {
-    switch (request.method) {
+  request: oxProvider.Provider['request'] = (({ method, params }: { method: string; params: unknown }) => {
+    switch (method) {
       case 'eth_call':
-        if (!request.params || !Array.isArray(request.params) || request.params.length === 0) {
-          throw new Error('eth_call requires transaction parameters')
-        }
-
-        const transaction: TransactionRequest.Rpc = request.params[0]
+        const transaction: TransactionRequest.Rpc = (params as any)[0]
 
         if (!transaction.data?.startsWith(AbiFunction.getSelector(recoverSapientSignatureCompactFunction))) {
           throw new Error(
@@ -408,15 +400,15 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         }
 
       default:
-        throw new Error(`method ${request.method} not implemented`)
+        throw new Error(`method ${method} not implemented`)
     }
-  }) as oxProvider.Provider['request']
+  }) as any
 
-  on: oxProvider.Provider['on'] = (event: string) => {
+  on(event: string) {
     throw new Error(`unable to listen for ${event}: not implemented`)
   }
 
-  removeListener: oxProvider.Provider['removeListener'] = (event: string) => {
+  removeListener(event: string) {
     throw new Error(`unable to remove listener for ${event}: not implemented`)
   }
 }

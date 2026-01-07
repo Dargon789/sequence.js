@@ -5,7 +5,7 @@ const TABLE_NAME = 'auth-commitments'
 
 export type AuthCommitment = {
   id: string
-  kind: 'google-pkce' | 'apple' | `custom-${string}`
+  kind: 'google-pkce' | 'apple'
   metadata: { [key: string]: string }
   verifier?: string
   challenge?: string

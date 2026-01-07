@@ -4,25 +4,25 @@ export type {
   LoginMethod,
   GuardConfig,
   Transaction,
-  SignatureResponse,
+  SignatureSuccessResponse,
+  ChainSessionManagerEvent,
   SequenceSessionStorage,
   RandomPrivateKeyFn,
+  Session,
   SignMessagePayload,
-  SessionResponse,
   AddExplicitSessionPayload,
+  AddExplicitSessionSuccessResponsePayload,
   CreateNewSessionPayload,
-  CreateNewSessionResponse,
   SignTypedDataPayload,
-  ModifyExplicitSessionPayload,
+  ConnectSuccessResponsePayload,
+  ModifySessionSuccessResponsePayload,
+  ModifySessionPayload,
   DappClientWalletActionEventListener,
   DappClientExplicitSessionEventListener,
   TransactionRequest,
   SendWalletTransactionPayload,
-  SendWalletTransactionResponse,
+  SendWalletTransactionSuccessResponse,
   WalletActionResponse,
-  GetFeeTokensResponse,
-  FeeToken,
-  FeeOption,
 } from './types/index.js'
 export { RequestActionType, TransportMode } from './types/index.js'
 export {
@@ -39,12 +39,10 @@ export type {
   SequenceStorage,
   ExplicitSessionData,
   ImplicitSessionData,
-  SessionlessConnectionData,
   PendingRequestContext,
   PendingPayload,
 } from './utils/storage.js'
 export { WebStorage } from './utils/storage.js'
 
-export { Attestation, Permission, Extensions, SessionConfig, Constants, Payload } from '@0xsequence/wallet-primitives'
-export type { ExplicitSessionConfig, ExplicitSession, ImplicitSession, Session } from '@0xsequence/wallet-core'
-export { Signers, Wallet, Utils, Envelope, State } from '@0xsequence/wallet-core'
+export { Permission, Extensions, SessionConfig } from '@0xsequence/wallet-primitives'
+export { Signers, Wallet, Utils, Relayer } from '@0xsequence/wallet-core'
