@@ -31,7 +31,7 @@ export function isSessionDumpV2(obj: any): obj is SessionDumpV2 {
 
 // These chains are always validated for migrations
 // if they are not available, the login will fail
-export const CRITICAL_CHAINS = [1, 137]
+export const CRITICAL_CHAINS = [ChainId.MAINNET, ChainId.POLYGON]
 
 export type SessionSettings = {
   services?: ServicesSettings
