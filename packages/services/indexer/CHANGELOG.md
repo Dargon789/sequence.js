@@ -1743,6 +1743,12 @@
 
 - - upgrade deps
 
+## 0.31.3
+
+### Patch Changes
+
+- update metadata bindings
+
 ## 0.31.0
 
 ### Minor Changes

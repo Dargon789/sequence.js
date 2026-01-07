@@ -1,3 +1,4 @@
+
 # @0xsequence/metadata
 
 ## 2.3.8
@@ -1774,6 +1775,7 @@
 - metadata: ContractInfo.decimals is now optional, i.e. may be undefined
 
   api: new APIs for user storage and isUsingGoogleMail
+
 
 ## 0.29.0
 
