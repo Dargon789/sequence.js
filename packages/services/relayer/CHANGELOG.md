@@ -1,5 +1,6 @@
 # @0xsequence/relayer
 
+<<<<<<< Updated upstream
 ## 3.0.0-beta.6
 
 ### Patch Changes
@@ -48,6 +49,8 @@
 - Updated dependencies
   - @0xsequence/wallet-primitives@3.0.0-beta.1
 
+=======
+>>>>>>> Stashed changes
 ## 2.3.8
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { Extensions } from '@0xsequence/wallet-primitives'
 import { AbiEvent, AbiFunction, Address, Bytes, Hex, Provider, RpcTransport, Secp256k1 } from 'ox'
 import { describe, expect, it } from 'vitest'
@@ -12,6 +13,17 @@ import {
   LOCAL_RPC_URL,
   USDC_ADDRESS,
 } from './constants'
+=======
+import { AbiEvent, AbiFunction, Address, Bytes, Hex, Provider, RpcTransport, Secp256k1 } from 'ox'
+import { describe, expect, it } from 'vitest'
+
+import { Attestation, GenericTree, Payload, Permission, SessionConfig } from '../../primitives/src/index.js'
+import { Envelope, Signers, State, Utils, Wallet } from '../src/index.js'
+
+import { EMITTER_FUNCTIONS, EMITTER_ADDRESS, EMITTER_EVENT_TOPICS, LOCAL_RPC_URL, USDC_ADDRESS } from './constants'
+import { Extensions } from '@0xsequence/wallet-primitives'
+
+>>>>>>> Stashed changes
 const { PermissionBuilder, ERC20PermissionBuilder } = Utils
 
 function randomAddress(): Address.Address {
@@ -31,6 +43,7 @@ const ALL_EXTENSIONS = [
     name: 'Rc3',
     ...Extensions.Rc3,
   },
+<<<<<<< Updated upstream
   {
     name: 'Rc4',
     ...Extensions.Rc4,
@@ -39,6 +52,8 @@ const ALL_EXTENSIONS = [
     name: 'Rc5',
     ...Extensions.Rc5,
   },
+=======
+>>>>>>> Stashed changes
 ]
 
 // Handle the increment call being first or last depending on the session manager version
@@ -58,6 +73,7 @@ for (const extension of ALL_EXTENSIONS) {
   describe(`SessionManager (${extension.name})`, () => {
     const timeout = 30000
 
+<<<<<<< Updated upstream
     const createImplicitSigner = async (redirectUrl: string, signingKey: Hex.Hex) => {
       const implicitPrivateKey = Secp256k1.randomPrivateKey()
       const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
@@ -78,6 +94,12 @@ for (const extension of ALL_EXTENSIONS) {
       })
       return new Signers.Session.Implicit(implicitPrivateKey, attestation, identitySignature, implicitAddress)
     }
+=======
+    const identityPrivateKey = Secp256k1.randomPrivateKey()
+    const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
+
+    const stateProvider = new State.Local.Provider()
+>>>>>>> Stashed changes
 
     it(
       'should load from state',
@@ -85,6 +107,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -93,6 +116,11 @@ for (const extension of ALL_EXTENSIONS) {
         let topology = SessionConfig.emptySessionsTopology(identityAddress)
         // Add random signer to the topology
         const sessionPermission: ExplicitSessionConfig = {
+=======
+        let topology = SessionConfig.emptySessionsTopology(identityAddress)
+        // Add random signer to the topology
+        const sessionPermission: Signers.Session.ExplicitParams = {
+>>>>>>> Stashed changes
           chainId,
           valueLimit: 1000000000000000000n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -155,7 +183,11 @@ for (const extension of ALL_EXTENSIONS) {
         const actualImageHash = await sessionManager.imageHash
         expect(actualImageHash).toBe(imageHash)
         expect(SessionConfig.isCompleteSessionsTopology(actualTopology)).toBe(true)
+<<<<<<< Updated upstream
         expect(SessionConfig.getIdentitySigners(actualTopology)).toStrictEqual([identityAddress])
+=======
+        expect(SessionConfig.getIdentitySigner(actualTopology)).toBe(identityAddress)
+>>>>>>> Stashed changes
         expect(SessionConfig.getImplicitBlacklist(actualTopology)).toStrictEqual([randomBlacklistAddress])
         const actualPermissions = SessionConfig.getSessionPermissions(actualTopology, randomSigner)
         expect(actualPermissions).toStrictEqual({
@@ -172,11 +204,14 @@ for (const extension of ALL_EXTENSIONS) {
       async () => {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
         const stateProvider = new State.Local.Provider()
 
+=======
+>>>>>>> Stashed changes
         // Create implicit signer
         const implicitPrivateKey = Secp256k1.randomPrivateKey()
         const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
@@ -210,11 +245,15 @@ for (const extension of ALL_EXTENSIONS) {
           {
             threshold: 1n,
             checkpoint: 0n,
+<<<<<<< Updated upstream
             topology: [
               { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
               // Include a random node leaf (bytes32) to prevent image hash collision
               Hex.random(32),
             ],
+=======
+            topology: { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+>>>>>>> Stashed changes
           },
           {
             stateProvider,
@@ -227,7 +266,11 @@ for (const extension of ALL_EXTENSIONS) {
 
         // Create a test transaction
         const call: Payload.Call = {
+<<<<<<< Updated upstream
           to: EMITTER_ADDRESS1,
+=======
+          to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
           gasLimit: 0n,
@@ -258,6 +301,7 @@ for (const extension of ALL_EXTENSIONS) {
       timeout,
     )
 
+<<<<<<< Updated upstream
     it(
       'should create and sign with a multiple implicit sessions',
       async () => {
@@ -414,10 +458,13 @@ for (const extension of ALL_EXTENSIONS) {
       timeout,
     )
 
+=======
+>>>>>>> Stashed changes
     const shouldCreateAndSignWithExplicitSession = async (useChainId: boolean) => {
       const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
       const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
       // Create unique identity and state provider for this test
       const identityPrivateKey = Secp256k1.randomPrivateKey()
       const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -430,6 +477,15 @@ for (const extension of ALL_EXTENSIONS) {
         valueLimit: 1000000000000000000n, // 1 ETH
         deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
         permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
+=======
+      // Create explicit signer
+      const explicitPrivateKey = Secp256k1.randomPrivateKey()
+      const explicitPermissions: Signers.Session.ExplicitParams = {
+        chainId: useChainId ? chainId : 0,
+        valueLimit: 1000000000000000000n, // 1 ETH
+        deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+        permissions: [PermissionBuilder.for(EMITTER_ADDRESS).allowAll().build()],
+>>>>>>> Stashed changes
       }
       const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
       // Create the topology and wallet
@@ -443,11 +499,15 @@ for (const extension of ALL_EXTENSIONS) {
         {
           threshold: 1n,
           checkpoint: 0n,
+<<<<<<< Updated upstream
           topology: [
             { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
             // Include a random node leaf (bytes32) to prevent image hash collision
             Hex.random(32),
           ],
+=======
+          topology: { type: 'sapient-signer', address: extension.sessions, weight: 1n, imageHash },
+>>>>>>> Stashed changes
         },
         {
           stateProvider,
@@ -461,7 +521,11 @@ for (const extension of ALL_EXTENSIONS) {
 
       // Create a test transaction within permissions
       const call: Payload.Call = {
+<<<<<<< Updated upstream
         to: EMITTER_ADDRESS1,
+=======
+        to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
         value: 0n,
         data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
         gasLimit: 0n,
@@ -510,18 +574,25 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = 0
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
         const stateProvider = new State.Local.Provider()
 
+=======
+>>>>>>> Stashed changes
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitPermissions: Signers.Session.ExplicitParams = {
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) - 3600), // 1 hour ago
+<<<<<<< Updated upstream
           permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
+=======
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS).allowAll().build()],
+>>>>>>> Stashed changes
         }
         const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, explicitPermissions)
         // Create the topology and wallet
@@ -550,7 +621,11 @@ for (const extension of ALL_EXTENSIONS) {
 
         // Create a test transaction within permissions
         const call: Payload.Call = {
+<<<<<<< Updated upstream
           to: EMITTER_ADDRESS1,
+=======
+          to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
           gasLimit: 0n,
@@ -566,8 +641,13 @@ for (const extension of ALL_EXTENSIONS) {
         }
 
         // Sign the transaction
+<<<<<<< Updated upstream
         await expect(sessionManager.signSapient(wallet.address, chainId, payload, imageHash)).rejects.toThrow(
           `Signer supporting call is expired: ${explicitSigner.address}`,
+=======
+        expect(sessionManager.signSapient(wallet.address, chainId, payload, imageHash)).rejects.toThrow(
+          'No signers match the topology',
+>>>>>>> Stashed changes
         )
       },
       timeout,
@@ -606,6 +686,7 @@ for (const extension of ALL_EXTENSIONS) {
       transaction: { to: Address.Address; data: Hex.Hex },
       expectedEventTopic?: Hex.Hex,
     ) => {
+<<<<<<< Updated upstream
       // Generate and use a random sender address to prevent race conditions
       const senderAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: Secp256k1.randomPrivateKey() }))
       await provider.request({
@@ -626,6 +707,12 @@ for (const extension of ALL_EXTENSIONS) {
             from: senderAddress,
           },
         ],
+=======
+      console.log('Simulating transaction', transaction)
+      const txHash = await provider.request({
+        method: 'eth_sendTransaction',
+        params: [transaction],
+>>>>>>> Stashed changes
       })
       console.log('Transaction hash:', txHash)
 
@@ -659,11 +746,14 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
         const stateProvider = new State.Local.Provider()
 
+=======
+>>>>>>> Stashed changes
         // Create an implicit signer
         const implicitPrivateKey = Secp256k1.randomPrivateKey()
         const implicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: implicitPrivateKey }))
@@ -714,7 +804,11 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
+<<<<<<< Updated upstream
           to: EMITTER_ADDRESS1,
+=======
+          to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[1]), // Implicit emit
           gasLimit: 0n,
@@ -736,6 +830,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -748,6 +843,15 @@ for (const extension of ALL_EXTENSIONS) {
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
           permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).allowAll().build()],
+=======
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const sessionPermission: Signers.Session.ExplicitParams = {
+          chainId,
+          valueLimit: 1000000000000000000n, // 1 ETH
+          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS).allowAll().build()],
+>>>>>>> Stashed changes
         }
         const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
         // Test manually building the session topology
@@ -787,7 +891,11 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
+<<<<<<< Updated upstream
           to: EMITTER_ADDRESS1,
+=======
+          to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
           gasLimit: 0n,
@@ -809,6 +917,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -821,6 +930,15 @@ for (const extension of ALL_EXTENSIONS) {
           valueLimit: 0n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
           permissions: [PermissionBuilder.for(EMITTER_ADDRESS1).forFunction(EMITTER_FUNCTIONS[0]).onlyOnce().build()],
+=======
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const sessionPermission: Signers.Session.ExplicitParams = {
+          chainId,
+          valueLimit: 0n,
+          deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
+          permissions: [PermissionBuilder.for(EMITTER_ADDRESS).forFunction(EMITTER_FUNCTIONS[0]).onlyOnce().build()],
+>>>>>>> Stashed changes
         }
         const explicitSigner = new Signers.Session.Explicit(explicitPrivateKey, sessionPermission)
         // Test manually building the session topology
@@ -860,7 +978,11 @@ for (const extension of ALL_EXTENSIONS) {
         })
 
         const call: Payload.Call = {
+<<<<<<< Updated upstream
           to: EMITTER_ADDRESS1,
+=======
+          to: EMITTER_ADDRESS,
+>>>>>>> Stashed changes
           value: 0n,
           data: AbiFunction.encodeData(EMITTER_FUNCTIONS[0]), // Explicit emit
           gasLimit: 0n,
@@ -901,16 +1023,23 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
         const stateProvider = new State.Local.Provider()
 
+=======
+>>>>>>> Stashed changes
         // Create explicit signer
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
         const approveAmount = 10000000n // 10 USDC
+<<<<<<< Updated upstream
         const sessionPermission: ExplicitSessionConfig = {
+=======
+        const sessionPermission: Signers.Session.ExplicitParams = {
+>>>>>>> Stashed changes
           chainId,
           valueLimit: 0n,
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -1004,6 +1133,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -1013,6 +1143,12 @@ for (const extension of ALL_EXTENSIONS) {
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
         const sessionPermission: ExplicitSessionConfig = {
+=======
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
+        const sessionPermission: Signers.Session.ExplicitParams = {
+>>>>>>> Stashed changes
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -1114,6 +1250,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -1123,6 +1260,12 @@ for (const extension of ALL_EXTENSIONS) {
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
         const sessionPermission: ExplicitSessionConfig = {
+=======
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
+        const sessionPermission: Signers.Session.ExplicitParams = {
+>>>>>>> Stashed changes
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now
@@ -1238,6 +1381,7 @@ for (const extension of ALL_EXTENSIONS) {
         const provider = Provider.from(RpcTransport.fromHttp(LOCAL_RPC_URL))
         const chainId = Number(await provider.request({ method: 'eth_chainId' }))
 
+<<<<<<< Updated upstream
         // Create unique identity and state provider for this test
         const identityPrivateKey = Secp256k1.randomPrivateKey()
         const identityAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: identityPrivateKey }))
@@ -1247,6 +1391,12 @@ for (const extension of ALL_EXTENSIONS) {
         const explicitPrivateKey = Secp256k1.randomPrivateKey()
         const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
         const sessionPermission: ExplicitSessionConfig = {
+=======
+        // Create explicit signer
+        const explicitPrivateKey = Secp256k1.randomPrivateKey()
+        const explicitAddress = Address.fromPublicKey(Secp256k1.getPublicKey({ privateKey: explicitPrivateKey }))
+        const sessionPermission: Signers.Session.ExplicitParams = {
+>>>>>>> Stashed changes
           chainId,
           valueLimit: 1000000000000000000n, // 1 ETH
           deadline: BigInt(Math.floor(Date.now() / 1000) + 3600), // 1 hour from now

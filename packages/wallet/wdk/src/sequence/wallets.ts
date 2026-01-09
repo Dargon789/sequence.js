@@ -14,7 +14,11 @@ import { PasskeysHandler } from './handlers/passkeys.js'
 import { GuardRole } from './guards.js'
 
 export type StartSignUpWithRedirectArgs = {
+<<<<<<< Updated upstream
   kind: 'google-pkce' | 'apple' | `custom-${string}`
+=======
+  kind: 'google-pkce' | 'apple'
+>>>>>>> Stashed changes
   target: string
   metadata: { [key: string]: string }
 }
@@ -55,7 +59,11 @@ export type CompleteRedirectArgs = CommonSignupArgs & {
 }
 
 export type AuthCodeSignupArgs = CommonSignupArgs & {
+<<<<<<< Updated upstream
   kind: 'google-pkce' | 'apple' | `custom-${string}`
+=======
+  kind: 'google-pkce' | 'apple'
+>>>>>>> Stashed changes
   commitment: AuthCommitment
   code: string
   target: string
@@ -434,7 +442,11 @@ function toConfig(
   loginTopology: Config.Topology,
   devicesTopology: Config.Topology,
   modules: Module[],
+<<<<<<< Updated upstream
   guardTopology?: Config.Topology,
+=======
+  guardTopology?: Config.NestedLeaf,
+>>>>>>> Stashed changes
 ): Config.Config {
   if (!guardTopology) {
     return {
@@ -467,7 +479,11 @@ function toModulesTopology(modules: Module[]): Config.Topology {
       return {
         type: 'nested',
         weight: module.weight,
+<<<<<<< Updated upstream
         threshold: module.sapientLeaf.weight + Config.getWeight(module.guardLeaf, () => true).maxWeight,
+=======
+        threshold: module.sapientLeaf.weight + module.guardLeaf.weight,
+>>>>>>> Stashed changes
         tree: [module.sapientLeaf, module.guardLeaf],
       } as Config.NestedLeaf
     } else {
@@ -491,7 +507,12 @@ function fromModulesTopology(topology: Config.Topology): Module[] {
   } else if (
     Config.isNestedLeaf(topology) &&
     Config.isNode(topology.tree) &&
+<<<<<<< Updated upstream
     Config.isSapientSignerLeaf(topology.tree[0])
+=======
+    Config.isSapientSignerLeaf(topology.tree[0]) &&
+    Config.isNestedLeaf(topology.tree[1])
+>>>>>>> Stashed changes
   ) {
     modules.push({
       sapientLeaf: topology.tree[0],
@@ -512,7 +533,11 @@ function fromConfig(config: Config.Config): {
   loginTopology: Config.Topology
   devicesTopology: Config.Topology
   modules: Module[]
+<<<<<<< Updated upstream
   guardTopology?: Config.Topology
+=======
+  guardTopology?: Config.NestedLeaf
+>>>>>>> Stashed changes
 } {
   if (config.threshold === 1n) {
     if (Config.isNode(config.topology) && Config.isNode(config.topology[0])) {
@@ -529,7 +554,11 @@ function fromConfig(config: Config.Config): {
       Config.isNode(config.topology) &&
       Config.isNode(config.topology[0]) &&
       Config.isNode(config.topology[0][0]) &&
+<<<<<<< Updated upstream
       Config.isTopology(config.topology[0][1])
+=======
+      Config.isNestedLeaf(config.topology[0][1])
+>>>>>>> Stashed changes
     ) {
       return {
         loginTopology: config.topology[0][0][0],
@@ -692,6 +721,7 @@ export class Wallets implements WalletsInterface {
         }
       }
     }
+<<<<<<< Updated upstream
 
     if (args.kind.startsWith('custom-')) {
       // TODO: support other custom auth methods (e.g. id-token)
@@ -716,6 +746,12 @@ export class Wallets implements WalletsInterface {
   async startSignUpWithRedirect(args: StartSignUpWithRedirectArgs) {
     const kind = args.kind.startsWith('custom-') ? args.kind : 'login-' + args.kind
     const handler = this.shared.handlers.get(kind) as AuthCodeHandler
+=======
+  }
+
+  async startSignUpWithRedirect(args: StartSignUpWithRedirectArgs) {
+    const handler = this.shared.handlers.get('login-' + args.kind) as AuthCodeHandler
+>>>>>>> Stashed changes
     if (!handler) {
       throw new Error('handler-not-registered')
     }
@@ -740,8 +776,12 @@ export class Wallets implements WalletsInterface {
         use4337: args.use4337,
       })
     } else {
+<<<<<<< Updated upstream
       const kind = commitment.kind.startsWith('custom-') ? commitment.kind : 'login-' + commitment.kind
       const handler = this.shared.handlers.get(kind) as AuthCodeHandler
+=======
+      const handler = this.shared.handlers.get('login-' + commitment.kind) as AuthCodeHandler
+>>>>>>> Stashed changes
       if (!handler) {
         throw new Error('handler-not-registered')
       }
@@ -837,12 +877,39 @@ export class Wallets implements WalletsInterface {
     let modules: Module[] = []
 
     if (!args.noSessionManager) {
+<<<<<<< Updated upstream
       const identitySigners = [device.address]
       if (!Signers.isSapientSigner(loginSigner.signer)) {
         // Add non sapient login signer to the identity signers
         identitySigners.unshift(loginSignerAddress)
       }
       await this.shared.modules.sessions.initSessionModule(modules, identitySigners, sessionsGuardTopology)
+=======
+      //  Calculate image hash with the identity signer
+      const sessionsTopology = SessionConfig.emptySessionsTopology(loginSignerAddress)
+      // Store this tree in the state provider
+      const sessionsConfigTree = SessionConfig.sessionsTopologyToConfigurationTree(sessionsTopology)
+      this.shared.sequence.stateProvider.saveTree(sessionsConfigTree)
+      // Prepare the configuration leaf
+      const sessionsImageHash = GenericTree.hash(sessionsConfigTree)
+      const signer = {
+        ...ManagerOptionsDefaults.defaultSessionsTopology,
+        address: this.shared.sequence.extensions.sessions,
+        imageHash: sessionsImageHash,
+      }
+      if (sessionsGuardTopology) {
+        modules.push({
+          sapientLeaf: signer,
+          weight: 255n,
+          guardLeaf: sessionsGuardTopology,
+        })
+      } else {
+        modules.push({
+          sapientLeaf: signer,
+          weight: 255n,
+        })
+      }
+>>>>>>> Stashed changes
     }
 
     if (!args.noRecovery) {
@@ -1010,10 +1077,13 @@ export class Wallets implements WalletsInterface {
           await this.shared.modules.recovery.addRecoverySignerToModules(modules, device.address)
         }
 
+<<<<<<< Updated upstream
         if (this.shared.modules.sessions.hasSessionModule(modules)) {
           await this.shared.modules.sessions.addIdentitySignerToModules(modules, device.address)
         }
 
+=======
+>>>>>>> Stashed changes
         const walletEntryToUpdate: Wallet = {
           ...(existingWallet as Wallet),
           address: args.wallet,
@@ -1179,6 +1249,15 @@ export class Wallets implements WalletsInterface {
       throw new Error('wallet-not-found')
     }
 
+<<<<<<< Updated upstream
+=======
+    // Prevent starting logout if already logging out or not ready
+    if (walletEntry.status !== 'ready') {
+      console.warn(`Logout called on wallet ${wallet} with status ${walletEntry.status}. Aborting.`)
+      throw new Error(`Wallet is not in 'ready' state for logout (current: ${walletEntry.status})`)
+    }
+
+>>>>>>> Stashed changes
     if (options?.skipRemoveDevice) {
       await Promise.all([
         this.shared.databases.manager.del(wallet),
@@ -1187,12 +1266,15 @@ export class Wallets implements WalletsInterface {
       return undefined as any
     }
 
+<<<<<<< Updated upstream
     // Prevent starting logout if already logging out or not ready
     if (walletEntry.status !== 'ready') {
       console.warn(`Logout called on wallet ${wallet} with status ${walletEntry.status}. Aborting.`)
       throw new Error(`Wallet is not in 'ready' state for logout (current: ${walletEntry.status})`)
     }
 
+=======
+>>>>>>> Stashed changes
     const device = await this.shared.modules.devices.get(walletEntry.device)
     if (!device) {
       throw new Error('device-not-found')
@@ -1382,11 +1464,14 @@ export class Wallets implements WalletsInterface {
       await this.shared.modules.recovery.removeRecoverySignerFromModules(modules, deviceToRemove)
     }
 
+<<<<<<< Updated upstream
     // Remove the device from the session module's topology as well.
     if (this.shared.modules.sessions.hasSessionModule(modules)) {
       await this.shared.modules.sessions.removeIdentitySignerFromModules(modules, deviceToRemove)
     }
 
+=======
+>>>>>>> Stashed changes
     // Request the configuration update.
     const requestId = await this.requestConfigurationUpdate(
       wallet,

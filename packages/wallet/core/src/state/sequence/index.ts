@@ -14,7 +14,11 @@ import { Sessions, SignatureType } from './sessions.gen.js'
 export class Provider implements ProviderInterface {
   private readonly service: Sessions
 
+<<<<<<< Updated upstream
   constructor(host = 'https://keymachine.sequence.app') {
+=======
+  constructor(host = 'https://v3-keymachine.sequence-dev.app') {
+>>>>>>> Stashed changes
     this.service = new Sessions(host, fetch)
   }
 
@@ -364,6 +368,7 @@ export class Provider implements ProviderInterface {
   }
 }
 
+<<<<<<< Updated upstream
 const passkeySigners = [
   Extensions.Dev1.passkeys,
   Extensions.Dev2.passkeys,
@@ -371,6 +376,11 @@ const passkeySigners = [
   Extensions.Rc4.passkeys,
   Extensions.Rc5.passkeys,
 ].map(Address.checksum)
+=======
+const passkeySigners = [Extensions.Dev1.passkeys, Extensions.Dev2.passkeys, Extensions.Rc3.passkeys].map(
+  Address.checksum,
+)
+>>>>>>> Stashed changes
 
 const recoverSapientSignatureCompactSignature =
   'function recoverSapientSignatureCompact(bytes32 _digest, bytes _signature) view returns (bytes32)'
@@ -378,6 +388,7 @@ const recoverSapientSignatureCompactSignature =
 const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSignatureCompactSignature)
 
 class PasskeySignatureValidator implements oxProvider.Provider {
+<<<<<<< Updated upstream
   request: oxProvider.Provider['request'] = (async (request) => {
     switch (request.method) {
       case 'eth_call':
@@ -386,6 +397,12 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         }
 
         const transaction: TransactionRequest.Rpc = request.params[0]
+=======
+  request: oxProvider.Provider['request'] = (({ method, params }: { method: string; params: unknown }) => {
+    switch (method) {
+      case 'eth_call':
+        const transaction: TransactionRequest.Rpc = (params as any)[0]
+>>>>>>> Stashed changes
 
         if (!transaction.data?.startsWith(AbiFunction.getSelector(recoverSapientSignatureCompactFunction))) {
           throw new Error(
@@ -408,6 +425,7 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         }
 
       default:
+<<<<<<< Updated upstream
         throw new Error(`method ${request.method} not implemented`)
     }
   }) as oxProvider.Provider['request']
@@ -417,6 +435,17 @@ class PasskeySignatureValidator implements oxProvider.Provider {
   }
 
   removeListener: oxProvider.Provider['removeListener'] = (event: string) => {
+=======
+        throw new Error(`method ${method} not implemented`)
+    }
+  }) as any
+
+  on(event: string) {
+    throw new Error(`unable to listen for ${event}: not implemented`)
+  }
+
+  removeListener(event: string) {
+>>>>>>> Stashed changes
     throw new Error(`unable to remove listener for ${event}: not implemented`)
   }
 }

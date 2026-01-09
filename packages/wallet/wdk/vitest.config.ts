@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+import { BrowserNavigationCrossOriginPolicyEnum } from 'happy-dom'
+>>>>>>> Stashed changes
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({

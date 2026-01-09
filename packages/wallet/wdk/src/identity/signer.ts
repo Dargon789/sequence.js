@@ -17,7 +17,11 @@ export function toIdentityAuthKey(authKey: AuthKey): Identity.AuthKey {
           hash: 'SHA-256',
         },
         authKey.privateKey,
+<<<<<<< Updated upstream
         new Uint8Array(digest),
+=======
+        digest,
+>>>>>>> Stashed changes
       )
       return Hex.fromBytes(new Uint8Array(authKeySignature))
     },

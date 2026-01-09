@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { Address, Bytes, Hash, Hex } from 'ox'
 
 import { from } from '../src/address.js'
+<<<<<<< Updated upstream
 import { Context, Dev1, Dev2, Rc3, Rc4, Rc5 } from '../src/context.js'
+=======
+import { Context, Dev1, Dev2, Rc3 } from '../src/context.js'
+>>>>>>> Stashed changes
 import { Config, hashConfiguration } from '../src/config.js'
 
 describe('Address', () => {
@@ -121,6 +125,7 @@ describe('Address', () => {
       expect(address).not.toBe(dev2Address)
     })
 
+<<<<<<< Updated upstream
     it('should work with Rc4 context', () => {
       const { stage2, ...rc4Context } = Rc4
       const address = from(sampleConfig, rc4Context)
@@ -147,6 +152,8 @@ describe('Address', () => {
       expect(address).not.toBe(dev2Address)
     })
 
+=======
+>>>>>>> Stashed changes
     it('should handle complex topology configurations', () => {
       const complexConfig: Config = {
         threshold: 2n,

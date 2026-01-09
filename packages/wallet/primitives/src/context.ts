@@ -59,6 +59,7 @@ export const Rc3_4337: Context = {
   },
 }
 
+<<<<<<< Updated upstream
 export const Rc4: Context = {
   factory: '0x00000000000018A77519fcCCa060c2537c9D6d3F',
   stage1: '0x0000000000003DF093bc4257E6dCE45D937EF161',
@@ -97,6 +98,8 @@ export const Rc5_4337: Context = {
   },
 }
 
+=======
+>>>>>>> Stashed changes
 export type KnownContext = Context & {
   name: string
   development: boolean
@@ -108,10 +111,13 @@ export const KnownContexts: KnownContext[] = [
   { name: 'Dev2_4337', development: true, ...Dev2_4337 },
   { name: 'Rc3', development: true, ...Rc3 },
   { name: 'Rc3_4337', development: true, ...Rc3_4337 },
+<<<<<<< Updated upstream
   { name: 'Rc4', development: false, ...Rc4 },
   { name: 'Rc4_4337', development: false, ...Rc4_4337 },
   { name: 'Rc5', development: false, ...Rc5 },
   { name: 'Rc5_4337', development: false, ...Rc5_4337 },
+=======
+>>>>>>> Stashed changes
 ]
 
 export function isKnownContext(context: Context): context is KnownContext {

@@ -1,6 +1,10 @@
 {
   "name": "@0xsequence/wallet-wdk",
+<<<<<<< Updated upstream
   "version": "3.0.0-beta.6",
+=======
+  "version": "0.0.0",
+>>>>>>> Stashed changes
   "license": "Apache-2.0",
   "type": "module",
   "publishConfig": {
@@ -10,9 +14,14 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+<<<<<<< Updated upstream
     "test": "vitest run && npm run test:ssr",
     "test:coverage": "vitest run --coverage",
     "test:ssr": "node test/test-ssr-safety.mjs",
+=======
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+>>>>>>> Stashed changes
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist"
   },
@@ -24,6 +33,7 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
+<<<<<<< Updated upstream
     "@types/node": "^25.0.2",
     "@vitest/coverage-v8": "^4.0.15",
     "dotenv": "^17.2.3",
@@ -31,10 +41,20 @@
     "happy-dom": "^20.0.11",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
+=======
+    "@types/node": "^22.15.29",
+    "@vitest/coverage-v8": "^3.2.4",
+    "dotenv": "^16.5.0",
+    "fake-indexeddb": "^6.0.1",
+    "happy-dom": "^20.0.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.1"
+>>>>>>> Stashed changes
   },
   "dependencies": {
     "@0xsequence/guard": "workspace:^",
     "@0xsequence/identity-instrument": "workspace:^",
+<<<<<<< Updated upstream
     "@0xsequence/relayer": "workspace:^",
     "@0xsequence/tee-verifier": "^0.1.2",
     "@0xsequence/wallet-core": "workspace:^",
@@ -43,5 +63,14 @@
     "jwt-decode": "^4.0.0",
     "ox": "^0.9.17",
     "uuid": "^13.0.0"
+=======
+    "@0xsequence/tee-verifier": "^0.1.2",
+    "@0xsequence/wallet-core": "workspace:^",
+    "@0xsequence/wallet-primitives": "workspace:^",
+    "idb": "^7.1.1",
+    "jwt-decode": "^4.0.0",
+    "ox": "^0.7.2",
+    "uuid": "^11.1.0"
+>>>>>>> Stashed changes
   }
 }

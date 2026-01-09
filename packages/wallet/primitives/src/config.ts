@@ -281,6 +281,7 @@ export function flatLeavesToTopology(leaves: Leaf[]): Topology {
   ]
 }
 
+<<<<<<< Updated upstream
 export function topologyToFlatLeaves(topology: Topology): Leaf[] {
   if (isNode(topology)) {
     return [...topologyToFlatLeaves(topology[0]), ...topologyToFlatLeaves(topology[1])]
@@ -291,6 +292,8 @@ export function topologyToFlatLeaves(topology: Topology): Leaf[] {
   return [topology]
 }
 
+=======
+>>>>>>> Stashed changes
 export function configToJson(config: Config): string {
   return JSON.stringify({
     threshold: config.threshold.toString(),
@@ -627,6 +630,7 @@ function mergeLeaf(a: Leaf, b: Leaf): Leaf {
 
   throw new Error('Topology mismatch: incompatible leaf types')
 }
+<<<<<<< Updated upstream
 
 export function replaceAddress(
   topology: Topology,
@@ -663,3 +667,5 @@ export function replaceAddress(
   // 4. Return other leaf types unchanged (Subdigest, NodeLeaf, etc.)
   return topology
 }
+=======
+>>>>>>> Stashed changes

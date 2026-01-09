@@ -1,5 +1,9 @@
 import { AbiFunction, AbiParameters, Address, Bytes, Hex, Provider } from 'ox'
+<<<<<<< Updated upstream
 import { SignatureErc6492 } from 'ox/erc6492'
+=======
+import { WrappedSignature } from 'ox/erc6492'
+>>>>>>> Stashed changes
 import { DEPLOY } from './constants.js'
 import { Context } from './context.js'
 
@@ -29,7 +33,11 @@ export function wrap<T extends Bytes.Bytes | Hex.Hex>(
       [{ type: 'address' }, { type: 'bytes' }, { type: 'bytes' }],
       [to, Hex.from(data), Hex.from(signature)],
     ),
+<<<<<<< Updated upstream
     SignatureErc6492.magicBytes,
+=======
+    WrappedSignature.magicBytes,
+>>>>>>> Stashed changes
   )
 
   switch (typeof signature) {
@@ -46,12 +54,21 @@ export function decode<T extends Bytes.Bytes | Hex.Hex>(
   switch (typeof signature) {
     case 'object':
       if (
+<<<<<<< Updated upstream
         Bytes.toHex(signature.subarray(-SignatureErc6492.magicBytes.slice(2).length / 2)) ===
         SignatureErc6492.magicBytes
       ) {
         const [to, data, decoded] = AbiParameters.decode(
           [{ type: 'address' }, { type: 'bytes' }, { type: 'bytes' }],
           signature.subarray(0, -SignatureErc6492.magicBytes.slice(2).length / 2),
+=======
+        Bytes.toHex(signature.subarray(-WrappedSignature.magicBytes.slice(2).length / 2)) ===
+        WrappedSignature.magicBytes
+      ) {
+        const [to, data, decoded] = AbiParameters.decode(
+          [{ type: 'address' }, { type: 'bytes' }, { type: 'bytes' }],
+          signature.subarray(0, -WrappedSignature.magicBytes.slice(2).length / 2),
+>>>>>>> Stashed changes
         )
         return { signature: Hex.toBytes(decoded) as T, erc6492: { to, data: Hex.toBytes(data) as T } }
       } else {
@@ -59,11 +76,19 @@ export function decode<T extends Bytes.Bytes | Hex.Hex>(
       }
 
     case 'string':
+<<<<<<< Updated upstream
       if (signature.endsWith(SignatureErc6492.magicBytes.slice(2))) {
         try {
           const [to, data, decoded] = AbiParameters.decode(
             [{ type: 'address' }, { type: 'bytes' }, { type: 'bytes' }],
             signature.slice(0, -SignatureErc6492.magicBytes.slice(2).length) as Hex.Hex,
+=======
+      if (signature.endsWith(WrappedSignature.magicBytes.slice(2))) {
+        try {
+          const [to, data, decoded] = AbiParameters.decode(
+            [{ type: 'address' }, { type: 'bytes' }, { type: 'bytes' }],
+            signature.slice(0, -WrappedSignature.magicBytes.slice(2).length) as Hex.Hex,
+>>>>>>> Stashed changes
           )
           return { signature: decoded as T, erc6492: { to, data: data as T } }
         } catch {

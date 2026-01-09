@@ -14,7 +14,11 @@ import {
 } from 'fake-indexeddb'
 import { Provider, RpcTransport } from 'ox'
 import { vi } from 'vitest'
+<<<<<<< Updated upstream
 import { LOCAL_RPC_URL } from './constants.js'
+=======
+import { LOCAL_RPC_URL } from './constants'
+>>>>>>> Stashed changes
 
 // Add IndexedDB support to the test environment using fake-indexeddb
 global.indexedDB = indexedDB

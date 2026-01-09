@@ -1,11 +1,19 @@
 {
   "name": "@0xsequence/metadata",
+<<<<<<< Updated upstream
   "version": "3.0.0-beta.6",
+=======
+  "version": "3.0.0",
+>>>>>>> Stashed changes
   "publishConfig": {
     "access": "public"
   },
   "description": "metadata sub-package for Sequence",
+<<<<<<< Updated upstream
   "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/services/metadata",
+=======
+  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/metadata",
+>>>>>>> Stashed changes
   "author": "Sequence Platforms Inc.",
   "license": "Apache-2.0",
   "scripts": {
@@ -16,13 +24,22 @@
   },
   "exports": {
     ".": {
+<<<<<<< Updated upstream
       "types": "./dist/index.d.ts",
+=======
+      "types": "./src/index.ts",
+>>>>>>> Stashed changes
       "default": "./dist/index.js"
     }
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
+<<<<<<< Updated upstream
     "@types/node": "^25.0.2",
     "typescript": "^5.9.3"
+=======
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3"
+>>>>>>> Stashed changes
   }
 }

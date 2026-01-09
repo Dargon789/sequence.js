@@ -5,7 +5,11 @@ const TABLE_NAME = 'auth-commitments'
 
 export type AuthCommitment = {
   id: string
+<<<<<<< Updated upstream
   kind: 'google-pkce' | 'apple' | `custom-${string}`
+=======
+  kind: 'google-pkce' | 'apple'
+>>>>>>> Stashed changes
   metadata: { [key: string]: string }
   verifier?: string
   challenge?: string

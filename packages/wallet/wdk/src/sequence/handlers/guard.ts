@@ -1,5 +1,6 @@
 import { Address, Hex } from 'ox'
 import * as Guard from '@0xsequence/guard'
+<<<<<<< Updated upstream
 import { Signers } from '@0xsequence/wallet-core'
 import { Handler } from './handler.js'
 import { BaseSignatureRequest, SignerUnavailable, SignerReady, SignerActionable, Kinds } from '../types/index.js'
@@ -13,18 +14,36 @@ export type PromptCodeHandler = (
   codeType: 'TOTP' | 'PIN',
   respond: RespondFn,
 ) => Promise<void>
+=======
+import { Handler } from './handler.js'
+import { BaseSignatureRequest, SignerUnavailable, SignerReady, SignerActionable, Kinds } from '../types/index.js'
+import { Signatures } from '../signatures.js'
+import { GuardRole, Guards } from '../guards.js'
+>>>>>>> Stashed changes
 
 export class GuardHandler implements Handler {
   kind = Kinds.Guard
 
+<<<<<<< Updated upstream
   private onPromptCode: undefined | PromptCodeHandler
+=======
+  private onPromptCode:
+    | undefined
+    | ((codeType: 'TOTP' | 'PIN', respond: (code: string) => Promise<void>) => Promise<void>)
+>>>>>>> Stashed changes
 
   constructor(
     private readonly signatures: Signatures,
     private readonly guards: Guards,
   ) {}
 
+<<<<<<< Updated upstream
   public registerUI(onPromptCode: PromptCodeHandler) {
+=======
+  public registerUI(
+    onPromptCode: (codeType: 'TOTP' | 'PIN', respond: (code: string) => Promise<void>) => Promise<void>,
+  ) {
+>>>>>>> Stashed changes
     this.onPromptCode = onPromptCode
     return () => {
       this.onPromptCode = undefined
@@ -95,6 +114,7 @@ export class GuardHandler implements Handler {
             resolve(true)
           } catch (e) {
             if (e instanceof Guard.AuthRequiredError) {
+<<<<<<< Updated upstream
               const respond: RespondFn = async (token) => {
                 const signature = await guard.signEnvelope(request.envelope, token)
                 await this.signatures.addSignature(request.id, signature)
@@ -102,6 +122,19 @@ export class GuardHandler implements Handler {
               }
 
               await onPromptCode(request, e.id, respond)
+=======
+              const respond = async (code: string) => {
+                try {
+                  const signature = await guard.signEnvelope(request.envelope, { id: e.id, code })
+                  await this.signatures.addSignature(request.id, signature)
+                  resolve(true)
+                } catch (e) {
+                  reject(e)
+                }
+              }
+
+              await onPromptCode(e.id, respond)
+>>>>>>> Stashed changes
             } else {
               reject(e)
             }

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+<<<<<<< Updated upstream
 import { Manager } from '../src/sequence/index.js'
 import { GuardHandler } from '../src/sequence/handlers/guard.js'
 import { Address, Bytes, Hex, TypedData } from 'ox'
@@ -6,6 +7,15 @@ import { Config, Constants, Network, Payload } from '@0xsequence/wallet-primitiv
 import { Kinds } from '../src/sequence/types/signer.js'
 import { newManager } from './constants.js'
 import { GuardRole, Guards } from '../src/sequence/guards.js'
+=======
+import { Manager } from '../src/sequence'
+import { GuardHandler } from '../src/sequence/handlers/guard'
+import { Address, Bytes, Hex, TypedData } from 'ox'
+import { Network, Payload } from '@0xsequence/wallet-primitives'
+import { Kinds } from '../src/sequence/types/signer'
+import { newManager } from './constants'
+import { GuardRole, Guards } from '../src/sequence/guards'
+>>>>>>> Stashed changes
 
 // Mock fetch globally for guard API calls
 const mockFetch = vi.fn()
@@ -163,7 +173,11 @@ describe('GuardHandler', () => {
       expect(result).toBe(true)
       expect(mockAddSignature).toHaveBeenCalledOnce()
 
+<<<<<<< Updated upstream
       const [requestId, signatureData] = mockAddSignature.mock.calls[0]!
+=======
+      const [requestId, signatureData] = mockAddSignature.mock.calls[0]
+>>>>>>> Stashed changes
       expect(requestId).toBe('test-request-id')
       expect(signatureData.address).toBe(guards.getByRole('wallet').address)
       expect(signatureData.signature).toBeDefined()
@@ -223,7 +237,11 @@ describe('GuardHandler', () => {
       const mockAddSignature = vi.fn()
       signatures.addSignature = mockAddSignature
 
+<<<<<<< Updated upstream
       const mockCallback = vi.fn().mockImplementation(async (request, codeType, respond) => {
+=======
+      const mockCallback = vi.fn().mockImplementation(async (codeType, respond) => {
+>>>>>>> Stashed changes
         expect(codeType).toBe('TOTP')
         await respond('123456')
       })
@@ -247,7 +265,11 @@ describe('GuardHandler', () => {
       expect(mockCallback).toHaveBeenCalledOnce()
       expect(mockAddSignature).toHaveBeenCalledOnce()
 
+<<<<<<< Updated upstream
       const [requestId, signatureData] = mockAddSignature.mock.calls[0]!
+=======
+      const [requestId, signatureData] = mockAddSignature.mock.calls[0]
+>>>>>>> Stashed changes
       expect(requestId).toBe('test-request-id')
       expect(signatureData.address).toBe(guards.getByRole('wallet').address)
       expect(signatureData.signature).toBeDefined()
@@ -300,7 +322,11 @@ describe('GuardHandler', () => {
         signatures: [],
       })
 
+<<<<<<< Updated upstream
       expect(mockFetch.mock.calls[0]![0]).toContain(customGuardUrl)
+=======
+      expect(mockFetch.mock.calls[0][0]).toContain(customGuardUrl)
+>>>>>>> Stashed changes
 
       await customManager.stop()
     })
@@ -315,6 +341,7 @@ describe('GuardHandler', () => {
       expect(sharedConfig.guardAddresses).toBeDefined()
     })
   })
+<<<<<<< Updated upstream
 
   describe('Guard Topology', () => {
     it('should replace the placeholder guard address', () => {
@@ -371,4 +398,6 @@ describe('GuardHandler', () => {
       await customManager.stop()
     })
   })
+=======
+>>>>>>> Stashed changes
 })

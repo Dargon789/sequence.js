@@ -3,10 +3,16 @@ import { Attestation, Payload } from '@0xsequence/wallet-primitives'
 import * as GuardService from '@0xsequence/guard'
 import * as Envelope from '../envelope.js'
 
+<<<<<<< Updated upstream
 export type GuardToken = {
   id: 'TOTP' | 'PIN' | 'recovery'
   code: string
   resetAuth?: boolean
+=======
+type GuardToken = {
+  id: 'TOTP' | 'PIN'
+  code: string
+>>>>>>> Stashed changes
 }
 
 export class Guard {
@@ -37,7 +43,11 @@ export class Guard {
       digest,
       message,
       previousSignatures,
+<<<<<<< Updated upstream
       token ? { id: token.id, token: token.code, resetAuth: token.resetAuth } : undefined,
+=======
+      token ? { id: token.id, token: token.code } : undefined,
+>>>>>>> Stashed changes
     )
     return {
       address: this.guard.address,

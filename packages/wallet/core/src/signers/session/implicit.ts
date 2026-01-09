@@ -8,11 +8,19 @@ import {
 } from '@0xsequence/wallet-primitives'
 import { AbiFunction, Address, Bytes, Hex, Provider, Secp256k1, Signature } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
+<<<<<<< Updated upstream
 import { ImplicitSessionSigner, SessionSignerValidity } from './session.js'
 
 export type AttestationParams = Omit<Attestation.Attestation, 'approvedSigner'>
 
 export class Implicit implements ImplicitSessionSigner {
+=======
+import { SessionSigner, SessionSignerValidity } from './session.js'
+
+export type AttestationParams = Omit<Attestation.Attestation, 'approvedSigner'>
+
+export class Implicit implements SessionSigner {
+>>>>>>> Stashed changes
   private readonly _privateKey: PkStore
   private readonly _identitySignature: SequenceSignature.RSY
   public readonly address: Address.Address
@@ -43,11 +51,21 @@ export class Implicit implements ImplicitSessionSigner {
   }
 
   isValid(sessionTopology: SessionConfig.SessionsTopology, _chainId: number): SessionSignerValidity {
+<<<<<<< Updated upstream
     const implicitSigners = SessionConfig.getIdentitySigners(sessionTopology)
     const thisIdentitySigner = this.identitySigner
     if (!implicitSigners.some((s) => Address.isEqual(s, thisIdentitySigner))) {
       return { isValid: false, invalidReason: 'Identity signer not found' }
     }
+=======
+    const implicitSigner = SessionConfig.getIdentitySigner(sessionTopology)
+    if (!implicitSigner) {
+      return { isValid: false, invalidReason: 'Identity signer not found' }
+    }
+    if (!Address.isEqual(implicitSigner, this.identitySigner)) {
+      return { isValid: false, invalidReason: 'Identity signer mismatch' }
+    }
+>>>>>>> Stashed changes
     const blacklist = SessionConfig.getImplicitBlacklist(sessionTopology)
     if (blacklist?.some((b) => Address.isEqual(b, this.address))) {
       return { isValid: false, invalidReason: 'Blacklisted' }
@@ -115,7 +133,14 @@ export class Implicit implements ImplicitSessionSigner {
     if (!isSupported) {
       throw new Error('Unsupported call')
     }
+<<<<<<< Updated upstream
     const callHash = SessionSignature.hashPayloadWithCallIdx(wallet, payload, callIdx, chainId, sessionManagerAddress)
+=======
+    const useDeprecatedHash =
+      Address.isEqual(sessionManagerAddress, Extensions.Dev1.sessions) ||
+      Address.isEqual(sessionManagerAddress, Extensions.Dev2.sessions)
+    const callHash = SessionSignature.hashCallWithReplayProtection(payload, callIdx, chainId, useDeprecatedHash)
+>>>>>>> Stashed changes
     const sessionSignature = await this._privateKey.signDigest(Bytes.fromHex(callHash))
     return {
       attestation: this._attestation,

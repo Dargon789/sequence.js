@@ -103,7 +103,11 @@ describe('Implicit Session', () => {
       const result = implicitSigner.isValid(topology, 1)
 
       expect(result.isValid).toBe(false)
+<<<<<<< Updated upstream
       expect(result.invalidReason).toBe('Identity signer not found')
+=======
+      expect(result.invalidReason).toBe('Identity signer mismatch')
+>>>>>>> Stashed changes
     })
 
     it('should return true regardless of chainId', () => {
@@ -223,7 +227,11 @@ describe('Implicit Session', () => {
       const result = implicitSigner.isValid(topology, 1)
 
       expect(result.isValid).toBe(false)
+<<<<<<< Updated upstream
       expect(result.invalidReason).toBe('Identity signer not found')
+=======
+      expect(result.invalidReason).toBe('Identity signer mismatch')
+>>>>>>> Stashed changes
     })
 
     it('should return false when attestation is issued in the future', () => {

@@ -17,7 +17,10 @@ import {
   isExplicitSessionSigner,
   SessionSigner,
   SessionSignerInvalidReason,
+<<<<<<< Updated upstream
   isImplicitSessionSigner,
+=======
+>>>>>>> Stashed changes
   UsageLimit,
 } from './session/index.js'
 
@@ -133,6 +136,7 @@ export class SessionManager implements SapientSigner {
   async findSignersForCalls(wallet: Address.Address, chainId: number, calls: Payload.Call[]): Promise<SessionSigner[]> {
     // Only use signers that match the topology
     const topology = await this.topology
+<<<<<<< Updated upstream
     const identitySigners = SessionConfig.getIdentitySigners(topology)
     if (identitySigners.length === 0) {
       throw new Error('Identity signers not found')
@@ -140,6 +144,17 @@ export class SessionManager implements SapientSigner {
 
     // Prioritize implicit signers
     const availableSigners = [...this._implicitSigners, ...this._explicitSigners]
+=======
+    const identitySigner = SessionConfig.getIdentitySigner(topology)
+    if (!identitySigner) {
+      throw new Error('Identity signer not found')
+    }
+    const validImplicitSigners = this._implicitSigners.filter((signer) => signer.isValid(topology, chainId).isValid)
+    const validExplicitSigners = this._explicitSigners.filter((signer) => signer.isValid(topology, chainId).isValid)
+
+    // Prioritize implicit signers
+    const availableSigners = [...validImplicitSigners, ...validExplicitSigners]
+>>>>>>> Stashed changes
     if (availableSigners.length === 0) {
       throw new Error('No signers match the topology')
     }
@@ -148,6 +163,7 @@ export class SessionManager implements SapientSigner {
     const signers: SessionSigner[] = []
     for (const call of calls) {
       let supported = false
+<<<<<<< Updated upstream
       let expiredSupportedSigner: SessionSigner | undefined
       for (const signer of availableSigners) {
         try {
@@ -160,6 +176,11 @@ export class SessionManager implements SapientSigner {
             }
             supported = signerValidity.isValid
           }
+=======
+      for (const signer of availableSigners) {
+        try {
+          supported = await signer.supportedCall(wallet, chainId, call, this.address, this._provider)
+>>>>>>> Stashed changes
         } catch (error) {
           console.error('findSignersForCalls error', error)
           continue
@@ -170,12 +191,16 @@ export class SessionManager implements SapientSigner {
         }
       }
       if (!supported) {
+<<<<<<< Updated upstream
         if (expiredSupportedSigner) {
           throw new Error(`Signer supporting call is expired: ${expiredSupportedSigner.address}`)
         }
         throw new Error(
           `No signer supported for call. ` + `Call: to=${call.to}, data=${call.data}, value=${call.value}, `,
         )
+=======
+        throw new Error('No signer supported for call')
+>>>>>>> Stashed changes
       }
     }
     return signers
@@ -268,7 +293,10 @@ export class SessionManager implements SapientSigner {
 
     const signers = await this.findSignersForCalls(wallet, chainId, payload.calls)
     if (signers.length !== payload.calls.length) {
+<<<<<<< Updated upstream
       // Unreachable. Throw in findSignersForCalls
+=======
+>>>>>>> Stashed changes
       throw new Error('No signer supported for call')
     }
     const signatures = await Promise.all(
@@ -305,10 +333,16 @@ export class SessionManager implements SapientSigner {
       }
     }
 
+<<<<<<< Updated upstream
     // Prepare encoding params
     const explicitSigners: Address.Address[] = []
     const implicitSigners: Address.Address[] = []
     let identitySigner: Address.Address | undefined
+=======
+    // Encode the signature
+    const explicitSigners: Address.Address[] = []
+    const implicitSigners: Address.Address[] = []
+>>>>>>> Stashed changes
     await Promise.all(
       signers.map(async (signer) => {
         const address = await signer.address
@@ -316,6 +350,7 @@ export class SessionManager implements SapientSigner {
           if (!explicitSigners.find((a) => Address.isEqual(a, address))) {
             explicitSigners.push(address)
           }
+<<<<<<< Updated upstream
         } else if (isImplicitSessionSigner(signer)) {
           if (!implicitSigners.find((a) => Address.isEqual(a, address))) {
             implicitSigners.push(address)
@@ -324,10 +359,16 @@ export class SessionManager implements SapientSigner {
             } else if (!Address.isEqual(identitySigner, signer.identitySigner)) {
               throw new Error('Multiple implicit signers with different identity signers')
             }
+=======
+        } else {
+          if (!implicitSigners.find((a) => Address.isEqual(a, address))) {
+            implicitSigners.push(address)
+>>>>>>> Stashed changes
           }
         }
       }),
     )
+<<<<<<< Updated upstream
     if (!identitySigner) {
       // Explicit signers only. Use any identity signer
       const identitySigners = SessionConfig.getIdentitySigners(await this.topology)
@@ -342,6 +383,12 @@ export class SessionManager implements SapientSigner {
       signatures,
       await this.topology,
       identitySigner,
+=======
+
+    const encodedSignature = SessionSignature.encodeSessionCallSignatures(
+      signatures,
+      await this.topology,
+>>>>>>> Stashed changes
       explicitSigners,
       implicitSigners,
     )

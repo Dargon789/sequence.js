@@ -11,18 +11,29 @@ import { AnswerIncorrectError, ChallengeExpiredError, TooManyAttemptsError } fro
 
 type RespondFn = (otp: string) => Promise<void>
 
+<<<<<<< Updated upstream
 export type PromptOtpHandler = (recipient: string, respond: RespondFn) => Promise<void>
 
 export class OtpHandler extends IdentityHandler implements Handler {
   kind = Kinds.LoginEmailOtp
 
   private onPromptOtp: undefined | PromptOtpHandler
+=======
+export class OtpHandler extends IdentityHandler implements Handler {
+  kind = Kinds.LoginEmailOtp
+
+  private onPromptOtp: undefined | ((recipient: string, respond: RespondFn) => Promise<void>)
+>>>>>>> Stashed changes
 
   constructor(nitro: Identity.IdentityInstrument, signatures: Signatures, authKeys: Db.AuthKeys) {
     super(nitro, authKeys, signatures, Identity.IdentityType.Email)
   }
 
+<<<<<<< Updated upstream
   public registerUI(onPromptOtp: PromptOtpHandler) {
+=======
+  public registerUI(onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>) {
+>>>>>>> Stashed changes
     this.onPromptOtp = onPromptOtp
     return () => {
       this.onPromptOtp = undefined
@@ -93,13 +104,21 @@ export class OtpHandler extends IdentityHandler implements Handler {
 
   private handleAuth(
     challenge: Identity.OtpChallenge,
+<<<<<<< Updated upstream
     onPromptOtp: PromptOtpHandler,
+=======
+    onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>,
+>>>>>>> Stashed changes
   ): Promise<{ signer: Signers.Signer & Signers.Witnessable; email: string }> {
     return new Promise(async (resolve, reject) => {
       try {
         const { loginHint, challenge: codeChallenge } = await this.nitroCommitVerifier(challenge)
 
+<<<<<<< Updated upstream
         const respond: RespondFn = async (otp) => {
+=======
+        const respond = async (otp: string) => {
+>>>>>>> Stashed changes
           try {
             const { signer, email: returnedEmail } = await this.nitroCompleteAuth(
               challenge.withAnswer(codeChallenge, otp),

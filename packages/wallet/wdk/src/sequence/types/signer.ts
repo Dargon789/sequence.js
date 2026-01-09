@@ -12,7 +12,11 @@ export const Kinds = {
   Unknown: 'unknown',
 } as const
 
+<<<<<<< Updated upstream
 export type Kind = (typeof Kinds)[keyof typeof Kinds] | `custom-${string}`
+=======
+export type Kind = (typeof Kinds)[keyof typeof Kinds]
+>>>>>>> Stashed changes
 
 export type WitnessExtraSignerKind = {
   signerKind: string

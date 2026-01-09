@@ -1,10 +1,17 @@
 import { config as dotenvConfig } from 'dotenv'
 import { Abi, Address, Provider, RpcTransport } from 'ox'
+<<<<<<< Updated upstream
 import { Manager, ManagerOptions, ManagerOptionsDefaults } from '../src/sequence/index.js'
 import { mockEthereum } from './setup.js'
 import { Signers as CoreSigners, State, Bundler } from '@0xsequence/wallet-core'
 import { Relayer } from '@0xsequence/relayer'
 import * as Db from '../src/dbs/index.js'
+=======
+import { Manager, ManagerOptions, ManagerOptionsDefaults } from '../src/sequence'
+import { mockEthereum } from './setup'
+import { Signers as CoreSigners, State, Relayer } from '@0xsequence/wallet-core'
+import * as Db from '../src/dbs'
+>>>>>>> Stashed changes
 import { Network } from '@0xsequence/wallet-primitives'
 
 const envFile = process.env.CI ? '.env.test' : '.env.test.local'
@@ -14,6 +21,11 @@ export const EMITTER_ADDRESS: Address.Address = '0xb7bE532959236170064cf099e1a33
 export const EMITTER_ABI = Abi.from(['function explicitEmit()', 'function implicitEmit()'])
 
 // Environment variables
+<<<<<<< Updated upstream
+=======
+export const { RPC_URL, PRIVATE_KEY } = process.env
+export const CAN_RUN_LIVE = !!RPC_URL && !!PRIVATE_KEY
+>>>>>>> Stashed changes
 export const LOCAL_RPC_URL = process.env.LOCAL_RPC_URL || 'http://localhost:8545'
 
 let testIdCounter = 0
@@ -82,16 +94,28 @@ export function newRemoteManager(
     : `_testrun_${testIdCounter}`
 
   let relayers: Relayer.Relayer[] = []
+<<<<<<< Updated upstream
   let bundlers: Bundler.Bundler[] = []
 
   if (remoteManagerOptions.network.relayerPk) {
     const provider = Provider.from(RpcTransport.fromHttp(remoteManagerOptions.network.rpcUrl))
     relayers.push(new Relayer.PkRelayer(remoteManagerOptions.network.relayerPk as `0x${string}`, provider))
+=======
+  let bundlers: Relayer.Bundler[] = []
+
+  if (remoteManagerOptions.network.relayerPk) {
+    const provider = Provider.from(RpcTransport.fromHttp(remoteManagerOptions.network.rpcUrl))
+    relayers.push(new Relayer.Standard.PkRelayer(remoteManagerOptions.network.relayerPk as `0x${string}`, provider))
+>>>>>>> Stashed changes
   }
 
   if (remoteManagerOptions.network.bundlerUrl) {
     bundlers.push(
+<<<<<<< Updated upstream
       new Bundler.Bundlers.PimlicoBundler(
+=======
+      new Relayer.Bundlers.PimlicoBundler(
+>>>>>>> Stashed changes
         remoteManagerOptions.network.bundlerUrl,
         Provider.from(RpcTransport.fromHttp(remoteManagerOptions.network.rpcUrl)),
       ),

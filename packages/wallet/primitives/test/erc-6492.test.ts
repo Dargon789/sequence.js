@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Address, Bytes, Hex, Provider } from 'ox'
+<<<<<<< Updated upstream
 import { SignatureErc6492 } from 'ox/erc6492'
+=======
+import { WrappedSignature } from 'ox/erc6492'
+>>>>>>> Stashed changes
 
 import { deploy, wrap, decode, isValid } from '../src/erc-6492.js'
 import { Context } from '../src/context.js'
@@ -82,7 +86,11 @@ describe('ERC-6492', () => {
       expect(result.startsWith('0x')).toBe(true)
 
       // Should end with the magic bytes
+<<<<<<< Updated upstream
       expect(result.endsWith(SignatureErc6492.magicBytes.slice(2))).toBe(true)
+=======
+      expect(result.endsWith(WrappedSignature.magicBytes.slice(2))).toBe(true)
+>>>>>>> Stashed changes
 
       // Should contain the original signature data somewhere
       expect(result.length).toBeGreaterThan(testSignature.length)
@@ -96,7 +104,11 @@ describe('ERC-6492', () => {
 
       // Convert to hex to check magic bytes
       const resultHex = Bytes.toHex(result)
+<<<<<<< Updated upstream
       expect(resultHex.endsWith(SignatureErc6492.magicBytes.slice(2))).toBe(true)
+=======
+      expect(resultHex.endsWith(WrappedSignature.magicBytes.slice(2))).toBe(true)
+>>>>>>> Stashed changes
     })
 
     it('should return same type as input signature', () => {
@@ -133,7 +145,11 @@ describe('ERC-6492', () => {
       // The wrapped signature should contain encoded: address, bytes (data), bytes (signature)
       expect(result.length).toBeGreaterThan(testSignature.length + deployData.data.length)
       expect(result).toContain(testAddress.slice(2)) // Address without 0x
+<<<<<<< Updated upstream
       expect(result.endsWith(SignatureErc6492.magicBytes.slice(2))).toBe(true)
+=======
+      expect(result.endsWith(WrappedSignature.magicBytes.slice(2))).toBe(true)
+>>>>>>> Stashed changes
     })
   })
 
@@ -209,7 +225,11 @@ describe('ERC-6492', () => {
 
     it('should handle malformed wrapped signature gracefully', () => {
       // Create a signature that ends with magic bytes but has invalid encoding
+<<<<<<< Updated upstream
       const malformedSig = ('0x1234' + SignatureErc6492.magicBytes.slice(2)) as Hex.Hex
+=======
+      const malformedSig = ('0x1234' + WrappedSignature.magicBytes.slice(2)) as Hex.Hex
+>>>>>>> Stashed changes
       const result = decode(malformedSig)
 
       // Should return original signature when decoding fails
@@ -391,7 +411,11 @@ describe('ERC-6492', () => {
 
       // 2. Wrap signature with deploy data
       const wrappedSig = wrap(testSignature, deployCall)
+<<<<<<< Updated upstream
       expect(wrappedSig.endsWith(SignatureErc6492.magicBytes.slice(2))).toBe(true)
+=======
+      expect(wrappedSig.endsWith(WrappedSignature.magicBytes.slice(2))).toBe(true)
+>>>>>>> Stashed changes
 
       // 3. Decode wrapped signature
       const decoded = decode(wrappedSig)
@@ -457,7 +481,11 @@ describe('ERC-6492', () => {
 
     it('should handle signatures that accidentally contain magic bytes', () => {
       // Create a signature that contains the magic bytes but isn't wrapped
+<<<<<<< Updated upstream
       const magicInSignature = (testSignature + SignatureErc6492.magicBytes.slice(2) + '1234') as Hex.Hex
+=======
+      const magicInSignature = (testSignature + WrappedSignature.magicBytes.slice(2) + '1234') as Hex.Hex
+>>>>>>> Stashed changes
       const result = decode(magicInSignature)
 
       // Should try to decode, but if it fails, should return original

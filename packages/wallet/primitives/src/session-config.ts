@@ -35,10 +35,15 @@ export type SessionLeaf = SessionPermissionsLeaf | ImplicitBlacklistLeaf | Ident
 export type SessionBranch = [SessionsTopology, SessionsTopology, ...SessionsTopology[]]
 export type SessionsTopology = SessionBranch | SessionLeaf | SessionNode
 
+<<<<<<< Updated upstream
 const SESSIONS_NODE_SIZE_BYTES = 32
 
 function isSessionsNode(topology: any): topology is SessionNode {
   return Hex.validate(topology) && Hex.size(topology) === SESSIONS_NODE_SIZE_BYTES
+=======
+function isSessionsNode(topology: any): topology is SessionNode {
+  return Hex.validate(topology) && Hex.size(topology) === 32
+>>>>>>> Stashed changes
 }
 
 function isImplicitBlacklist(topology: any): topology is ImplicitBlacklistLeaf {
@@ -67,8 +72,12 @@ export function isSessionsTopology(topology: any): topology is SessionsTopology 
 
 /**
  * Checks if the topology is complete.
+<<<<<<< Updated upstream
  * A complete topology has at least one identity signer and one blacklist.
  * When performing encoding, exactly one identity signer is required. Others must be hashed into nodes.
+=======
+ * A complete topology has exactly one identity signer and one blacklist.
+>>>>>>> Stashed changes
  * @param topology The topology to check
  * @returns True if the topology is complete
  */
@@ -77,9 +86,15 @@ export function isCompleteSessionsTopology(topology: any): topology is SessionsT
   if (!isSessionsTopology(topology)) {
     return false
   }
+<<<<<<< Updated upstream
   // Check the topology contains at least one identity signer and exactly one blacklist
   const { identitySignerCount, blacklistCount } = checkIsCompleteSessionsBranch(topology)
   return identitySignerCount >= 1 && blacklistCount === 1
+=======
+  // Check the topology contains exactly one identity signer and one blacklist
+  const { identitySignerCount, blacklistCount } = checkIsCompleteSessionsBranch(topology)
+  return identitySignerCount === 1 && blacklistCount === 1
+>>>>>>> Stashed changes
 }
 
 function checkIsCompleteSessionsBranch(topology: SessionsTopology): {
@@ -105,6 +120,7 @@ function checkIsCompleteSessionsBranch(topology: SessionsTopology): {
 }
 
 /**
+<<<<<<< Updated upstream
  * Gets the identity signers from the topology.
  * @param topology The topology to get the identity signer from
  * @returns The identity signers
@@ -113,14 +129,37 @@ export function getIdentitySigners(topology: SessionsTopology): Address.Address[
   if (isIdentitySignerLeaf(topology)) {
     // Got one
     return [topology.identitySigner]
+=======
+ * Gets the identity signer from the topology.
+ * @param topology The topology to get the identity signer from
+ * @returns The identity signer or null if it's not present
+ */
+export function getIdentitySigner(topology: SessionsTopology): Address.Address | null {
+  if (isIdentitySignerLeaf(topology)) {
+    // Got it
+    return topology.identitySigner
+>>>>>>> Stashed changes
   }
 
   if (isSessionsBranch(topology)) {
     // Check branches
+<<<<<<< Updated upstream
     return topology.map(getIdentitySigners).flat()
   }
 
   return []
+=======
+    const results = topology.map(getIdentitySigner).filter((t) => t !== null)
+    if (results.length > 1) {
+      throw new Error('Multiple identity signers')
+    }
+    if (results.length === 1) {
+      return results[0]!
+    }
+  }
+
+  return null
+>>>>>>> Stashed changes
 }
 
 /**
@@ -161,10 +200,14 @@ export function getImplicitBlacklistLeaf(topology: SessionsTopology): ImplicitBl
   return null
 }
 
+<<<<<<< Updated upstream
 export function getSessionPermissions(
   topology: SessionsTopology,
   address: Address.Address,
 ): SessionPermissionsLeaf | null {
+=======
+export function getSessionPermissions(topology: SessionsTopology, address: Address.Address): SessionPermissions | null {
+>>>>>>> Stashed changes
   if (isSessionPermissions(topology)) {
     if (Address.isEqual(topology.signer, address)) {
       return topology
@@ -344,6 +387,7 @@ export function encodeSessionsTopology(topology: SessionsTopology): Bytes.Bytes 
   throw new Error('Invalid topology')
 }
 
+<<<<<<< Updated upstream
 export function decodeSessionsTopology(bytes: Bytes.Bytes): SessionsTopology {
   const { topology } = decodeSessionTopologyPointer(bytes)
   return topology
@@ -428,6 +472,8 @@ function decodeSessionTopologyPointer(bytes: Bytes.Bytes): {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 // JSON
 
 export function sessionsTopologyToJson(topology: SessionsTopology): string {
@@ -500,6 +546,7 @@ function sessionsTopologyFromParsed(parsed: any): SessionsTopology {
 
 // Operations
 
+<<<<<<< Updated upstream
 function removeLeaf(topology: SessionsTopology, leaf: SessionLeaf | SessionNode): SessionsTopology | null {
   if (isSessionsLeaf(topology) && isSessionsLeaf(leaf)) {
     if (topology.type === leaf.type) {
@@ -526,13 +573,34 @@ function removeLeaf(topology: SessionsTopology, leaf: SessionLeaf | SessionNode)
       // Match, remove the node
       return null
     }
+=======
+/**
+ * Removes all explicit sessions (permissions leaf nodes) that match the given signer from the topology.
+ * Returns the updated topology or null if it becomes empty (for nesting).
+ * If the signer is not found, the topology is returned unchanged.
+ */
+export function removeExplicitSession(
+  topology: SessionsTopology,
+  signerAddress: `0x${string}`,
+): SessionsTopology | null {
+  if (isSessionPermissions(topology)) {
+    if (Address.isEqual(topology.signer, signerAddress)) {
+      return null
+    }
+    // Return the leaf unchanged
+    return topology
+>>>>>>> Stashed changes
   }
 
   // If it's a branch, recurse on each child:
   if (isSessionsBranch(topology)) {
     const newChildren: SessionsTopology[] = []
     for (const child of topology) {
+<<<<<<< Updated upstream
       const updatedChild = removeLeaf(child, leaf)
+=======
+      const updatedChild = removeExplicitSession(child, signerAddress)
+>>>>>>> Stashed changes
       if (updatedChild != null) {
         newChildren.push(updatedChild)
       }
@@ -556,6 +624,7 @@ function removeLeaf(topology: SessionsTopology, leaf: SessionLeaf | SessionNode)
   return topology
 }
 
+<<<<<<< Updated upstream
 /**
  * Removes all explicit sessions (permissions leaf nodes) that match the given signer from the topology.
  * Returns the updated topology or null if it becomes empty (for nesting).
@@ -579,6 +648,8 @@ export function removeExplicitSession(
   return balanceSessionsTopology(removed)
 }
 
+=======
+>>>>>>> Stashed changes
 export function addExplicitSession(
   topology: SessionsTopology,
   sessionPermissions: SessionPermissions,
@@ -592,6 +663,7 @@ export function addExplicitSession(
   return balanceSessionsTopology(merged)
 }
 
+<<<<<<< Updated upstream
 export function removeIdentitySigner(
   topology: SessionsTopology,
   identitySigner: Address.Address,
@@ -619,6 +691,8 @@ export function addIdentitySigner(topology: SessionsTopology, identitySigner: Ad
   return balanceSessionsTopology(merged)
 }
 
+=======
+>>>>>>> Stashed changes
 /**
  * Merges two topologies into a new branch of [a, b].
  */
@@ -666,9 +740,23 @@ function buildBalancedSessionsTopology(items: (SessionLeaf | SessionNode)[]): Se
 
 /**
  * Balances the topology by flattening and rebuilding as a balanced binary tree.
+<<<<<<< Updated upstream
  */
 export function balanceSessionsTopology(topology: SessionsTopology): SessionsTopology {
   return buildBalancedSessionsTopology(flattenSessionsTopology(topology))
+=======
+ * This does not make a binary tree as the blacklist and identity signer are included at the top level.
+ */
+export function balanceSessionsTopology(topology: SessionsTopology): SessionsTopology {
+  const flattened = flattenSessionsTopology(topology)
+  const blacklist = flattened.find((l) => isImplicitBlacklist(l))
+  const identitySigner = flattened.find((l) => isIdentitySignerLeaf(l))
+  const leaves = flattened.filter((l) => isSessionPermissions(l))
+  if (!blacklist || !identitySigner) {
+    throw new Error('No blacklist or identity signer')
+  }
+  return buildBalancedSessionsTopology([blacklist, identitySigner, ...leaves])
+>>>>>>> Stashed changes
 }
 
 /**
@@ -733,10 +821,16 @@ export function minimiseSessionsTopology(
   topology: SessionsTopology,
   explicitSigners: Address.Address[] = [],
   implicitSigners: Address.Address[] = [],
+<<<<<<< Updated upstream
   identitySigner?: Address.Address,
 ): SessionsTopology {
   if (isSessionsBranch(topology)) {
     const branches = topology.map((b) => minimiseSessionsTopology(b, explicitSigners, implicitSigners, identitySigner))
+=======
+): SessionsTopology {
+  if (isSessionsBranch(topology)) {
+    const branches = topology.map((b) => minimiseSessionsTopology(b, explicitSigners, implicitSigners))
+>>>>>>> Stashed changes
     // If all branches are nodes, the branch can be a node too
     if (branches.every((b) => isSessionsNode(b))) {
       return Hash.keccak256(Bytes.concat(...branches.map((b) => Hex.toBytes(b))), { as: 'Hex' })
@@ -759,11 +853,15 @@ export function minimiseSessionsTopology(
     return topology
   }
   if (isIdentitySignerLeaf(topology)) {
+<<<<<<< Updated upstream
     if (identitySigner && !Address.isEqual(topology.identitySigner, identitySigner)) {
       // Not the identity signer we're looking for, so roll it up
       return GenericTree.hash(encodeLeafToGeneric(topology))
     }
     // Return this identity signer leaf
+=======
+    // Never roll up the identity signer
+>>>>>>> Stashed changes
     return topology
   }
   if (isSessionsNode(topology)) {
@@ -809,6 +907,7 @@ export function removeFromImplicitBlacklist(topology: SessionsTopology, address:
 /**
  *  Generate an empty sessions topology with the given identity signer. No session permission and an empty blacklist
  */
+<<<<<<< Updated upstream
 export function emptySessionsTopology(
   identitySigner: Address.Address | [Address.Address, ...Address.Address[]],
 ): SessionsTopology {
@@ -816,11 +915,23 @@ export function emptySessionsTopology(
     return emptySessionsTopology([identitySigner])
   }
   const flattenedTopology: SessionLeaf[] = [
+=======
+export function emptySessionsTopology(identitySigner: Address.Address): SessionsTopology {
+  return [
+>>>>>>> Stashed changes
     {
       type: 'implicit-blacklist',
       blacklist: [],
     },
+<<<<<<< Updated upstream
     ...identitySigner.map((signer): IdentitySignerLeaf => ({ type: 'identity-signer', identitySigner: signer })),
   ]
   return buildBalancedSessionsTopology(flattenedTopology)
+=======
+    {
+      type: 'identity-signer',
+      identitySigner,
+    },
+  ]
+>>>>>>> Stashed changes
 }

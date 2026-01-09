@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { Address, Bytes } from 'ox'
 import { describe, expect, it } from 'vitest'
 
@@ -49,12 +50,70 @@ describe('Session Config', () => {
   const testNode: SessionNode = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 
   const samplePermission: Permission = {
+=======
+import { describe, expect, it } from 'vitest'
+import { Address, Bytes, Hex } from 'ox'
+
+import {
+  SESSIONS_FLAG_PERMISSIONS,
+  SESSIONS_FLAG_NODE,
+  SESSIONS_FLAG_BRANCH,
+  SESSIONS_FLAG_BLACKLIST,
+  SESSIONS_FLAG_IDENTITY_SIGNER,
+  ImplicitBlacklistLeaf,
+  IdentitySignerLeaf,
+  SessionPermissionsLeaf,
+  SessionNode,
+  SessionLeaf,
+  SessionBranch,
+  SessionsTopology,
+  isSessionsTopology,
+  isCompleteSessionsTopology,
+  getIdentitySigner,
+  getImplicitBlacklist,
+  getImplicitBlacklistLeaf,
+  getSessionPermissions,
+  getExplicitSigners,
+  encodeLeafToGeneric,
+  decodeLeafFromBytes,
+  sessionsTopologyToConfigurationTree,
+  configurationTreeToSessionsTopology,
+  encodeSessionsTopology,
+  sessionsTopologyToJson,
+  sessionsTopologyFromJson,
+  removeExplicitSession,
+  addExplicitSession,
+  mergeSessionsTopologies,
+  balanceSessionsTopology,
+  cleanSessionsTopology,
+  minimiseSessionsTopology,
+  addToImplicitBlacklist,
+  removeFromImplicitBlacklist,
+  emptySessionsTopology,
+} from '../src/session-config.js'
+import { SessionPermissions } from '../src/permission.js'
+import { ChainId } from '../src/network.js'
+
+describe('Session Config', () => {
+  // Test data
+  const testAddress1 = '0x742d35cc6635c0532925a3b8d563a6b35b7f05f1' as Address.Address
+  const testAddress2 = '0x8ba1f109551bd432803012645aac136c776056c0' as Address.Address
+  const testAddress3 = '0xa0b86a33e6f8b5f56e64c9e1a1b8c6a9cc4b9a9e' as Address.Address
+  const testNode = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef' as SessionNode
+
+  const samplePermission = {
+>>>>>>> Stashed changes
     target: testAddress3,
     rules: [
       {
         cumulative: false,
+<<<<<<< Updated upstream
         operation: ParameterOperation.EQUAL,
         value: Bytes.fromHex('0x0000000000000000000000000000000000000000000000000000000000000000'),
+=======
+        operation: 0, // EQUAL
+        value: Bytes.fromHex('0x'),
+>>>>>>> Stashed changes
         offset: 0n,
         mask: Bytes.fromHex('0xffffffff00000000000000000000000000000000000000000000000000000000'),
       },
@@ -152,9 +211,15 @@ describe('Session Config', () => {
         expect(isCompleteSessionsTopology(duplicateBlacklist)).toBe(false)
       })
 
+<<<<<<< Updated upstream
       it('should return true for topology with multiple identity signers', () => {
         const duplicateIdentity = [sampleBlacklistLeaf, sampleIdentitySignerLeaf, sampleIdentitySignerLeaf]
         expect(isCompleteSessionsTopology(duplicateIdentity)).toBe(true)
+=======
+      it('should return false for topology with multiple identity signers', () => {
+        const duplicateIdentity = [sampleBlacklistLeaf, sampleIdentitySignerLeaf, sampleIdentitySignerLeaf]
+        expect(isCompleteSessionsTopology(duplicateIdentity)).toBe(false)
+>>>>>>> Stashed changes
       })
 
       it('should return false for invalid topology', () => {
@@ -165,6 +230,7 @@ describe('Session Config', () => {
   })
 
   describe('Topology Queries', () => {
+<<<<<<< Updated upstream
     describe('getIdentitySigners', () => {
       it('should return identity signer from identity signer leaf', () => {
         const result = getIdentitySigners(sampleIdentitySignerLeaf)
@@ -182,12 +248,35 @@ describe('Session Config', () => {
       })
 
       it('should return multiple identity signers', () => {
+=======
+    describe('getIdentitySigner', () => {
+      it('should return identity signer from identity signer leaf', () => {
+        const result = getIdentitySigner(sampleIdentitySignerLeaf)
+        expect(result).toBe(testAddress1)
+      })
+
+      it('should return identity signer from branch', () => {
+        const result = getIdentitySigner(sampleCompleteTopology)
+        expect(result).toBe(testAddress1)
+      })
+
+      it('should return null when no identity signer present', () => {
+        const result = getIdentitySigner(sampleSessionPermissionsLeaf)
+        expect(result).toBe(null)
+      })
+
+      it('should throw for multiple identity signers', () => {
+>>>>>>> Stashed changes
         const multipleIdentity = [
           sampleIdentitySignerLeaf,
           sampleIdentitySignerLeaf,
           sampleBlacklistLeaf,
         ] as SessionBranch
+<<<<<<< Updated upstream
         expect(getIdentitySigners(multipleIdentity)).toEqual([testAddress1, testAddress1])
+=======
+        expect(() => getIdentitySigner(multipleIdentity)).toThrow('Multiple identity signers')
+>>>>>>> Stashed changes
       })
     })
 
@@ -400,14 +489,21 @@ describe('Session Config', () => {
     })
   })
 
+<<<<<<< Updated upstream
   describe('Sessions Topology Encoding and Decoding', () => {
+=======
+  describe('Sessions Topology Encoding', () => {
+>>>>>>> Stashed changes
     describe('encodeSessionsTopology', () => {
       it('should encode session permissions leaf', () => {
         const result = encodeSessionsTopology(sampleSessionPermissionsLeaf)
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] >> 4).toBe(SESSIONS_FLAG_PERMISSIONS)
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(sampleSessionPermissionsLeaf)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should encode session node', () => {
@@ -415,14 +511,18 @@ describe('Session Config', () => {
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] >> 4).toBe(SESSIONS_FLAG_NODE)
         expect(result.length).toBe(33) // 1 flag byte + 32 hash bytes
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(testNode)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should encode blacklist leaf', () => {
         const result = encodeSessionsTopology(sampleBlacklistLeaf)
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] >> 4).toBe(SESSIONS_FLAG_BLACKLIST)
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(sampleBlacklistLeaf)
       })
@@ -443,6 +543,8 @@ describe('Session Config', () => {
         expect(result.length).toBe(3 + blacklistCount * 20)
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(largeBlacklist)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should encode identity signer leaf', () => {
@@ -450,16 +552,22 @@ describe('Session Config', () => {
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] >> 4).toBe(SESSIONS_FLAG_IDENTITY_SIGNER)
         expect(result.length).toBe(21) // 1 flag byte + 20 address bytes
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(sampleIdentitySignerLeaf)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should encode session branch', () => {
         const result = encodeSessionsTopology(sampleBranch)
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] >> 4).toBe(SESSIONS_FLAG_BRANCH)
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(sampleBranch)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should handle large blacklist with extended encoding', () => {
@@ -470,6 +578,7 @@ describe('Session Config', () => {
         const result = encodeSessionsTopology(largeBlacklist)
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result[0] & 0x0f).toBe(0x0f) // Extended encoding flag
+<<<<<<< Updated upstream
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(largeBlacklist)
       })
@@ -479,6 +588,8 @@ describe('Session Config', () => {
         expect(result).toBeInstanceOf(Uint8Array)
         const decoded = decodeSessionsTopology(result)
         expect(decoded).toEqual(sampleCompleteTopology)
+=======
+>>>>>>> Stashed changes
       })
 
       it('should throw for blacklist too large', () => {
@@ -656,9 +767,19 @@ describe('Session Config', () => {
         expect(isSessionsTopology(result)).toBe(true)
 
         const blacklist = getImplicitBlacklist(result)
+<<<<<<< Updated upstream
         const identitySigners = getIdentitySigners(result)
         expect(blacklist).toBeTruthy()
         expect(identitySigners).toBeTruthy()
+=======
+        const identitySigner = getIdentitySigner(result)
+        expect(blacklist).toBeTruthy()
+        expect(identitySigner).toBeTruthy()
+      })
+
+      it('should throw when missing blacklist or identity signer', () => {
+        expect(() => balanceSessionsTopology(sampleSessionPermissionsLeaf)).toThrow('No blacklist or identity signer')
+>>>>>>> Stashed changes
       })
     })
 
@@ -763,6 +884,7 @@ describe('Session Config', () => {
       it('should throw for invalid topology', () => {
         expect(() => minimiseSessionsTopology({} as any, [], [])).toThrow('Invalid topology')
       })
+<<<<<<< Updated upstream
 
       it('should minimize topology with multiple identity signers but keep only the specified one', () => {
         // Create multiple identity signer leaves
@@ -894,6 +1016,8 @@ describe('Session Config', () => {
           expect(result.length).toBeGreaterThan(0)
         }
       })
+=======
+>>>>>>> Stashed changes
     })
 
     describe('addToImplicitBlacklist', () => {
@@ -960,6 +1084,7 @@ describe('Session Config', () => {
 
         expect(isCompleteSessionsTopology(result)).toBe(true)
 
+<<<<<<< Updated upstream
         const identitySigners = getIdentitySigners(result)
         expect(identitySigners).toEqual([testAddress1])
 
@@ -977,6 +1102,10 @@ describe('Session Config', () => {
 
         const identitySigners = getIdentitySigners(result)
         expect(identitySigners).toEqual([testAddress1, testAddress2])
+=======
+        const identitySigner = getIdentitySigner(result)
+        expect(identitySigner).toBe(testAddress1)
+>>>>>>> Stashed changes
 
         const blacklist = getImplicitBlacklist(result)
         expect(blacklist).toEqual([])
@@ -1016,8 +1145,13 @@ describe('Session Config', () => {
       expect(isSessionsTopology(nestedTopology)).toBe(true)
       expect(isCompleteSessionsTopology(nestedTopology)).toBe(true)
 
+<<<<<<< Updated upstream
       const identitySigners = getIdentitySigners(nestedTopology)
       expect(identitySigners).toEqual([testAddress1])
+=======
+      const identitySigner = getIdentitySigner(nestedTopology)
+      expect(identitySigner).toBe(testAddress1)
+>>>>>>> Stashed changes
 
       const blacklist = getImplicitBlacklist(nestedTopology)
       expect(blacklist).toContain(testAddress2)
@@ -1081,7 +1215,11 @@ describe('Session Config', () => {
       expect(isCompleteSessionsTopology(deserialized)).toBe(true)
 
       // Verify data integrity
+<<<<<<< Updated upstream
       expect(getIdentitySigners(deserialized)).toEqual([testAddress1])
+=======
+      expect(getIdentitySigner(deserialized)).toBe(testAddress1)
+>>>>>>> Stashed changes
       expect(getImplicitBlacklist(deserialized)).toContain(testAddress3)
       expect(getSessionPermissions(deserialized, testAddress2)).toBeTruthy()
     })

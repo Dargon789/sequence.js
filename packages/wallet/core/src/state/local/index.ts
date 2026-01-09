@@ -66,7 +66,11 @@ export interface Store {
 export class Provider implements ProviderInterface {
   constructor(
     private readonly store: Store = new MemoryStore(),
+<<<<<<< Updated upstream
     public readonly extensions: Extensions.Extensions = Extensions.Rc5,
+=======
+    public readonly extensions: Extensions.Extensions = Extensions.Rc3,
+>>>>>>> Stashed changes
   ) {}
 
   getConfiguration(imageHash: Hex.Hex): Promise<Config.Config | undefined> {

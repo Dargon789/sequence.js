@@ -1,11 +1,22 @@
+<<<<<<< Updated upstream
 import { Address, Hex } from 'ox'
 import { jsonReplacers, jsonRevivers } from './index.js'
 import {
+=======
+import { Attestation } from '@0xsequence/wallet-primitives'
+import { Address, Hex } from 'ox'
+import { jsonReplacers, jsonRevivers } from './index.js'
+import {
+  AddExplicitSessionPayload,
+  CreateNewSessionPayload,
+  ModifySessionPayload,
+>>>>>>> Stashed changes
   LoginMethod,
   SignMessagePayload,
   SignTypedDataPayload,
   GuardConfig,
   SendWalletTransactionPayload,
+<<<<<<< Updated upstream
   ModifyExplicitSessionPayload,
   CreateNewSessionPayload,
   AddExplicitSessionPayload,
@@ -17,6 +28,10 @@ const isBrowser = typeof window !== 'undefined'
 const hasSessionStorage = isBrowser && typeof sessionStorage !== 'undefined'
 const hasIndexedDb = typeof indexedDB !== 'undefined'
 
+=======
+} from '../types/index.js'
+
+>>>>>>> Stashed changes
 export interface ExplicitSessionData {
   pk: Hex.Hex
   walletAddress: Address.Address
@@ -37,6 +52,7 @@ export interface ImplicitSessionData {
   guard?: GuardConfig
 }
 
+<<<<<<< Updated upstream
 export interface SessionlessConnectionData {
   walletAddress: Address.Address
   loginMethod?: LoginMethod
@@ -48,6 +64,12 @@ export type PendingPayload =
   | CreateNewSessionPayload
   | AddExplicitSessionPayload
   | ModifyExplicitSessionPayload
+=======
+export type PendingPayload =
+  | CreateNewSessionPayload
+  | AddExplicitSessionPayload
+  | ModifySessionPayload
+>>>>>>> Stashed changes
   | SignMessagePayload
   | SignTypedDataPayload
   | SendWalletTransactionPayload
@@ -77,6 +99,7 @@ export interface SequenceStorage {
   getImplicitSession(): Promise<ImplicitSessionData | null>
   clearImplicitSession(): Promise<void>
 
+<<<<<<< Updated upstream
   saveSessionlessConnection(sessionData: SessionlessConnectionData): Promise<void>
   getSessionlessConnection(): Promise<SessionlessConnectionData | null>
   clearSessionlessConnection(): Promise<void>
@@ -85,6 +108,8 @@ export interface SequenceStorage {
   getSessionlessConnectionSnapshot?(): Promise<SessionlessConnectionData | null>
   clearSessionlessConnectionSnapshot?(): Promise<void>
 
+=======
+>>>>>>> Stashed changes
   clearAllData(): Promise<void>
 }
 
@@ -93,20 +118,27 @@ const DB_VERSION = 1
 const STORE_NAME = 'userKeys'
 const IMPLICIT_SESSIONS_IDB_KEY = 'SequenceImplicitSession'
 const EXPLICIT_SESSIONS_IDB_KEY = 'SequenceExplicitSession'
+<<<<<<< Updated upstream
 const SESSIONLESS_CONNECTION_IDB_KEY = 'SequenceSessionlessConnection'
 const SESSIONLESS_CONNECTION_SNAPSHOT_IDB_KEY = 'SequenceSessionlessConnectionSnapshot'
+=======
+>>>>>>> Stashed changes
 
 const PENDING_REDIRECT_REQUEST_KEY = 'SequencePendingRedirect'
 const TEMP_SESSION_PK_KEY = 'SequencePendingTempSessionPk'
 const PENDING_REQUEST_CONTEXT_KEY = 'SequencePendingRequestContext'
 
 export class WebStorage implements SequenceStorage {
+<<<<<<< Updated upstream
   private inMemoryDb = new Map<IDBValidKey, unknown>()
 
   private openDB(): Promise<IDBDatabase> {
     if (!hasIndexedDb) {
       return Promise.reject(new Error('IndexedDB is not available in this environment.'))
     }
+=======
+  private openDB(): Promise<IDBDatabase> {
+>>>>>>> Stashed changes
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION)
       request.onerror = (event) => reject(`IndexedDB error: ${(event.target as IDBRequest).error}`)
@@ -121,9 +153,12 @@ export class WebStorage implements SequenceStorage {
   }
 
   private async getIDBItem<T>(key: IDBValidKey): Promise<T | undefined> {
+<<<<<<< Updated upstream
     if (!hasIndexedDb) {
       return this.inMemoryDb.get(key) as T | undefined
     }
+=======
+>>>>>>> Stashed changes
     const db = await this.openDB()
     return new Promise((resolve, reject) => {
       const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(key)
@@ -133,10 +168,13 @@ export class WebStorage implements SequenceStorage {
   }
 
   private async setIDBItem(key: IDBValidKey, value: unknown): Promise<void> {
+<<<<<<< Updated upstream
     if (!hasIndexedDb) {
       this.inMemoryDb.set(key, value)
       return
     }
+=======
+>>>>>>> Stashed changes
     const db = await this.openDB()
     return new Promise((resolve, reject) => {
       const request = db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).put(value, key)
@@ -146,10 +184,13 @@ export class WebStorage implements SequenceStorage {
   }
 
   private async deleteIDBItem(key: IDBValidKey): Promise<void> {
+<<<<<<< Updated upstream
     if (!hasIndexedDb) {
       this.inMemoryDb.delete(key)
       return
     }
+=======
+>>>>>>> Stashed changes
     const db = await this.openDB()
     return new Promise((resolve, reject) => {
       const request = db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).delete(key)
@@ -160,9 +201,17 @@ export class WebStorage implements SequenceStorage {
 
   async setPendingRedirectRequest(isPending: boolean): Promise<void> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return
       if (isPending) sessionStorage.setItem(PENDING_REDIRECT_REQUEST_KEY, 'true')
       else sessionStorage.removeItem(PENDING_REDIRECT_REQUEST_KEY)
+=======
+      if (isPending) {
+        sessionStorage.setItem(PENDING_REDIRECT_REQUEST_KEY, 'true')
+      } else {
+        sessionStorage.removeItem(PENDING_REDIRECT_REQUEST_KEY)
+      }
+>>>>>>> Stashed changes
     } catch (error) {
       console.error('Failed to set pending redirect flag:', error)
     }
@@ -170,7 +219,10 @@ export class WebStorage implements SequenceStorage {
 
   async isRedirectRequestPending(): Promise<boolean> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return false
+=======
+>>>>>>> Stashed changes
       return sessionStorage.getItem(PENDING_REDIRECT_REQUEST_KEY) === 'true'
     } catch (error) {
       console.error('Failed to check pending redirect flag:', error)
@@ -180,7 +232,10 @@ export class WebStorage implements SequenceStorage {
 
   async saveTempSessionPk(pk: Hex.Hex): Promise<void> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return
+=======
+>>>>>>> Stashed changes
       sessionStorage.setItem(TEMP_SESSION_PK_KEY, pk)
     } catch (error) {
       console.error('Failed to save temp session PK:', error)
@@ -189,7 +244,10 @@ export class WebStorage implements SequenceStorage {
 
   async getAndClearTempSessionPk(): Promise<Hex.Hex | null> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return null
+=======
+>>>>>>> Stashed changes
       const pk = sessionStorage.getItem(TEMP_SESSION_PK_KEY)
       sessionStorage.removeItem(TEMP_SESSION_PK_KEY)
       return pk as Hex.Hex | null
@@ -201,7 +259,10 @@ export class WebStorage implements SequenceStorage {
 
   async savePendingRequest(context: PendingRequestContext): Promise<void> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return
+=======
+>>>>>>> Stashed changes
       sessionStorage.setItem(PENDING_REQUEST_CONTEXT_KEY, JSON.stringify(context, jsonReplacers))
     } catch (error) {
       console.error('Failed to save pending request context:', error)
@@ -210,7 +271,10 @@ export class WebStorage implements SequenceStorage {
 
   async getAndClearPendingRequest(): Promise<PendingRequestContext | null> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return null
+=======
+>>>>>>> Stashed changes
       const context = sessionStorage.getItem(PENDING_REQUEST_CONTEXT_KEY)
       if (!context) return null
       sessionStorage.removeItem(PENDING_REQUEST_CONTEXT_KEY)
@@ -223,7 +287,10 @@ export class WebStorage implements SequenceStorage {
 
   async peekPendingRequest(): Promise<PendingRequestContext | null> {
     try {
+<<<<<<< Updated upstream
       if (!hasSessionStorage) return null
+=======
+>>>>>>> Stashed changes
       const context = sessionStorage.getItem(PENDING_REQUEST_CONTEXT_KEY)
       if (!context) return null
       return JSON.parse(context, jsonRevivers)
@@ -296,6 +363,7 @@ export class WebStorage implements SequenceStorage {
     }
   }
 
+<<<<<<< Updated upstream
   async saveSessionlessConnection(sessionData: SessionlessConnectionData): Promise<void> {
     try {
       await this.setIDBItem(SESSIONLESS_CONNECTION_IDB_KEY, sessionData)
@@ -358,12 +426,23 @@ export class WebStorage implements SequenceStorage {
         sessionStorage.removeItem(TEMP_SESSION_PK_KEY)
         sessionStorage.removeItem(PENDING_REQUEST_CONTEXT_KEY)
       }
+=======
+  async clearAllData(): Promise<void> {
+    try {
+      // Clear all session storage items
+      sessionStorage.removeItem(PENDING_REDIRECT_REQUEST_KEY)
+      sessionStorage.removeItem(TEMP_SESSION_PK_KEY)
+      sessionStorage.removeItem(PENDING_REQUEST_CONTEXT_KEY)
+>>>>>>> Stashed changes
 
       // Clear all IndexedDB items
       await this.clearExplicitSessions()
       await this.clearImplicitSession()
+<<<<<<< Updated upstream
       await this.clearSessionlessConnection()
       await this.clearSessionlessConnectionSnapshot()
+=======
+>>>>>>> Stashed changes
     } catch (error) {
       console.error('Failed to clear all data:', error)
       throw error

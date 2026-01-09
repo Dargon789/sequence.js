@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 import { Bundler, Signers as CoreSigners, State } from '@0xsequence/wallet-core'
 import { Relayer } from '@0xsequence/relayer'
+=======
+import { Signers as CoreSigners, Relayer, State } from '@0xsequence/wallet-core'
+
+>>>>>>> Stashed changes
 import { IdentityInstrument } from '@0xsequence/identity-instrument'
 import { createAttestationVerifyingFetch } from '@0xsequence/tee-verifier'
 import { Config, Constants, Context, Extensions, Network } from '@0xsequence/wallet-primitives'
@@ -27,17 +32,25 @@ import { Signers } from './signers.js'
 import { Transactions, TransactionsInterface } from './transactions.js'
 import { Kinds } from './types/signer.js'
 import { Wallets, WalletsInterface } from './wallets.js'
+<<<<<<< Updated upstream
 import { GuardHandler, PromptCodeHandler } from './handlers/guard.js'
 import { PasskeyCredential } from '../dbs/index.js'
 import { PromptMnemonicHandler } from './handlers/mnemonic.js'
 import { PromptOtpHandler } from './handlers/otp.js'
+=======
+import { GuardHandler } from './handlers/guard.js'
+import { PasskeyCredential } from '../dbs/index.js'
+>>>>>>> Stashed changes
 
 export type ManagerOptions = {
   verbose?: boolean
 
   extensions?: Extensions.Extensions
   context?: Context.Context
+<<<<<<< Updated upstream
   context4337?: Context.Context
+=======
+>>>>>>> Stashed changes
   guest?: Address.Address
 
   encryptedPksDb?: CoreSigners.Pk.Encrypted.EncryptedPksDb
@@ -55,6 +68,7 @@ export type ManagerOptions = {
   stateProvider?: State.Provider
   networks?: Network.Network[]
   relayers?: Relayer.Relayer[] | (() => Relayer.Relayer[])
+<<<<<<< Updated upstream
   bundlers?: Bundler.Bundler[]
   guardUrl?: string
   guardAddresses?: Record<GuardRole, Address.Address>
@@ -63,6 +77,13 @@ export type ManagerOptions = {
 
   // The default guard topology MUST have a placeholder address for the guard address
   defaultGuardTopology?: Config.Topology
+=======
+  bundlers?: Relayer.Bundler[]
+  guardUrl?: string
+  guardAddresses?: Record<GuardRole, Address.Address>
+
+  defaultGuardTopology?: Config.SignerLeaf
+>>>>>>> Stashed changes
   defaultRecoverySettings?: RecoverySettings
 
   // EIP-6963 support
@@ -85,6 +106,7 @@ export type ManagerOptions = {
       enabled: boolean
       clientId: string
     }
+<<<<<<< Updated upstream
     customProviders?: {
       kind: `custom-${string}`
       authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
@@ -92,15 +114,23 @@ export type ManagerOptions = {
       oauthUrl: string
       clientId: string
     }[]
+=======
+>>>>>>> Stashed changes
   }
 }
 
 export const ManagerOptionsDefaults = {
   verbose: false,
 
+<<<<<<< Updated upstream
   extensions: Extensions.Rc5,
   context: Context.Rc5,
   context4337: Context.Rc5_4337,
+=======
+  extensions: Extensions.Rc3,
+  context: Context.Rc3,
+  context4337: Context.Rc3_4337,
+>>>>>>> Stashed changes
   guest: Constants.DefaultGuestAddress,
 
   encryptedPksDb: new CoreSigners.Pk.Encrypted.EncryptedPksDb(),
@@ -117,6 +147,7 @@ export const ManagerOptionsDefaults = {
 
   stateProvider: new State.Sequence.Provider(),
   networks: Network.ALL,
+<<<<<<< Updated upstream
   relayers: () => {
     if (typeof window !== 'undefined') {
       return [Relayer.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined)
@@ -153,6 +184,26 @@ export const ManagerOptionsDefaults = {
   } as Config.NestedLeaf,
 
   defaultSessionsTopology: {
+=======
+  relayers: () => [Relayer.Standard.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined),
+  bundlers: [],
+
+  guardUrl: 'https://dev-guard.sequence.app',
+  guardAddresses: {
+    wallet: '0xa2e70CeaB3Eb145F32d110383B75B330fA4e288a',
+    sessions: '0x18002Fc09deF9A47437cc64e270843dE094f5984',
+  } as Record<GuardRole, Address.Address>, // TODO: change to the actual guard address
+
+  defaultGuardTopology: {
+    // TODO: Move this somewhere else
+    type: 'signer',
+    address: '0x0000000000000000000000000000000000000000', // will be replaced by the actual guard address
+    weight: 1n,
+  } as Config.SignerLeaf,
+
+  defaultSessionsTopology: {
+    // TODO: Move this somewhere else
+>>>>>>> Stashed changes
     type: 'sapient-signer',
     weight: 1n,
   } as Omit<Config.SapientSignerLeaf, 'imageHash' | 'address'>,
@@ -165,8 +216,14 @@ export const ManagerOptionsDefaults = {
   multiInjectedProviderDiscovery: true,
 
   identity: {
+<<<<<<< Updated upstream
     url: 'https://identity.sequence.app',
     fetch: typeof window !== 'undefined' ? window.fetch : undefined,
+=======
+    // TODO: change to prod url once deployed
+    url: 'https://dev-identity.sequence-dev.app',
+    fetch: window.fetch,
+>>>>>>> Stashed changes
     verifyAttestation: true,
     email: {
       enabled: false,
@@ -187,11 +244,16 @@ export const CreateWalletOptionsDefaults = {
 }
 
 export function applyManagerOptionsDefaults(options?: ManagerOptions) {
+<<<<<<< Updated upstream
   const merged = {
+=======
+  return {
+>>>>>>> Stashed changes
     ...ManagerOptionsDefaults,
     ...options,
     identity: { ...ManagerOptionsDefaults.identity, ...options?.identity },
   }
+<<<<<<< Updated upstream
 
   // Merge and normalize non-witnessable signers.
   // We always include the sessions extension address for the active extensions set.
@@ -222,6 +284,8 @@ export function applyManagerOptionsDefaults(options?: ManagerOptions) {
   merged.nonWitnessableSigners = Array.from(nonWitnessable) as Address.Address[]
 
   return merged
+=======
+>>>>>>> Stashed changes
 }
 
 export type RecoverySettings = {
@@ -253,11 +317,17 @@ export type Sequence = {
 
   readonly networks: Network.Network[]
   readonly relayers: Relayer.Relayer[]
+<<<<<<< Updated upstream
   readonly bundlers: Bundler.Bundler[]
 
   readonly nonWitnessableSigners: ReadonlySet<Address.Address>
 
   readonly defaultGuardTopology: Config.Topology
+=======
+  readonly bundlers: Relayer.Bundler[]
+
+  readonly defaultGuardTopology: Config.SignerLeaf
+>>>>>>> Stashed changes
   readonly defaultRecoverySettings: RecoverySettings
 
   readonly guardUrl: string
@@ -420,7 +490,11 @@ export class Manager {
     // Add EIP-6963 relayers if enabled
     if (ops.multiInjectedProviderDiscovery) {
       try {
+<<<<<<< Updated upstream
         relayers.push(...Relayer.EIP6963.getRelayers())
+=======
+        relayers.push(...Relayer.Standard.EIP6963.getRelayers())
+>>>>>>> Stashed changes
       } catch (error) {
         console.warn('Failed to initialize EIP-6963 relayers:', error)
       }
@@ -444,10 +518,13 @@ export class Manager {
         relayers,
         bundlers: ops.bundlers,
 
+<<<<<<< Updated upstream
         nonWitnessableSigners: new Set(
           (ops.nonWitnessableSigners ?? []).map((address) => address.toLowerCase() as Address.Address),
         ),
 
+=======
+>>>>>>> Stashed changes
         defaultGuardTopology: ops.defaultGuardTopology,
         defaultRecoverySettings: ops.defaultRecoverySettings,
 
@@ -532,7 +609,10 @@ export class Manager {
         new AuthCodePkceHandler(
           'google-pkce',
           'https://accounts.google.com',
+<<<<<<< Updated upstream
           'https://accounts.google.com/o/oauth2/v2/auth',
+=======
+>>>>>>> Stashed changes
           ops.identity.google.clientId,
           identityInstrument,
           modules.signatures,
@@ -547,7 +627,10 @@ export class Manager {
         new AuthCodeHandler(
           'apple',
           'https://appleid.apple.com',
+<<<<<<< Updated upstream
           'https://appleid.apple.com/auth/authorize',
+=======
+>>>>>>> Stashed changes
           ops.identity.apple.clientId,
           identityInstrument,
           modules.signatures,
@@ -556,6 +639,7 @@ export class Manager {
         ),
       )
     }
+<<<<<<< Updated upstream
     if (ops.identity.customProviders?.length) {
       for (const provider of ops.identity.customProviders) {
         switch (provider.authMethod) {
@@ -596,6 +680,8 @@ export class Manager {
         }
       }
     }
+=======
+>>>>>>> Stashed changes
 
     shared.modules = modules
     this.shared = shared
@@ -608,6 +694,7 @@ export class Manager {
     }
   }
 
+<<<<<<< Updated upstream
   public registerMnemonicUI(onPromptMnemonic: PromptMnemonicHandler) {
     return this.mnemonicHandler.registerUI(onPromptMnemonic)
   }
@@ -618,6 +705,20 @@ export class Manager {
 
   public registerGuardUI(onPromptCode: PromptCodeHandler) {
     return this.guardHandler?.registerUI(onPromptCode) || (() => {})
+=======
+  public registerMnemonicUI(onPromptMnemonic: (respond: (mnemonic: string) => Promise<void>) => Promise<void>) {
+    return this.mnemonicHandler.registerUI(onPromptMnemonic)
+  }
+
+  public registerOtpUI(onPromptOtp: (recipient: string, respond: (otp: string) => Promise<void>) => Promise<void>) {
+    return this.otpHandler?.registerUI(onPromptOtp) || (() => {})
+  }
+
+  public registerGuardUI(
+    onPromptOtp: (codeType: 'TOTP' | 'PIN', respond: (otp: string) => Promise<void>) => Promise<void>,
+  ) {
+    return this.guardHandler?.registerUI(onPromptOtp) || (() => {})
+>>>>>>> Stashed changes
   }
 
   public async setRedirectPrefix(prefix: string) {

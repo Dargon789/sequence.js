@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest'
 import { Address, Bytes, Hex } from 'ox'
 import { Network, Payload } from '@0xsequence/wallet-primitives'
@@ -5,6 +6,15 @@ import { IdentityInstrument, KeyType } from '@0xsequence/identity-instrument'
 import { State } from '@0xsequence/wallet-core'
 import { IdentitySigner, toIdentityAuthKey } from '../src/identity/signer.js'
 import { AuthKey } from '../src/dbs/auth-keys.js'
+=======
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { Address, Hex, Bytes } from 'ox'
+import { Network, Payload } from '@0xsequence/wallet-primitives'
+import { IdentityInstrument, KeyType } from '@0xsequence/identity-instrument'
+import { State } from '@0xsequence/wallet-core'
+import { IdentitySigner, toIdentityAuthKey } from '../src/identity/signer'
+import { AuthKey } from '../src/dbs/auth-keys'
+>>>>>>> Stashed changes
 
 // Mock the global crypto API
 const mockCryptoSubtle = {
@@ -31,7 +41,11 @@ describe('Identity Signer', () => {
   let testAuthKey: AuthKey
   let testWallet: Address.Address
   let mockStateWriter: State.Writer
+<<<<<<< Updated upstream
   let mockSignFn: Mock<IdentityInstrument['sign']>
+=======
+  let mockSignFn: ReturnType<typeof vi.fn>
+>>>>>>> Stashed changes
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -179,7 +193,11 @@ describe('Identity Signer', () => {
 
         // Verify that identityInstrument.sign was called with correct parameters
         expect(mockSignFn).toHaveBeenCalledOnce()
+<<<<<<< Updated upstream
         const [authKeyArg, digestArg] = mockSignFn.mock.calls[0]!
+=======
+        const [authKeyArg, digestArg] = mockSignFn.mock.calls[0]
+>>>>>>> Stashed changes
         expect(authKeyArg.address).toBe(testAuthKey.address)
         expect(authKeyArg.signer).toBe(testAuthKey.identitySigner)
         expect(digestArg).toBeDefined()
@@ -196,7 +214,11 @@ describe('Identity Signer', () => {
 
         expect(mockSignFn).toHaveBeenCalledOnce()
         // The digest should be different for different chainIds
+<<<<<<< Updated upstream
         const [, digestArg] = mockSignFn.mock.calls[0]!
+=======
+        const [, digestArg] = mockSignFn.mock.calls[0]
+>>>>>>> Stashed changes
         expect(digestArg).toBeDefined()
       })
 
@@ -255,7 +277,11 @@ describe('Identity Signer', () => {
         }
 
         expect(mockSignFn).toHaveBeenCalledOnce()
+<<<<<<< Updated upstream
         const [authKeyArg, digestArg] = mockSignFn.mock.calls[0]!
+=======
+        const [authKeyArg, digestArg] = mockSignFn.mock.calls[0]
+>>>>>>> Stashed changes
         expect(authKeyArg.address).toBe(testAuthKey.address)
         expect(digestArg).toBe(digest)
       })
@@ -295,7 +321,11 @@ describe('Identity Signer', () => {
       it('Should handle malformed signature from identity instrument', async () => {
         const digest = Hex.toBytes('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')
 
+<<<<<<< Updated upstream
         mockSignFn.mockResolvedValueOnce('invalid-signature' as any)
+=======
+        mockSignFn.mockResolvedValueOnce('invalid-signature')
+>>>>>>> Stashed changes
 
         await expect(identitySigner.signDigest(digest)).rejects.toThrow() // Should throw when Signature.fromHex fails
       })
@@ -317,7 +347,11 @@ describe('Identity Signer', () => {
 
         // Verify witness was saved
         expect(mockSaveWitnesses).toHaveBeenCalledOnce()
+<<<<<<< Updated upstream
         const [wallet, chainId, payload, witness] = mockSaveWitnesses.mock.calls[0]!
+=======
+        const [wallet, chainId, payload, witness] = mockSaveWitnesses.mock.calls[0]
+>>>>>>> Stashed changes
 
         expect(wallet).toBe(testWallet)
         expect(chainId).toBe(0) // Witness signatures use chainId 0
@@ -338,7 +372,11 @@ describe('Identity Signer', () => {
         await identitySigner.witness(mockStateWriter, testWallet)
 
         // Extract the payload that was signed
+<<<<<<< Updated upstream
         const [, , payload] = mockSaveWitnesses.mock.calls[0]!
+=======
+        const [, , payload] = mockSaveWitnesses.mock.calls[0]
+>>>>>>> Stashed changes
 
         // Parse the message content to verify consent structure
         const messageHex = payload.message
@@ -367,7 +405,11 @@ describe('Identity Signer', () => {
         await identitySigner.witness(mockStateWriter, testWallet, extraData)
 
         // Extract and verify extra data was included
+<<<<<<< Updated upstream
         const [, , payload] = mockSaveWitnesses.mock.calls[0]!
+=======
+        const [, , payload] = mockSaveWitnesses.mock.calls[0]
+>>>>>>> Stashed changes
         const messageString = Hex.toString(payload.message)
         const consentData = JSON.parse(messageString)
 
@@ -435,7 +477,11 @@ describe('Identity Signer', () => {
         expect(mockSaveWitnesses).toHaveBeenCalledOnce()
 
         // Verify witness payload includes extra context
+<<<<<<< Updated upstream
         const [, , witnessPayload] = mockSaveWitnesses.mock.calls[0]!
+=======
+        const [, , witnessPayload] = mockSaveWitnesses.mock.calls[0]
+>>>>>>> Stashed changes
         const witnessMessage = JSON.parse(Hex.toString(witnessPayload.message))
         expect(witnessMessage.signatureId).toBe('sig-123')
         expect(witnessMessage.purpose).toBe('authentication')
@@ -469,8 +515,13 @@ describe('Identity Signer', () => {
         expect(mockSignFn).toHaveBeenCalledTimes(2)
 
         // Verify different payloads produce different hashes
+<<<<<<< Updated upstream
         const [, messageDigest] = mockSignFn.mock.calls[0]!
         const [, transactionDigest] = mockSignFn.mock.calls[1]!
+=======
+        const [, messageDigest] = mockSignFn.mock.calls[0]
+        const [, transactionDigest] = mockSignFn.mock.calls[1]
+>>>>>>> Stashed changes
         expect(messageDigest).not.toEqual(transactionDigest)
       })
     })
@@ -500,7 +551,11 @@ describe('Identity Signer', () => {
       it('Should handle malformed hex signatures', async () => {
         const digest = Hex.toBytes('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')
 
+<<<<<<< Updated upstream
         mockSignFn.mockResolvedValueOnce('not-a-hex-string' as any)
+=======
+        mockSignFn.mockResolvedValueOnce('not-a-hex-string')
+>>>>>>> Stashed changes
 
         await expect(identitySigner.signDigest(digest)).rejects.toThrow()
       })

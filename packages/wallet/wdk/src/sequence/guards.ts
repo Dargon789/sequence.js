@@ -1,8 +1,16 @@
+<<<<<<< Updated upstream
 import { Address, Bytes } from 'ox'
 import { Shared } from './manager.js'
 import * as Guard from '@0xsequence/guard'
 import { Signers } from '@0xsequence/wallet-core'
 import { Config, Constants } from '@0xsequence/wallet-primitives'
+=======
+import { Address, Secp256k1 } from 'ox'
+import { Shared } from './manager.js'
+import * as Guard from '@0xsequence/guard'
+import { Signers } from '@0xsequence/wallet-core'
+import { Config } from '@0xsequence/wallet-primitives'
+>>>>>>> Stashed changes
 
 export type GuardRole = 'wallet' | 'sessions'
 
@@ -28,12 +36,17 @@ export class Guards {
     return undefined
   }
 
+<<<<<<< Updated upstream
   topology(role: GuardRole): Config.Topology | undefined {
+=======
+  topology(role: GuardRole): Config.NestedLeaf | undefined {
+>>>>>>> Stashed changes
     const guardAddress = this.shared.sequence.guardAddresses[role]
     if (!guardAddress) {
       return undefined
     }
 
+<<<<<<< Updated upstream
     const topology = Config.replaceAddress(
       this.shared.sequence.defaultGuardTopology,
       Constants.PlaceholderAddress,
@@ -51,5 +64,13 @@ export class Guards {
     }
 
     return topology
+=======
+    return {
+      type: 'nested',
+      weight: 1n,
+      threshold: 1n,
+      tree: { ...this.shared.sequence.defaultGuardTopology, address: guardAddress },
+    }
+>>>>>>> Stashed changes
   }
 }

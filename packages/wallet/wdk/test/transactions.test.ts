@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+<<<<<<< Updated upstream
 import {
   Manager,
   SignerActionable,
@@ -8,6 +9,11 @@ import {
 } from '../src/sequence/index.js'
 import { Address, Hex, Mnemonic, Provider, RpcTransport } from 'ox'
 import { LOCAL_RPC_URL, newManager } from './constants.js'
+=======
+import { Manager, SignerActionable, Transaction, TransactionDefined, TransactionRelayed } from '../src/sequence'
+import { Address, Hex, Mnemonic, Provider, RpcTransport } from 'ox'
+import { LOCAL_RPC_URL, newManager } from './constants'
+>>>>>>> Stashed changes
 import { Payload, Network } from '@0xsequence/wallet-primitives'
 
 describe('Transactions', () => {
@@ -54,9 +60,15 @@ describe('Transactions', () => {
     }
 
     expect(tx.relayerOptions.length).toBe(1)
+<<<<<<< Updated upstream
     expect(tx.relayerOptions[0]!.id).toBeDefined()
 
     const sigId = await manager.transactions.selectRelayer(txId!, tx.relayerOptions[0]!.id)
+=======
+    expect(tx.relayerOptions[0].id).toBeDefined()
+
+    const sigId = await manager.transactions.selectRelayer(txId!, tx.relayerOptions[0].id)
+>>>>>>> Stashed changes
     expect(sigId).toBeDefined()
 
     tx = await manager.transactions.get(txId!)
@@ -167,9 +179,15 @@ describe('Transactions', () => {
     }
 
     expect(tx.relayerOptions.length).toBe(1)
+<<<<<<< Updated upstream
     expect(tx.relayerOptions[0]!.id).toBeDefined()
 
     const sigId = await manager.transactions.selectRelayer(txId!, tx.relayerOptions[0]!.id)
+=======
+    expect(tx.relayerOptions[0].id).toBeDefined()
+
+    const sigId = await manager.transactions.selectRelayer(txId!, tx.relayerOptions[0].id)
+>>>>>>> Stashed changes
     expect(sigId).toBeDefined()
 
     tx = await manager.transactions.get(txId!)
@@ -236,12 +254,20 @@ describe('Transactions', () => {
 
     expect(calledTimes).toBe(1)
     expect(transactions.length).toBe(1)
+<<<<<<< Updated upstream
     const tx = transactions[0]!
     expect(tx.status).toBe('requested')
     expect(tx.wallet).toBe(wallet!)
     expect(tx.requests.length).toBe(1)
     expect(tx.requests[0]!.to).toEqual(to)
     expect(tx.requests[0]!.value).toEqual(9n)
+=======
+    expect(transactions[0].status).toBe('requested')
+    expect(transactions[0].wallet).toBe(wallet!)
+    expect(transactions[0].requests.length).toBe(1)
+    expect(transactions[0].requests[0].to).toEqual(to)
+    expect(transactions[0].requests[0].value).toEqual(9n)
+>>>>>>> Stashed changes
   })
 
   it('Should call onTransactionUpdate when a transaction is defined, relayer selected and relayed', async () => {
@@ -280,12 +306,21 @@ describe('Transactions', () => {
     expect(tx!.status).toBe('defined')
     expect(tx!.wallet).toBe(wallet!)
     expect(tx!.requests.length).toBe(1)
+<<<<<<< Updated upstream
     expect(tx!.requests[0]!.to).toEqual(to)
     expect(tx!.requests[0]!.value).toBeUndefined()
     expect(tx!.requests[0]!.gasLimit).toBeUndefined()
     expect(tx!.requests[0]!.data).toBeUndefined()
 
     const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0]!.id)
+=======
+    expect(tx!.requests[0].to).toEqual(to)
+    expect(tx!.requests[0].value).toBeUndefined()
+    expect(tx!.requests[0].gasLimit).toBeUndefined()
+    expect(tx!.requests[0].data).toBeUndefined()
+
+    const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0].id)
+>>>>>>> Stashed changes
     expect(sigId).toBeDefined()
 
     while (calledTimes < 2) {
@@ -381,7 +416,11 @@ describe('Transactions', () => {
     expect(tx).toBeDefined()
     expect(tx!.status).toBe('defined')
 
+<<<<<<< Updated upstream
     const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0]!.id)
+=======
+    const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0].id)
+>>>>>>> Stashed changes
     expect(sigId).toBeDefined()
 
     await manager.transactions.delete(txId!)
@@ -440,12 +479,21 @@ describe('Transactions', () => {
 
     // The first call should be to the random address
     // and the second one should be a call to self
+<<<<<<< Updated upstream
     const call1 = (tx.envelope.payload as Payload.Calls).calls[0]!
     const call2 = (tx.envelope.payload as Payload.Calls).calls[1]!
     expect(call1.to).toEqual(randomAddress)
     expect(call2.to).toEqual(wallet)
 
     const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0]!.id)
+=======
+    const call1 = (tx.envelope.payload as Payload.Calls).calls[0]
+    const call2 = (tx.envelope.payload as Payload.Calls).calls[1]
+    expect(call1.to).toEqual(randomAddress)
+    expect(call2.to).toEqual(wallet)
+
+    const sigId = await manager.transactions.selectRelayer(txId!, (tx as TransactionDefined).relayerOptions[0].id)
+>>>>>>> Stashed changes
     expect(sigId).toBeDefined()
 
     tx = await manager.transactions.get(txId!)
@@ -547,10 +595,16 @@ describe('Transactions', () => {
 
     // Should now have one transaction
     expect(transactionsList.length).toBe(1)
+<<<<<<< Updated upstream
     const tx = transactionsList[0]!
     expect(tx.id).toBe(txId)
     expect(tx.status).toBe('requested')
     expect(tx.wallet).toBe(wallet)
+=======
+    expect(transactionsList[0].id).toBe(txId)
+    expect(transactionsList[0].status).toBe('requested')
+    expect(transactionsList[0].wallet).toBe(wallet)
+>>>>>>> Stashed changes
 
     unsubscribe()
   })
@@ -585,7 +639,11 @@ describe('Transactions', () => {
 
     expect(callCount).toBe(1)
     expect(receivedTransactions.length).toBe(1)
+<<<<<<< Updated upstream
     expect(receivedTransactions[0]!.id).toBe(txId)
+=======
+    expect(receivedTransactions[0].id).toBe(txId)
+>>>>>>> Stashed changes
 
     unsubscribe()
   })
@@ -705,8 +763,13 @@ describe('Transactions', () => {
 
     const tx = await manager.transactions.get(txId)
     expect(tx.status).toBe('defined')
+<<<<<<< Updated upstream
     expect(tx.envelope.payload.calls[0]!.gasLimit).toBe(50000n)
     expect(tx.envelope.payload.calls[1]!.gasLimit).toBe(75000n)
+=======
+    expect(tx.envelope.payload.calls[0].gasLimit).toBe(50000n)
+    expect(tx.envelope.payload.calls[1].gasLimit).toBe(75000n)
+>>>>>>> Stashed changes
   })
 
   it('Should throw error when defining transaction not in requested state', async () => {
@@ -788,8 +851,13 @@ describe('Transactions', () => {
     expect(tx.status).toBe('requested')
     expect(tx.source).toBe('test-dapp')
     expect(tx.envelope.payload.space).toBe(customSpace)
+<<<<<<< Updated upstream
     expect(tx.requests[0]!.data).toBe('0x1234')
     expect(tx.requests[0]!.gasLimit).toBe(21000n)
+=======
+    expect(tx.requests[0].data).toBe('0x1234')
+    expect(tx.requests[0].gasLimit).toBe(21000n)
+>>>>>>> Stashed changes
   })
 
   it('Should throw error for unknown network', async () => {
@@ -828,12 +896,21 @@ describe('Transactions', () => {
 
     const tx = await manager.transactions.get(txId)
     expect(tx.status).toBe('requested')
+<<<<<<< Updated upstream
     expect(tx.envelope.payload.calls[0]!.value).toBe(0n)
     expect(tx.envelope.payload.calls[0]!.data).toBe('0x')
     expect(tx.envelope.payload.calls[0]!.gasLimit).toBe(0n)
     expect(tx.envelope.payload.calls[0]!.delegateCall).toBe(false)
     expect(tx.envelope.payload.calls[0]!.onlyFallback).toBe(false)
     expect(tx.envelope.payload.calls[0]!.behaviorOnError).toBe('revert')
+=======
+    expect(tx.envelope.payload.calls[0].value).toBe(0n)
+    expect(tx.envelope.payload.calls[0].data).toBe('0x')
+    expect(tx.envelope.payload.calls[0].gasLimit).toBe(0n)
+    expect(tx.envelope.payload.calls[0].delegateCall).toBe(false)
+    expect(tx.envelope.payload.calls[0].onlyFallback).toBe(false)
+    expect(tx.envelope.payload.calls[0].behaviorOnError).toBe('revert')
+>>>>>>> Stashed changes
   })
 
   it('Should handle relay with signature ID instead of transaction ID', async () => {
@@ -864,7 +941,11 @@ describe('Transactions', () => {
       throw new Error('Transaction not defined')
     }
 
+<<<<<<< Updated upstream
     const sigId = await manager.transactions.selectRelayer(txId, tx.relayerOptions[0]!.id)
+=======
+    const sigId = await manager.transactions.selectRelayer(txId, tx.relayerOptions[0].id)
+>>>>>>> Stashed changes
 
     // Sign the transaction
     const sigRequest = await manager.signatures.get(sigId)

@@ -45,7 +45,11 @@ const addressCommand: CommandModule = {
             .option('creationCode', {
               type: 'string',
               description: 'Creation code (optional)',
+<<<<<<< Updated upstream
               default: Context.Rc5.creationCode,
+=======
+              default: Context.Rc3.creationCode,
+>>>>>>> Stashed changes
             })
         },
         async (argv) => {

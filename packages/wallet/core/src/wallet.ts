@@ -402,7 +402,11 @@ export class Wallet {
         factory,
         factoryData,
       },
+<<<<<<< Updated upstream
       ...(await this.prepareBlankEnvelope(Number(chainId), provider)),
+=======
+      ...(await this.prepareBlankEnvelope(Number(chainId))),
+>>>>>>> Stashed changes
     }
   }
 
@@ -490,7 +494,11 @@ export class Wallet {
         nonce,
         calls,
       },
+<<<<<<< Updated upstream
       ...(await this.prepareBlankEnvelope(Number(chainId), provider)),
+=======
+      ...(await this.prepareBlankEnvelope(Number(chainId))),
+>>>>>>> Stashed changes
     }
   }
 
@@ -597,8 +605,13 @@ export class Wallet {
     return encoded
   }
 
+<<<<<<< Updated upstream
   private async prepareBlankEnvelope(chainId: number, provider?: Provider.Provider) {
     const status = await this.getStatus(provider)
+=======
+  private async prepareBlankEnvelope(chainId: number) {
+    const status = await this.getStatus()
+>>>>>>> Stashed changes
 
     return {
       wallet: this.address,

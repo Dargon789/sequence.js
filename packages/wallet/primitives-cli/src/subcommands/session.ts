@@ -19,12 +19,16 @@ export async function doEncodeTopology(sessionTopologyInput: string): Promise<st
 export async function doEncodeSessionCallSignatures(
   sessionTopologyInput: string,
   callSignaturesInput: string[],
+<<<<<<< Updated upstream
   identitySigner?: string,
+=======
+>>>>>>> Stashed changes
   explicitSigners: string[] = [],
   implicitSigners: string[] = [],
 ): Promise<string> {
   const sessionTopology = SessionConfig.sessionsTopologyFromJson(sessionTopologyInput)
   const callSignatures = callSignaturesInput.map((s) => SessionSignature.sessionCallSignatureFromJson(s))
+<<<<<<< Updated upstream
   // Use first identity signer if not provided
   if (!identitySigner) {
     const identitySigners = SessionConfig.getIdentitySigners(sessionTopology)
@@ -37,6 +41,11 @@ export async function doEncodeSessionCallSignatures(
     callSignatures,
     sessionTopology,
     identitySigner as `0x${string}`,
+=======
+  const encoded = SessionSignature.encodeSessionCallSignatures(
+    callSignatures,
+    sessionTopology,
+>>>>>>> Stashed changes
     explicitSigners as `0x${string}`[],
     implicitSigners as `0x${string}`[],
   )
@@ -100,6 +109,7 @@ const sessionCommand: CommandModule = {
               description: 'The call signatures',
               demandOption: true,
             })
+<<<<<<< Updated upstream
             .option('identity-signer', {
               type: 'string',
               description: 'The identity signer',
@@ -107,6 +117,8 @@ const sessionCommand: CommandModule = {
               default: undefined,
               alias: 'id',
             })
+=======
+>>>>>>> Stashed changes
             .option('explicit-signers', {
               type: 'string',
               array: true,
@@ -129,7 +141,10 @@ const sessionCommand: CommandModule = {
             await doEncodeSessionCallSignatures(
               args.sessionTopology,
               args.callSignatures,
+<<<<<<< Updated upstream
               args.identitySigner,
+=======
+>>>>>>> Stashed changes
               args.explicitSigners,
               args.implicitSigners,
             ),

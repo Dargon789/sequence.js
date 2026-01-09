@@ -1,19 +1,34 @@
 import { Address, Bytes, Hash, Hex } from 'ox'
+<<<<<<< Updated upstream
 import { Attestation, Extensions, Payload } from './index.js'
 import { MAX_PERMISSIONS_COUNT } from './permission.js'
 import {
   decodeSessionsTopology,
   encodeSessionsTopology,
   getIdentitySigners,
+=======
+import { Attestation, encode, encodeForJson, fromParsed, toJson } from './attestation.js'
+import { MAX_PERMISSIONS_COUNT } from './permission.js'
+import {
+  encodeSessionsTopology,
+>>>>>>> Stashed changes
   isCompleteSessionsTopology,
   minimiseSessionsTopology,
   SessionsTopology,
 } from './session-config.js'
 import { RSY } from './signature.js'
+<<<<<<< Updated upstream
 import { minBytesFor, packRSY, unpackRSY } from './utils.js'
 
 export type ImplicitSessionCallSignature = {
   attestation: Attestation.Attestation
+=======
+import { minBytesFor, packRSY } from './utils.js'
+import { Payload } from './index.js'
+
+export type ImplicitSessionCallSignature = {
+  attestation: Attestation
+>>>>>>> Stashed changes
   identitySignature: RSY
   sessionSignature: RSY
 }
@@ -46,7 +61,11 @@ export function sessionCallSignatureToJson(callSignature: SessionCallSignature):
 export function encodeSessionCallSignatureForJson(callSignature: SessionCallSignature): any {
   if (isImplicitSessionCallSignature(callSignature)) {
     return {
+<<<<<<< Updated upstream
       attestation: Attestation.encodeForJson(callSignature.attestation),
+=======
+      attestation: encodeForJson(callSignature.attestation),
+>>>>>>> Stashed changes
       identitySignature: rsyToRsvStr(callSignature.identitySignature),
       sessionSignature: rsyToRsvStr(callSignature.sessionSignature),
     }
@@ -68,7 +87,11 @@ export function sessionCallSignatureFromJson(json: string): SessionCallSignature
 export function sessionCallSignatureFromParsed(decoded: any): SessionCallSignature {
   if (decoded.attestation) {
     return {
+<<<<<<< Updated upstream
       attestation: Attestation.fromParsed(decoded.attestation),
+=======
+      attestation: fromParsed(decoded.attestation),
+>>>>>>> Stashed changes
       identitySignature: rsyFromRsvStr(decoded.identitySignature),
       sessionSignature: rsyFromRsvStr(decoded.sessionSignature),
     }
@@ -104,6 +127,7 @@ function rsyFromRsvStr(sigStr: string): RSY {
 
 // Usage
 
+<<<<<<< Updated upstream
 /**
  * Encodes a list of session call signatures into a bytes array for contract validation.
  * @param callSignatures The list of session call signatures to encode.
@@ -117,6 +141,11 @@ export function encodeSessionSignature(
   callSignatures: SessionCallSignature[],
   topology: SessionsTopology,
   identitySigner: Address.Address,
+=======
+export function encodeSessionCallSignatures(
+  callSignatures: SessionCallSignature[],
+  topology: SessionsTopology,
+>>>>>>> Stashed changes
   explicitSigners: Address.Address[] = [],
   implicitSigners: Address.Address[] = [],
 ): Bytes.Bytes {
@@ -128,6 +157,7 @@ export function encodeSessionSignature(
     throw new Error('Incomplete topology')
   }
 
+<<<<<<< Updated upstream
   // Check the topology contains the identity signer
   const identitySigners = getIdentitySigners(topology)
   if (!identitySigners.some((s) => Address.isEqual(s, identitySigner))) {
@@ -136,6 +166,10 @@ export function encodeSessionSignature(
 
   // Optimise the configuration tree by rolling unused signers into nodes.
   topology = minimiseSessionsTopology(topology, explicitSigners, implicitSigners, identitySigner)
+=======
+  // Optimise the configuration tree by rolling unused signers into nodes.
+  topology = minimiseSessionsTopology(topology, explicitSigners, implicitSigners)
+>>>>>>> Stashed changes
 
   // Session topology
   const encodedTopology = encodeSessionsTopology(topology)
@@ -151,12 +185,19 @@ export function encodeSessionSignature(
   // Map each call signature to its attestation index
   callSignatures.filter(isImplicitSessionCallSignature).forEach((callSig) => {
     if (callSig.attestation) {
+<<<<<<< Updated upstream
       const attestationStr = Attestation.toJson(callSig.attestation)
       if (!attestationMap.has(attestationStr)) {
         attestationMap.set(attestationStr, encodedAttestations.length)
         encodedAttestations.push(
           Bytes.concat(Attestation.encode(callSig.attestation), packRSY(callSig.identitySignature)),
         )
+=======
+      const attestationStr = toJson(callSig.attestation)
+      if (!attestationMap.has(attestationStr)) {
+        attestationMap.set(attestationStr, encodedAttestations.length)
+        encodedAttestations.push(Bytes.concat(encode(callSig.attestation), packRSY(callSig.identitySignature)))
+>>>>>>> Stashed changes
       }
     }
   })
@@ -171,7 +212,11 @@ export function encodeSessionSignature(
   for (const callSignature of callSignatures) {
     if (isImplicitSessionCallSignature(callSignature)) {
       // Implicit
+<<<<<<< Updated upstream
       const attestationStr = Attestation.toJson(callSignature.attestation)
+=======
+      const attestationStr = toJson(callSignature.attestation)
+>>>>>>> Stashed changes
       const attestationIndex = attestationMap.get(attestationStr)
       if (attestationIndex === undefined) {
         // Unreachable
@@ -195,6 +240,7 @@ export function encodeSessionSignature(
   return Bytes.concat(...parts)
 }
 
+<<<<<<< Updated upstream
 export function decodeSessionSignature(encodedSignatures: Bytes.Bytes): {
   topology: SessionsTopology
   callSignatures: SessionCallSignature[]
@@ -317,4 +363,26 @@ export function hashPayloadWithCallIdx(
   const payloadHash = Payload.hash(wallet, chainId, payload)
   payload.parentWallets = parentWallets
   return Hex.fromBytes(Hash.keccak256(Bytes.concat(payloadHash, Bytes.fromNumber(callIdx, { size: 32 }))))
+=======
+// Helper
+
+export function hashCallWithReplayProtection(
+  payload: Payload.Calls,
+  callIdx: number,
+  chainId: number,
+  skipCallIdx: boolean = false, // Deprecated. Dev1 and Dev2 support
+): Hex.Hex {
+  const call = payload.calls[callIdx]!
+  return Hex.fromBytes(
+    Hash.keccak256(
+      Bytes.concat(
+        Bytes.fromNumber(chainId, { size: 32 }),
+        Bytes.fromNumber(payload.space, { size: 32 }),
+        Bytes.fromNumber(payload.nonce, { size: 32 }),
+        skipCallIdx ? Bytes.from([]) : Bytes.fromNumber(callIdx, { size: 32 }),
+        Bytes.fromHex(Payload.hashCall(call)),
+      ),
+    ),
+  )
+>>>>>>> Stashed changes
 }
