@@ -563,6 +563,10 @@ export class DappTransport {
   }
 
   private generateId(): string {
-    return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 9)}`
+    // Use crypto.getRandomValues for cryptographically secure randomness
+    const array = new Uint32Array(2);
+    window.crypto.getRandomValues(array);
+    const randStr = (array[0].toString(36) + array[1].toString(36)).slice(0, 9);
+    return `${Date.now().toString(36)}-${randStr}`;
   }
 }
