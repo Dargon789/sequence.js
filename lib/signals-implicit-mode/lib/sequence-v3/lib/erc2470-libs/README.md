@@ -41,7 +41,7 @@ If the `SingletonDeployer` has not yet been deployed on chain, that will be done
 > [!NOTE]
 > The `SingletonDeployer` has a fixed gas cost which may not be compatible with all networks. If deployment fails, check the gas settings of the network.
 > A network base fee exceeding 100 gwei will cause the deployment to fail.
-> Networks requiring additions gas costs (L2, etc) will require additional funds for the factory deployer.
+> Networks requiring additional gas costs (L2, etc) will require additional funds for the factory deployer.
 
 Ensure you have your private key set in your `.env` file:
 
