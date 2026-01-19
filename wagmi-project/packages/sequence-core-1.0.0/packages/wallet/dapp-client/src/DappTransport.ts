@@ -513,9 +513,15 @@ export class DappTransport {
   }
 
   private generateId(): string {
-    const buffer = new Uint32Array(1)
-    window.crypto.getRandomValues(buffer)
-    const randomPart = buffer[0].toString(36).substring(0, 7)
-    return `${Date.now().toString(36)}-${randomPart}`
+    // Use cryptographically secure randomness instead of Math.random
+    const bytes = new Uint8Array(8)
+    window.crypto.getRandomValues(bytes)
+    let randomPart = ''
+    for (let i = 0; i < bytes.length; i++) {
+      // Convert each byte to base36 (0-9a-z), pad to at least 2 chars, and append
+      randomPart += bytes[i].toString(36).padStart(2, '0')
+    }
+    // Keep overall format stable: "<timestampBase36>-<randomString>"
+    return `${Date.now().toString(36)}-${randomPart.substring(0, 7)}`
   }
 }

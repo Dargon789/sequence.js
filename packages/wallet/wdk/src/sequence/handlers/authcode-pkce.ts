@@ -8,16 +8,15 @@ import { AuthCodeHandler } from './authcode.js'
 
 export class AuthCodePkceHandler extends AuthCodeHandler implements Handler {
   constructor(
-    signupKind: 'google-pkce' | `custom-${string}`,
+    signupKind: 'google-pkce',
     issuer: string,
-    oauthUrl: string,
     audience: string,
     nitro: Identity.IdentityInstrument,
     signatures: Signatures,
     commitments: Db.AuthCommitments,
     authKeys: Db.AuthKeys,
   ) {
-    super(signupKind, issuer, oauthUrl, audience, nitro, signatures, commitments, authKeys)
+    super(signupKind, issuer, audience, nitro, signatures, commitments, authKeys)
   }
 
   public async commitAuth(target: string, isSignUp: boolean, state?: string, signer?: string) {
@@ -51,7 +50,8 @@ export class AuthCodePkceHandler extends AuthCodeHandler implements Handler {
       state,
     })
 
-    return `${this.oauthUrl}?${searchParams.toString()}`
+    const oauthUrl = this.oauthUrl()
+    return `${oauthUrl}?${searchParams.toString()}`
   }
 
   public async completeAuth(
