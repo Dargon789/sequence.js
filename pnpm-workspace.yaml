@@ -7,16 +7,5 @@ packages:
   - repo/*
   - test/*
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - bufferutil
-  - core-js-pure
-  - esbuild
-  - keccak
-  - lefthook
-  - sharp
-  - utf-8-validate
-
 publicHoistPattern:
-  - eslint
+- "eslint"
