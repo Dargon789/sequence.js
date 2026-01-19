@@ -2,6 +2,46 @@
   "name": "sequence-core",
   "license": "Apache-2.0",
   "private": true,
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "lefthook": "^1.13.6",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.1.0",
+    "turbo": "^2.6.1",
+    "typescript": "5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "0xsequence": "^2.3.33",
+    "@0xsequence/connect": "0.0.0-20250924112110",
+    "@0xsequence/waas": "^2.3.33",
+    "@0xsequence/wallet": "~2.3.33",
+    "@0xsequence/wallet-contracts": "~3.0.1",
+    "@0xsequence/wallet-primitives": "0.0.0-20250915145821",
+    "@vercel/analytics": "^1.5.0",
+    "ethers": "^6.15.0",
+    "flag": "^5.0.1",
+    "prettier-plugin-solidity": "^2.2.0",
+    "vercel": "^48.10.2"
+  },
+  "version": "1.0.0",
+  "description": "**NOTE: please see [v2](https://github.com/0xsequence/sequence.js/tree/v2) branch for sequence.js 2.x.x**",
+  "main": "sequence.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dargon789/sequence.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Dargon789/sequence.js/issues"
+  },
+  "homepage": "https://github.com/Dargon789/sequence.js#readme",
   "scripts": {
     "build:all": "turbo build",
     "build:packages": "turbo build --filter=\"./packages/**/*\"",
@@ -15,46 +55,6 @@
     "dev:server": "node packages/wallet/primitives-cli/dist/index.js server",
     "reinstall": "rimraf -g ./**/node_modules && pnpm install",
     "test:anvil": "anvil --fork-url https://nodes.sequence.app/arbitrum",
-    "clean": "turbo clean",
-    "deps:lint": "syncpack list-mismatches",
-    "deps:fix": "syncpack fix-mismatches"
-  },
-  "devDependencies": {
-    "@changesets/cli": "^2.29.8",
-    "lefthook": "^2.0.12",
-    "prettier": "^3.7.4",
-    "rimraf": "^6.1.2",
-    "syncpack": "^13.0.4",
-    "turbo": "^2.6.3",
-    "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "ox": "^0.9.17"
-    }
-  },
-  "packageManager": "pnpm@10.24.0",
-  "engines": {
-    "node": ">=18"
-  },
-  "syncpack": {
-    "source": [
-      "package.json",
-      "packages/**/package.json",
-      "extras/**/package.json",
-      "repo/**/package.json"
-    ],
-    "versionGroups": [
-      {
-        "label": "Use workspace protocol when developing local packages",
-        "dependencyTypes": [
-          "!local"
-        ],
-        "dependencies": [
-          "$LOCAL"
-        ],
-        "pinVersion": "workspace:^"
-      }
-    ]
+    "clean": "turbo clean"
   }
 }

@@ -1,3 +1,4 @@
+
 # @0xsequence/metadata
 
 ## 2.3.8
@@ -385,6 +386,12 @@
 ### Patch Changes
 
 - utils: extractProjectIdFromAccessKey
+
+## 2.0.0
+
+### Major Changes
+
+- changeset
 
 ## 1.10.14
 
@@ -1768,6 +1775,7 @@
 - metadata: ContractInfo.decimals is now optional, i.e. may be undefined
 
   api: new APIs for user storage and isUsingGoogleMail
+
 
 ## 0.29.0
 
