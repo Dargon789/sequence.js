@@ -1,11 +1,2 @@
 packages:
-  - extras/*
-  - packages/*
-  - packages/services/*
-  - packages/utils/*
-  - packages/wallet/*
-  - repo/*
-  - test/*
-
-publicHoistPattern:
-- "eslint"
+  - 'packages/*'
