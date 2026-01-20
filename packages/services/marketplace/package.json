@@ -1,14 +1,8 @@
 {
   "name": "@0xsequence/marketplace",
-<<<<<<< Updated upstream
-  "version": "3.0.0-beta.6",
-  "description": "marketplace sub-package for Sequence",
-  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/services/marketplace",
-=======
   "version": "3.0.0",
   "description": "marketplace sub-package for Sequence",
   "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/marketplace",
->>>>>>> Stashed changes
   "author": "Sequence Platforms Inc.",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -22,22 +16,13 @@
   },
   "exports": {
     ".": {
-<<<<<<< Updated upstream
-      "types": "./dist/index.d.ts",
-=======
       "types": "./src/index.ts",
->>>>>>> Stashed changes
       "default": "./dist/index.js"
     }
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
-<<<<<<< Updated upstream
-    "@types/node": "^25.0.2",
-    "typescript": "^5.9.3"
-=======
     "@types/node": "^22.15.29",
     "typescript": "^5.8.3"
->>>>>>> Stashed changes
   }
 }
