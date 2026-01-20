@@ -2,19 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Address, Hex, Bytes } from 'ox'
 import { Network, Payload } from '@0xsequence/wallet-primitives'
 import { IdentityInstrument, IdentityType, KeyType, AuthCodeChallenge } from '@0xsequence/identity-instrument'
-<<<<<<< Updated upstream
-import { AuthCodeHandler } from '../src/sequence/handlers/authcode.js'
-import { Signatures } from '../src/sequence/signatures.js'
-import * as Db from '../src/dbs/index.js'
-import { IdentitySigner } from '../src/identity/signer.js'
-import { BaseSignatureRequest } from '../src/sequence/types/signature-request.js'
-=======
 import { AuthCodeHandler } from '../src/sequence/handlers/authcode'
 import { Signatures } from '../src/sequence/signatures'
 import * as Db from '../src/dbs'
 import { IdentitySigner } from '../src/identity/signer'
 import { BaseSignatureRequest } from '../src/sequence/types/signature-request'
->>>>>>> Stashed changes
 
 // Mock the global crypto API
 const mockCryptoSubtle = {
@@ -137,10 +129,6 @@ describe('AuthCodeHandler', () => {
     authCodeHandler = new AuthCodeHandler(
       'google-pkce',
       'https://accounts.google.com',
-<<<<<<< Updated upstream
-      'https://accounts.google.com/o/oauth2/v2/auth',
-=======
->>>>>>> Stashed changes
       'test-audience',
       mockIdentityInstrument,
       mockSignatures,
@@ -160,10 +148,6 @@ describe('AuthCodeHandler', () => {
       const handler = new AuthCodeHandler(
         'google-pkce',
         'https://accounts.google.com',
-<<<<<<< Updated upstream
-        'https://accounts.google.com/o/oauth2/v2/auth',
-=======
->>>>>>> Stashed changes
         'google-client-id',
         mockIdentityInstrument,
         mockSignatures,
@@ -181,10 +165,6 @@ describe('AuthCodeHandler', () => {
       const handler = new AuthCodeHandler(
         'apple',
         'https://appleid.apple.com',
-<<<<<<< Updated upstream
-        'https://appleid.apple.com/auth/authorize',
-=======
->>>>>>> Stashed changes
         'apple-client-id',
         mockIdentityInstrument,
         mockSignatures,
@@ -209,10 +189,6 @@ describe('AuthCodeHandler', () => {
       const googleHandler = new AuthCodeHandler(
         'google-pkce',
         'https://accounts.google.com',
-<<<<<<< Updated upstream
-        'https://accounts.google.com/o/oauth2/v2/auth',
-=======
->>>>>>> Stashed changes
         'test-audience',
         mockIdentityInstrument,
         mockSignatures,
@@ -227,10 +203,6 @@ describe('AuthCodeHandler', () => {
       const appleHandler = new AuthCodeHandler(
         'apple',
         'https://appleid.apple.com',
-<<<<<<< Updated upstream
-        'https://appleid.apple.com/auth/authorize',
-=======
->>>>>>> Stashed changes
         'test-audience',
         mockIdentityInstrument,
         mockSignatures,
@@ -277,11 +249,7 @@ describe('AuthCodeHandler', () => {
 
       // Verify commitment was saved
       expect(mockAuthCommitmentsSet).toHaveBeenCalledOnce()
-<<<<<<< Updated upstream
-      const commitmentCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const commitmentCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
 
       expect(commitmentCall.kind).toBe('google-pkce')
       expect(commitmentCall.signer).toBe(signer)
@@ -306,11 +274,7 @@ describe('AuthCodeHandler', () => {
       const result = await authCodeHandler.commitAuth('/target', false, customState)
 
       // Verify commitment uses custom state
-<<<<<<< Updated upstream
-      const commitmentCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const commitmentCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
       expect(commitmentCall.id).toBe(customState)
       expect(result).toContain(`state=${customState}`)
     })
@@ -318,11 +282,7 @@ describe('AuthCodeHandler', () => {
     it('Should generate random state when not provided', async () => {
       const result = await authCodeHandler.commitAuth('/target', false)
 
-<<<<<<< Updated upstream
-      const commitmentCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const commitmentCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
       expect(commitmentCall.id).toBeDefined()
       expect(typeof commitmentCall.id).toBe('string')
       expect(commitmentCall.id.startsWith('0x')).toBe(true)
@@ -333,10 +293,6 @@ describe('AuthCodeHandler', () => {
       const appleHandler = new AuthCodeHandler(
         'apple',
         'https://appleid.apple.com',
-<<<<<<< Updated upstream
-        'https://appleid.apple.com/auth/authorize',
-=======
->>>>>>> Stashed changes
         'apple-client-id',
         mockIdentityInstrument,
         mockSignatures,
@@ -349,16 +305,14 @@ describe('AuthCodeHandler', () => {
 
       expect(result).toContain('https://appleid.apple.com/auth/authorize?')
       expect(result).toContain('client_id=apple-client-id')
+      const resultUrl = new URL(result)
+      expect(resultUrl.searchParams.has('scope')).toBe(false)
     })
 
     it('Should create commitment without signer', async () => {
       const result = await authCodeHandler.commitAuth('/target', true)
 
-<<<<<<< Updated upstream
-      const commitmentCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const commitmentCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
       expect(commitmentCall.signer).toBeUndefined()
       expect(commitmentCall.isSignUp).toBe(true)
     })
@@ -390,20 +344,12 @@ describe('AuthCodeHandler', () => {
 
       // Verify commitVerifier was called
       expect(mockCommitVerifier).toHaveBeenCalledOnce()
-<<<<<<< Updated upstream
-      const commitVerifierCall = mockCommitVerifier.mock.calls[0]!
-=======
       const commitVerifierCall = mockCommitVerifier.mock.calls[0]
->>>>>>> Stashed changes
       expect(commitVerifierCall[1]).toBeInstanceOf(AuthCodeChallenge)
 
       // Verify completeAuth was called
       expect(mockCompleteAuth).toHaveBeenCalledOnce()
-<<<<<<< Updated upstream
-      const completeAuthCall = mockCompleteAuth.mock.calls[0]!
-=======
       const completeAuthCall = mockCompleteAuth.mock.calls[0]
->>>>>>> Stashed changes
       expect(completeAuthCall[1]).toBeInstanceOf(AuthCodeChallenge)
 
       // Verify results
@@ -540,34 +486,20 @@ describe('AuthCodeHandler', () => {
       expect(window.location.href).toContain('https://accounts.google.com/o/oauth2/v2/auth')
       expect(mockAuthCommitmentsSet).toHaveBeenCalledOnce()
 
-<<<<<<< Updated upstream
-      const commitmentCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const commitmentCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
       expect(commitmentCall.target).toBe(window.location.pathname)
       expect(commitmentCall.isSignUp).toBe(false)
       expect(commitmentCall.signer).toBe(testWallet)
     })
   })
 
-<<<<<<< Updated upstream
-  // === OAUTH URL PROPERTY ===
-
-  describe('oauthUrl', () => {
-=======
   // === OAUTH URL METHOD ===
 
   describe('oauthUrl()', () => {
->>>>>>> Stashed changes
     it('Should return Google OAuth URL for Google issuer', () => {
       const googleHandler = new AuthCodeHandler(
         'google-pkce',
         'https://accounts.google.com',
-<<<<<<< Updated upstream
-        'https://accounts.google.com/o/oauth2/v2/auth',
-=======
->>>>>>> Stashed changes
         'test-audience',
         mockIdentityInstrument,
         mockSignatures,
@@ -575,11 +507,7 @@ describe('AuthCodeHandler', () => {
         mockAuthKeys,
       )
 
-<<<<<<< Updated upstream
-      const url = googleHandler['oauthUrl']
-=======
       const url = googleHandler['oauthUrl']()
->>>>>>> Stashed changes
       expect(url).toBe('https://accounts.google.com/o/oauth2/v2/auth')
     })
 
@@ -587,10 +515,6 @@ describe('AuthCodeHandler', () => {
       const appleHandler = new AuthCodeHandler(
         'apple',
         'https://appleid.apple.com',
-<<<<<<< Updated upstream
-        'https://appleid.apple.com/auth/authorize',
-=======
->>>>>>> Stashed changes
         'test-audience',
         mockIdentityInstrument,
         mockSignatures,
@@ -598,11 +522,6 @@ describe('AuthCodeHandler', () => {
         mockAuthKeys,
       )
 
-<<<<<<< Updated upstream
-      const url = appleHandler['oauthUrl']
-      expect(url).toBe('https://appleid.apple.com/auth/authorize')
-    })
-=======
       const url = appleHandler['oauthUrl']()
       expect(url).toBe('https://appleid.apple.com/auth/authorize')
     })
@@ -620,7 +539,6 @@ describe('AuthCodeHandler', () => {
 
       expect(() => unsupportedHandler['oauthUrl']()).toThrow('unsupported-issuer')
     })
->>>>>>> Stashed changes
   })
 
   // === INHERITED METHODS FROM IDENTITYHANDLER ===
@@ -795,8 +713,6 @@ describe('AuthCodeHandler', () => {
       expect(metadata.email).toBe('test@example.com')
     })
 
-<<<<<<< Updated upstream
-=======
     it('Should handle different OAuth providers correctly', async () => {
       const providers = [
         {
@@ -829,29 +745,20 @@ describe('AuthCodeHandler', () => {
       }
     })
 
->>>>>>> Stashed changes
     it('Should handle signup vs login flows correctly', async () => {
       authCodeHandler.setRedirectUri('https://example.com/callback')
 
       // Test signup flow
       await authCodeHandler.commitAuth('/signup-target', true, 'signup-state')
 
-<<<<<<< Updated upstream
-      const signupCall = mockAuthCommitmentsSet.mock.calls[0]![0]!
-=======
       const signupCall = mockAuthCommitmentsSet.mock.calls[0][0]
->>>>>>> Stashed changes
       expect(signupCall.isSignUp).toBe(true)
       expect(signupCall.target).toBe('/signup-target')
 
       // Test login flow
       await authCodeHandler.commitAuth('/login-target', false, 'login-state')
 
-<<<<<<< Updated upstream
-      const loginCall = mockAuthCommitmentsSet.mock.calls[1]![0]!
-=======
       const loginCall = mockAuthCommitmentsSet.mock.calls[1][0]
->>>>>>> Stashed changes
       expect(loginCall.isSignUp).toBe(false)
       expect(loginCall.target).toBe('/login-target')
     })

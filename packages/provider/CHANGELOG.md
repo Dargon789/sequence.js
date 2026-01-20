@@ -1,5 +1,122 @@
 # @0xsequence/provider
 
+## 2.0.0
+
+### Major Changes
+
+- changeset
+
+### Patch Changes
+
+- Updated dependencies
+  - @0xsequence/abi@2.0.0
+  - @0xsequence/account@2.0.0
+  - @0xsequence/auth@2.0.0
+  - @0xsequence/core@2.0.0
+  - @0xsequence/migration@2.0.0
+  - @0xsequence/network@2.0.0
+  - @0xsequence/relayer@2.0.0
+  - @0xsequence/utils@2.0.0
+  - @0xsequence/wallet@2.0.0
+
+## 1.10.14
+
+### Patch Changes
+
+- network: add borne-testnet to allNetworks
+- Updated dependencies
+  - @0xsequence/abi@1.10.14
+  - @0xsequence/account@1.10.14
+  - @0xsequence/auth@1.10.14
+  - @0xsequence/core@1.10.14
+  - @0xsequence/migration@1.10.14
+  - @0xsequence/network@1.10.14
+  - @0xsequence/relayer@1.10.14
+  - @0xsequence/utils@1.10.14
+  - @0xsequence/wallet@1.10.14
+
+## 1.10.13
+
+### Patch Changes
+
+- network: add borne testnet
+- Updated dependencies
+  - @0xsequence/abi@1.10.13
+  - @0xsequence/account@1.10.13
+  - @0xsequence/auth@1.10.13
+  - @0xsequence/core@1.10.13
+  - @0xsequence/migration@1.10.13
+  - @0xsequence/network@1.10.13
+  - @0xsequence/relayer@1.10.13
+  - @0xsequence/utils@1.10.13
+  - @0xsequence/wallet@1.10.13
+
+## 1.10.12
+
+### Patch Changes
+
+- api: update bindings
+- global/window -> globalThis
+- Updated dependencies
+- Updated dependencies
+  - @0xsequence/abi@1.10.12
+  - @0xsequence/account@1.10.12
+  - @0xsequence/auth@1.10.12
+  - @0xsequence/core@1.10.12
+  - @0xsequence/migration@1.10.12
+  - @0xsequence/network@1.10.12
+  - @0xsequence/relayer@1.10.12
+  - @0xsequence/utils@1.10.12
+  - @0xsequence/wallet@1.10.12
+
+## 1.10.11
+
+### Patch Changes
+
+- waas: updated intent.gen without webrpc types, errors exported from authenticator.gen
+- Updated dependencies
+  - @0xsequence/abi@1.10.11
+  - @0xsequence/account@1.10.11
+  - @0xsequence/auth@1.10.11
+  - @0xsequence/core@1.10.11
+  - @0xsequence/migration@1.10.11
+  - @0xsequence/network@1.10.11
+  - @0xsequence/relayer@1.10.11
+  - @0xsequence/utils@1.10.11
+  - @0xsequence/wallet@1.10.11
+
+## 1.10.10
+
+### Patch Changes
+
+- metadata: update bindings with new contract collections api
+- Updated dependencies
+  - @0xsequence/abi@1.10.10
+  - @0xsequence/account@1.10.10
+  - @0xsequence/auth@1.10.10
+  - @0xsequence/core@1.10.10
+  - @0xsequence/migration@1.10.10
+  - @0xsequence/network@1.10.10
+  - @0xsequence/relayer@1.10.10
+  - @0xsequence/utils@1.10.10
+  - @0xsequence/wallet@1.10.10
+
+## 1.10.9
+
+### Patch Changes
+
+- waas minor update
+- Updated dependencies
+  - @0xsequence/abi@1.10.9
+  - @0xsequence/account@1.10.9
+  - @0xsequence/auth@1.10.9
+  - @0xsequence/core@1.10.9
+  - @0xsequence/migration@1.10.9
+  - @0xsequence/network@1.10.9
+  - @0xsequence/relayer@1.10.9
+  - @0xsequence/utils@1.10.9
+  - @0xsequence/wallet@1.10.9
+
 ## 1.10.8
 
 ### Patch Changes

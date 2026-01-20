@@ -1,58 +1,46 @@
 import {
-  changeIntentTime,
-  closeSession,
-  combineTransactionIntents,
-  feeOptions,
-  finishValidateSession,
-  getIdToken,
-  getSession,
-  getTransactionReceipt,
-  GetTransactionReceiptArgs,
-  initiateAuth,
   Intent,
-  listSessions,
-  openSession,
-  OpenSessionArgs,
-  sendDelayedEncode,
-  SendDelayedEncodeArgs,
-  sendERC1155,
-  SendERC1155Args,
-  sendERC20,
-  SendERC20Args,
-  sendERC721,
-  SendERC721Args,
-  sendTransactions,
-  SendTransactionsArgs,
-  sessionAuthProof,
   SignedIntent,
+  closeSession,
+  getSession,
+  openSession,
+  listSessions,
+  validateSession,
+  finishValidateSession,
+  sessionAuthProof,
   signIntent,
   signMessage,
+  feeOptions,
+  sendDelayedEncode,
+  sendERC1155,
+  sendERC20,
+  sendERC721,
+  sendTransactions,
+  combineTransactionIntents,
   SignMessageArgs,
-  validateSession
+  SendTransactionsArgs,
+  SendERC20Args,
+  SendERC721Args,
+  SendERC1155Args,
+  SendDelayedEncodeArgs,
+  GetTransactionReceiptArgs,
+  getTransactionReceipt,
+  changeIntentTime,
 } from './intents'
 import { LocalStore, Store, StoreObj } from './store'
 import { newSession, newSessionFromSessionId } from './session'
 import { OpenSessionResponse } from './intents/responses'
-import { federateAccount, listAccounts, removeAccount } from './intents/accounts'
-import { SimpleNetwork, toNetworkID, WithSimpleNetwork } from './networks'
+import { SimpleNetwork, WithSimpleNetwork, toNetworkID } from './networks'
 import {
-  IdentityType,
-  IntentDataFederateAccount,
   IntentDataFeeOptions,
   IntentDataFinishValidateSession,
   IntentDataGetSession,
   IntentDataGetTransactionReceipt,
-  IntentDataInitiateAuth,
-  IntentDataListAccounts,
   IntentDataOpenSession,
   IntentDataSendTransaction,
   IntentDataSignMessage,
   IntentDataValidateSession
 } from './clients/intent.gen'
-import { getDefaultSubtleCryptoBackend, SubtleCryptoBackend } from './subtle-crypto'
-import { getDefaultSecureStoreBackend, SecureStoreBackend } from './secure-store'
-import { ethers } from 'ethers'
-import { ChallengeIntentParams } from './challenge'
 
 type Status = 'pending' | 'signed-in' | 'signed-out'
 
@@ -82,6 +70,8 @@ export type SequenceBaseConfig = {
 export type Observer<T> = (value: T | null) => any
 
 export class SequenceWaaSBase {
+  readonly VERSION = '0.0.0-dev1'
+
   private readonly status: StoreObj<Status>
   private readonly sessionId: StoreObj<string | undefined>
   private readonly wallet: StoreObj<string | undefined>
@@ -90,9 +80,7 @@ export class SequenceWaaSBase {
 
   constructor(
     public readonly config = { network: 1 } as SequenceBaseConfig,
-    private readonly store: Store = new LocalStore(),
-    private readonly cryptoBackend: SubtleCryptoBackend | null = getDefaultSubtleCryptoBackend(),
-    private readonly secureStoreBackend: SecureStoreBackend | null = getDefaultSecureStoreBackend()
+    private readonly store: Store = new LocalStore()
   ) {
     this.status = new StoreObj(this.store, SEQUENCE_WAAS_STATUS_KEY, 'signed-out')
     this.sessionId = new StoreObj(this.store, SEQUENCE_WAAS_SESSION_ID_KEY, undefined)
@@ -147,22 +135,22 @@ export class SequenceWaaSBase {
    * @returns A payload that can be sent to the WaaS API
    */
   private async signIntent<T>(intent: Intent<T>): Promise<SignedIntent<T>> {
-    const sessionId = await this.getSessionId()
+    const sessionId = await this.sessionId.get()
     if (sessionId === undefined) {
       throw new Error('session not open')
     }
 
-    const session = await newSessionFromSessionId(sessionId, this.cryptoBackend, this.secureStoreBackend)
+    const session = await newSessionFromSessionId(sessionId)
     return signIntent(session, intent)
   }
 
   public async signUsingSessionKey(message: string | Uint8Array) {
-    const sessionId = await this.getSessionId()
+    const sessionId = await this.sessionId.get()
     if (!sessionId) {
       throw new Error('session not open')
     }
 
-    const signer = await newSessionFromSessionId(sessionId, this.cryptoBackend, this.secureStoreBackend)
+    const signer = await newSessionFromSessionId(sessionId)
     return signer.sign(message)
   }
 
@@ -181,7 +169,7 @@ export class SequenceWaaSBase {
     const promiseGenerator = async () => {
       let sessionId = await this.sessionId.get()
       if (!sessionId) {
-        const session = await newSession(this.cryptoBackend, this.secureStoreBackend)
+        const session = await newSession()
         sessionId = await session.sessionId()
         await this.sessionId.set(sessionId)
         this.signalObservers(this.sessionObservers, sessionId)
@@ -203,11 +191,11 @@ export class SequenceWaaSBase {
    * must be sent to the waas API to complete the sign-in. The waas API will return a receipt
    * that must be sent to the `completeSignIn` method to complete the sign-in.
    *
-   * @param idToken Information about the user that can be used to prove their identity
+   * @param proof Information about the user that can be used to prove their identity
    * @returns a session payload that **must** be sent to the waas API to complete the sign-in
    * @throws {Error} If the session is already signed in or there is a pending sign-in
    */
-  async signInWithIdToken(idToken: string): Promise<SignedIntent<IntentDataOpenSession>> {
+  async signIn({ idToken }: { idToken: string }): Promise<SignedIntent<IntentDataOpenSession>> {
     const status = await this.status.get()
     if (status !== 'signed-out') {
       await this.completeSignOut()
@@ -215,89 +203,7 @@ export class SequenceWaaSBase {
     }
 
     const sessionId = await this.getSessionId()
-    const intent = await openSession({
-      sessionId,
-      identityType: IdentityType.None,
-      idToken,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    await this.status.set('pending')
-
-    return this.signIntent(intent)
-  }
-
-  async initiateGuestAuth(): Promise<SignedIntent<IntentDataInitiateAuth>> {
-    const sessionId = await this.getSessionId()
-    const intent = await initiateAuth({
-      sessionId,
-      identityType: IdentityType.Guest,
-      verifier: sessionId,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    return this.signIntent(intent)
-  }
-
-  async initiateEmailAuth(email: string): Promise<SignedIntent<IntentDataInitiateAuth>> {
-    const sessionId = await this.getSessionId()
-    const intent = await initiateAuth({
-      sessionId,
-      identityType: IdentityType.Email,
-      verifier: `${email};${sessionId}`,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    return this.signIntent(intent)
-  }
-
-  async initiateIdTokenAuth(idToken: string, exp?: number): Promise<SignedIntent<IntentDataInitiateAuth>> {
-    const sessionId = await this.getSessionId()
-    const idTokenHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(idToken))
-    const intent = await initiateAuth({
-      sessionId,
-      identityType: IdentityType.OIDC,
-      verifier: `${idTokenHash};${exp}`,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    return this.signIntent(intent)
-  }
-
-  async initiateStytchAuth(idToken: string, exp?: number): Promise<SignedIntent<IntentDataInitiateAuth>> {
-    const sessionId = await this.getSessionId()
-    const idTokenHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(idToken))
-    const intent = await initiateAuth({
-      sessionId,
-      identityType: IdentityType.Stytch,
-      verifier: `${idTokenHash};${exp}`,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    return this.signIntent(intent)
-  }
-
-  async initiatePlayFabAuth(titleId: string, sessionTicket: string): Promise<SignedIntent<IntentDataInitiateAuth>> {
-    const sessionId = await this.getSessionId()
-    const ticketHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(sessionTicket))
-    const intent = await initiateAuth({
-      sessionId,
-      identityType: IdentityType.PlayFab,
-      verifier: `${titleId}|${ticketHash}`,
-      lifespan: DEFAULT_LIFESPAN
-    })
-
-    return this.signIntent(intent)
-  }
-
-  async completeAuth(params: ChallengeIntentParams, optParams: Partial<OpenSessionArgs>) {
-    const sessionId = await this.getSessionId()
-    const intent = await openSession({
-      ...optParams,
-      sessionId,
-      lifespan: DEFAULT_LIFESPAN,
-      ...params
-    })
+    const intent = await openSession({ idToken, sessionId, lifespan: DEFAULT_LIFESPAN })
 
     await this.status.set('pending')
 
@@ -487,9 +393,7 @@ export class SequenceWaaSBase {
     return this.signIntent(intent)
   }
 
-  async feeOptions(
-    args: WithSimpleNetwork<SendTransactionsArgs> & ExtraTransactionArgs
-  ): Promise<SignedIntent<IntentDataFeeOptions>> {
+  async feeOptions(args: WithSimpleNetwork<SendTransactionsArgs> & ExtraTransactionArgs): Promise<SignedIntent<IntentDataFeeOptions>> {
     const intent = feeOptions(await this.commonArgs(args))
     return this.signIntent(intent)
   }
@@ -538,53 +442,6 @@ export class SequenceWaaSBase {
       lifespan: DEFAULT_LIFESPAN,
       salt,
       challenge
-    })
-    return this.signIntent(intent)
-  }
-
-  async listAccounts(): Promise<SignedIntent<IntentDataListAccounts>> {
-    const intent = listAccounts({
-      wallet: await this.getWalletAddress(),
-      lifespan: DEFAULT_LIFESPAN
-    })
-    return this.signIntent(intent)
-  }
-
-  async linkAccount(params: ChallengeIntentParams): Promise<SignedIntent<IntentDataFederateAccount>> {
-    const sessionId = await this.sessionId.get()
-    if (!sessionId) {
-      throw new Error('session not open')
-    }
-
-    const intent = federateAccount({
-      wallet: await this.getWalletAddress(),
-      lifespan: DEFAULT_LIFESPAN,
-      sessionId,
-      ...params
-    })
-    return this.signIntent(intent)
-  }
-
-  async removeAccount({ accountId }: { accountId: string }) {
-    const intent = removeAccount({
-      wallet: await this.getWalletAddress(),
-      lifespan: DEFAULT_LIFESPAN,
-      accountId
-    })
-    return this.signIntent(intent)
-  }
-
-  async getIdToken({ nonce }: { nonce?: string }) {
-    const sessionId = await this.sessionId.get()
-    if (!sessionId) {
-      throw new Error('session not open')
-    }
-
-    const intent = getIdToken({
-      wallet: await this.getWalletAddress(),
-      lifespan: DEFAULT_LIFESPAN,
-      sessionId,
-      nonce
     })
     return this.signIntent(intent)
   }

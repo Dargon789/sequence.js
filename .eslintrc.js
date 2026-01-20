@@ -7,10 +7,6 @@ module.exports = {
     sourceType: 'module'
   },
 
-  settings: {
-    'import/ignore': ['react-native'],
-  },
-
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:import/errors',
@@ -32,9 +28,9 @@ module.exports = {
     '@typescript-eslint/no-this-alias': 'off',
 
     'import/no-unresolved': 'off',
-'import/no-default-export': 'warn',
+    'import/no-default-export': 2,
     'import/no-named-as-default-member': 'off',
-'import/export': 'off'
+    'import/export': 'off'
 
 
     // 'import/order': [
