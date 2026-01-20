@@ -1,10 +1,6 @@
 {
   "name": "@repo/ui",
-<<<<<<< Updated upstream
-  "version": "0.0.1-beta.1",
-=======
   "version": "0.0.0",
->>>>>>> Stashed changes
   "private": true,
   "exports": {
     "./button": "./src/button.tsx",
@@ -17,19 +13,6 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-<<<<<<< Updated upstream
-    "@repo/eslint-config": "workspace:^",
-    "@repo/typescript-config": "workspace:^",
-    "@turbo/gen": "^1.13.4",
-    "@types/node": "^25.0.2",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
-=======
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@turbo/gen": "^1.13.4",
@@ -41,6 +24,5 @@
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
->>>>>>> Stashed changes
   }
 }
