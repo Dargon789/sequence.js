@@ -32,7 +32,7 @@ module.exports = {
     '@typescript-eslint/no-this-alias': 'off',
 
     'import/no-unresolved': 'off',
-    'import/no-default-export': 2,
+'import/no-default-export': 'warn',
     'import/no-named-as-default-member': 'off',
     'import/export': 'off'
 
