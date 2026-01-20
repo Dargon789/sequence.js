@@ -1,10 +1,6 @@
 {
   "name": "@repo/typescript-config",
-<<<<<<< Updated upstream
-  "version": "0.0.1-beta.1",
-=======
   "version": "0.0.0",
->>>>>>> Stashed changes
   "private": true,
   "license": "MIT",
   "publishConfig": {
