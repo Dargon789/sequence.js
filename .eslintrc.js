@@ -34,7 +34,7 @@ module.exports = {
     'import/no-unresolved': 'off',
 'import/no-default-export': 'warn',
     'import/no-named-as-default-member': 'off',
-    'import/export': 'off'
+'import/export': 'off'
 
 
     // 'import/order': [
