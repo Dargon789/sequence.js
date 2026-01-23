@@ -151,7 +151,7 @@ export const createExplicitSessionConfig = (params: ExplicitSessionParams): Expl
   const deadline = nowInSeconds + BigInt(sessionLifetimeSeconds)
 
   if (params.permissions.length === 0) {
-    throw new Error('createExplicitSessionConfig: At least one permission is required.')
+    throw new ExplicitSessionConfigError('At least one permission is required.')
   }
 
   const nativeTokenSpending = params.nativeTokenSpending
