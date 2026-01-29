@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
-    "next": "^15.4.7",
+    "@vercel/analytics": "^1.5.0",
+    "next": "15.4.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
