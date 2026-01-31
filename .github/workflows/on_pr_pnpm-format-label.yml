@@ -8,6 +8,8 @@ jobs:
   proto:
     if: ${{ github.event.label.name == 'pnpm format' }}
     uses: ./.github/workflows/pnpm-format.yml
+    permissions:
+      contents: read
     secrets: inherit
 
   rm:
