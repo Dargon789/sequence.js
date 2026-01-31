@@ -1,6 +1,5 @@
 # @0xsequence/abi
 
-<<<<<<<< HEAD:packages/utils/abi/CHANGELOG.md
 ## 2.0.0
 
 ### Major Changes
@@ -211,8 +210,6 @@
 
 - api client bindings update
 
-========
->>>>>>>> codesandbox:packages/abi/CHANGELOG.md
 ## 1.9.19
 
 ### Patch Changes

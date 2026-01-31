@@ -1,4 +1,4 @@
-# packages/utils
+@0xsequence/utils
+=================
 
-This folder contains utility packages. We group them under
-the utils/ folder to keep the repo nice and tidy.
+See [0xsequence project page](https://github.com/0xsequence/sequence.js).
