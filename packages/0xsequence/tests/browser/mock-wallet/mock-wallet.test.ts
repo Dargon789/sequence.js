@@ -45,24 +45,14 @@ const main = async () => {
       rpcUrl: provider.connection.url,
       provider: provider,
       relayer: relayer,
-      isDefaultChain: true,
-      nativeToken: {
-        symbol: 'ETH',
-        name: 'Ether',
-        decimals: 18
-      }
+      isDefaultChain: true
     },
     {
       name: 'hardhat2',
       chainId: 31338,
       rpcUrl: provider2.connection.url,
       provider: provider2,
-      relayer: relayer2,
-      nativeToken: {
-        symbol: 'ETH',
-        name: 'Ether',
-        decimals: 18
-      }
+      relayer: relayer2
     }
   ]
 

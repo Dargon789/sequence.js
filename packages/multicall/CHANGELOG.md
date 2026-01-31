@@ -1,5 +1,18 @@
 # @0xsequence/multicall
 
+## 2.0.0
+
+### Major Changes
+
+- changeset
+
+### Patch Changes
+
+- Updated dependencies
+  - @0xsequence/abi@2.0.0
+  - @0xsequence/network@2.0.0
+  - @0xsequence/utils@2.0.0
+
 ## 1.10.14
 
 ### Patch Changes

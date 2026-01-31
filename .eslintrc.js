@@ -7,10 +7,6 @@ module.exports = {
     sourceType: 'module'
   },
 
-  settings: {
-    'import/ignore': ['react-native'],
-  },
-
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:import/errors',

@@ -104,24 +104,14 @@ describe('Account', () => {
         name: 'hardhat',
         provider: provider1,
         rpcUrl: '',
-        relayer: new LocalRelayer(signer1),
-        nativeToken: {
-          symbol: 'ETH',
-          name: 'Ether',
-          decimals: 18
-        }
+        relayer: new LocalRelayer(signer1)
       },
       {
         chainId: 31338,
         name: 'hardhat2',
         provider: provider2,
         rpcUrl: 'http://127.0.0.1:7048',
-        relayer: new LocalRelayer(signer2),
-        nativeToken: {
-          symbol: 'ETH',
-          name: 'Ether',
-          decimals: 18
-        }
+        relayer: new LocalRelayer(signer2)
       }
     ]
 

@@ -1,5 +1,16 @@
 # @0xsequence/waas-ethers
 
+## 2.0.0
+
+### Major Changes
+
+- changeset
+
+### Patch Changes
+
+- Updated dependencies
+  - @0xsequence/waas@2.0.0
+
 ## 1.10.14
 
 ### Patch Changes

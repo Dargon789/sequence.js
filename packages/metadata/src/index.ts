@@ -2,7 +2,7 @@ export * from './metadata.gen'
 
 import { Metadata as MetadataRpc, Collections as CollectionsRpc } from './metadata.gen'
 
-const fetch = globalThis.fetch
+const fetch = typeof global === 'object' ? global.fetch : window.fetch
 
 export class SequenceMetadata extends MetadataRpc {
   constructor(

@@ -92,12 +92,7 @@ describe('Wallet integration', function () {
         provider: ethnode.provider,
         isDefaultChain: true,
         relayer,
-        rpcUrl: '',
-        nativeToken: {
-          symbol: 'ETH',
-          name: 'Ether',
-          decimals: 18
-        }
+        rpcUrl: ''
       }
     ] as NetworkConfig[]
 
