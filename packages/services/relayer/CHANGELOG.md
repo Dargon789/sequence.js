@@ -1,359 +1,4 @@
-# @0xsequence/relayer
-
-## 2.0.0
-
-### Major Changes
-
-- changeset
-
-### Patch Changes
-
-- Updated dependencies
-  - @0xsequence/abi@2.0.0
-  - @0xsequence/core@2.0.0
-  - @0xsequence/utils@2.0.0
-
-## 1.10.14
-
-### Patch Changes
-
-- network: add borne-testnet to allNetworks
-- Updated dependencies
-  - @0xsequence/abi@1.10.14
-  - @0xsequence/core@1.10.14
-  - @0xsequence/utils@1.10.14
-
-## 1.10.13
-
-### Patch Changes
-
-- network: add borne testnet
-- Updated dependencies
-  - @0xsequence/abi@1.10.13
-  - @0xsequence/core@1.10.13
-  - @0xsequence/utils@1.10.13
-
-## 1.10.12
-
-### Patch Changes
-
-- api: update bindings
-- global/window -> globalThis
-- Updated dependencies
-- Updated dependencies
-  - @0xsequence/abi@1.10.12
-  - @0xsequence/core@1.10.12
-  - @0xsequence/utils@1.10.12
-
-## 1.10.11
-
-### Patch Changes
-
-- waas: updated intent.gen without webrpc types, errors exported from authenticator.gen
-- Updated dependencies
-  - @0xsequence/abi@1.10.11
-  - @0xsequence/core@1.10.11
-  - @0xsequence/utils@1.10.11
-
-## 1.10.10
-
-### Patch Changes
-
-- metadata: update bindings with new contract collections api
-- Updated dependencies
-  - @0xsequence/abi@1.10.10
-  - @0xsequence/core@1.10.10
-  - @0xsequence/utils@1.10.10
-
-## 1.10.9
-
-### Patch Changes
-
-- waas minor update
-- Updated dependencies
-  - @0xsequence/abi@1.10.9
-  - @0xsequence/core@1.10.9
-  - @0xsequence/utils@1.10.9
-
-## 1.10.8
-
-### Patch Changes
-
-- update metadata bindings
-- Updated dependencies
-  - @0xsequence/abi@1.10.8
-  - @0xsequence/core@1.10.8
-  - @0xsequence/utils@1.10.8
-
-## 1.10.7
-
-### Patch Changes
-
-- minor fixes to waas client
-- Updated dependencies
-  - @0xsequence/abi@1.10.7
-  - @0xsequence/core@1.10.7
-  - @0xsequence/utils@1.10.7
-
-## 1.10.6
-
-### Patch Changes
-
-- metadata: update bindings
-- Updated dependencies
-  - @0xsequence/abi@1.10.6
-  - @0xsequence/core@1.10.6
-  - @0xsequence/utils@1.10.6
-
-## 1.10.5
-
-### Patch Changes
-
-- network: ape-chain-testnet -> apechain-testnet
-- Updated dependencies
-  - @0xsequence/abi@1.10.5
-  - @0xsequence/core@1.10.5
-  - @0xsequence/utils@1.10.5
-
-## 1.10.4
-
-### Patch Changes
-
-- network: add b3-sepolia, ape-chain-testnet, blast, blast-sepolia
-- Updated dependencies
-  - @0xsequence/abi@1.10.4
-  - @0xsequence/core@1.10.4
-  - @0xsequence/utils@1.10.4
-
-## 1.10.3
-
-### Patch Changes
-
-- typing fix
-- Updated dependencies
-  - @0xsequence/abi@1.10.3
-  - @0xsequence/core@1.10.3
-  - @0xsequence/utils@1.10.3
-
-## 1.10.2
-
-### Patch Changes
-
-- - waas: add getIdToken method
-  - indexer: update api client
-- Updated dependencies
-  - @0xsequence/abi@1.10.2
-  - @0xsequence/core@1.10.2
-  - @0xsequence/utils@1.10.2
-
-## 1.10.1
-
-### Patch Changes
-
-- metadata: update bindings
-- Updated dependencies
-  - @0xsequence/abi@1.10.1
-  - @0xsequence/core@1.10.1
-  - @0xsequence/utils@1.10.1
-
-## 1.10.0
-
-### Minor Changes
-
-- waas release v1.3.0
-
-### Patch Changes
-
-- Updated dependencies
-  - @0xsequence/abi@1.10.0
-  - @0xsequence/core@1.10.0
-  - @0xsequence/utils@1.10.0
-
-## 1.9.37
-
-### Patch Changes
-
-- network: adds nativeToken data to NetworkMetadata constants
-- Updated dependencies
-  - @0xsequence/abi@1.9.37
-  - @0xsequence/core@1.9.37
-  - @0xsequence/utils@1.9.37
-
-## 1.9.36
-
-### Patch Changes
-
-- guard: export client
-- Updated dependencies
-  - @0xsequence/abi@1.9.36
-  - @0xsequence/core@1.9.36
-  - @0xsequence/utils@1.9.36
-
-## 1.9.35
-
-### Patch Changes
-
-- guard: update bindings
-- Updated dependencies
-  - @0xsequence/abi@1.9.35
-  - @0xsequence/core@1.9.35
-  - @0xsequence/utils@1.9.35
-
-## 1.9.34
-
-### Patch Changes
-
-- waas: always use lowercase email
-- Updated dependencies
-  - @0xsequence/abi@1.9.34
-  - @0xsequence/core@1.9.34
-  - @0xsequence/utils@1.9.34
-
-## 1.9.33
-
-### Patch Changes
-
-- waas: umd build
-- Updated dependencies
-  - @0xsequence/abi@1.9.33
-  - @0xsequence/core@1.9.33
-  - @0xsequence/utils@1.9.33
-
-## 1.9.32
-
-### Patch Changes
-
-- indexer: update bindings
-- Updated dependencies
-  - @0xsequence/abi@1.9.32
-  - @0xsequence/core@1.9.32
-  - @0xsequence/utils@1.9.32
-
-## 1.9.31
-
-### Patch Changes
-
-- metadata: token directory changes
-- Updated dependencies
-  - @0xsequence/abi@1.9.31
-  - @0xsequence/core@1.9.31
-  - @0xsequence/utils@1.9.31
-
-## 1.9.30
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @0xsequence/abi@1.9.30
-  - @0xsequence/core@1.9.30
-  - @0xsequence/utils@1.9.30
-
-## 1.9.29
-
-### Patch Changes
-
-- disable gnosis chain
-- Updated dependencies
-  - @0xsequence/abi@1.9.29
-  - @0xsequence/core@1.9.29
-  - @0xsequence/utils@1.9.29
-
-## 1.9.28
-
-### Patch Changes
-
-- add utils/merkletree
-- Updated dependencies
-  - @0xsequence/abi@1.9.28
-  - @0xsequence/core@1.9.28
-  - @0xsequence/utils@1.9.28
-
-## 1.9.27
-
-### Patch Changes
-
-- network: optimistic -> optimism
-- waas: remove defaults
-- api, sessions: update bindings
-- Updated dependencies
-- Updated dependencies
-- Updated dependencies
-  - @0xsequence/abi@1.9.27
-  - @0xsequence/core@1.9.27
-  - @0xsequence/utils@1.9.27
-
-## 1.9.26
-
-### Patch Changes
-
-- - add backend interfaces for pluggable interfaces
-  - introduce @0xsequence/react-native
-  - update pnpm to lockfile v9
-- Updated dependencies
-  - @0xsequence/abi@1.9.26
-  - @0xsequence/core@1.9.26
-  - @0xsequence/utils@1.9.26
-
-## 1.9.25
-
-### Patch Changes
-
-- update webrpc clients with new error types
-- Updated dependencies
-  - @0xsequence/abi@1.9.25
-  - @0xsequence/core@1.9.25
-  - @0xsequence/utils@1.9.25
-
-## 1.9.24
-
-### Patch Changes
-
-- waas: add memoryStore backend to localStore
-- Updated dependencies
-  - @0xsequence/abi@1.9.24
-  - @0xsequence/core@1.9.24
-  - @0xsequence/utils@1.9.24
-
-## 1.9.23
-
-### Patch Changes
-
-- update api client bindings
-- Updated dependencies
-  - @0xsequence/abi@1.9.23
-  - @0xsequence/core@1.9.23
-  - @0xsequence/utils@1.9.23
-
-## 1.9.22
-
-### Patch Changes
-
-- update metadata client bindings
-- Updated dependencies
-  - @0xsequence/abi@1.9.22
-  - @0xsequence/core@1.9.22
-  - @0xsequence/utils@1.9.22
-
-## 1.9.21
-
-### Patch Changes
-
-- api client bindings
-- Updated dependencies
-  - @0xsequence/abi@1.9.21
-  - @0xsequence/core@1.9.21
-  - @0xsequence/utils@1.9.21
-
-## 1.9.20
-
-### Patch Changes
-
-- api client bindings update
-- Updated dependencies
-  - @0xsequence/abi@1.9.20
-  - @0xsequence/core@1.9.20
-  - @0xsequence/utils@1.9.20
+# @0xsequence/wallet
 
 ## 1.9.19
 
@@ -363,6 +8,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.19
   - @0xsequence/core@1.9.19
+  - @0xsequence/network@1.9.19
+  - @0xsequence/relayer@1.9.19
+  - @0xsequence/signhub@1.9.19
   - @0xsequence/utils@1.9.19
 
 ## 1.9.18
@@ -373,6 +21,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.18
   - @0xsequence/core@1.9.18
+  - @0xsequence/network@1.9.18
+  - @0xsequence/relayer@1.9.18
+  - @0xsequence/signhub@1.9.18
   - @0xsequence/utils@1.9.18
 
 ## 1.9.17
@@ -381,8 +32,11 @@
 
 - network: add xr-sepolia
 - Updated dependencies
+  - @0xsequence/network@1.9.17
   - @0xsequence/abi@1.9.17
   - @0xsequence/core@1.9.17
+  - @0xsequence/relayer@1.9.17
+  - @0xsequence/signhub@1.9.17
   - @0xsequence/utils@1.9.17
 
 ## 1.9.16
@@ -393,6 +47,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.16
   - @0xsequence/core@1.9.16
+  - @0xsequence/network@1.9.16
+  - @0xsequence/relayer@1.9.16
+  - @0xsequence/signhub@1.9.16
   - @0xsequence/utils@1.9.16
 
 ## 1.9.15
@@ -403,6 +60,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.15
   - @0xsequence/core@1.9.15
+  - @0xsequence/network@1.9.15
+  - @0xsequence/relayer@1.9.15
+  - @0xsequence/signhub@1.9.15
   - @0xsequence/utils@1.9.15
 
 ## 1.9.14
@@ -417,6 +77,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.14
   - @0xsequence/core@1.9.14
+  - @0xsequence/network@1.9.14
+  - @0xsequence/relayer@1.9.14
+  - @0xsequence/signhub@1.9.14
   - @0xsequence/utils@1.9.14
 
 ## 1.9.13
@@ -427,6 +90,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.13
   - @0xsequence/core@1.9.13
+  - @0xsequence/network@1.9.13
+  - @0xsequence/relayer@1.9.13
+  - @0xsequence/signhub@1.9.13
   - @0xsequence/utils@1.9.13
 
 ## 1.9.12
@@ -441,6 +107,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.12
   - @0xsequence/core@1.9.12
+  - @0xsequence/network@1.9.12
+  - @0xsequence/relayer@1.9.12
+  - @0xsequence/signhub@1.9.12
   - @0xsequence/utils@1.9.12
 
 ## 1.9.11
@@ -451,6 +120,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.11
   - @0xsequence/core@1.9.11
+  - @0xsequence/network@1.9.11
+  - @0xsequence/relayer@1.9.11
+  - @0xsequence/signhub@1.9.11
   - @0xsequence/utils@1.9.11
 
 ## 1.9.10
@@ -461,6 +133,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.10
   - @0xsequence/core@1.9.10
+  - @0xsequence/network@1.9.10
+  - @0xsequence/relayer@1.9.10
+  - @0xsequence/signhub@1.9.10
   - @0xsequence/utils@1.9.10
 
 ## 1.9.9
@@ -471,6 +146,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.9
   - @0xsequence/core@1.9.9
+  - @0xsequence/network@1.9.9
+  - @0xsequence/relayer@1.9.9
+  - @0xsequence/signhub@1.9.9
   - @0xsequence/utils@1.9.9
 
 ## 1.9.8
@@ -481,6 +159,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.8
   - @0xsequence/core@1.9.8
+  - @0xsequence/network@1.9.8
+  - @0xsequence/relayer@1.9.8
+  - @0xsequence/signhub@1.9.8
   - @0xsequence/utils@1.9.8
 
 ## 1.9.7
@@ -491,6 +172,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.7
   - @0xsequence/core@1.9.7
+  - @0xsequence/network@1.9.7
+  - @0xsequence/relayer@1.9.7
+  - @0xsequence/signhub@1.9.7
   - @0xsequence/utils@1.9.7
 
 ## 1.9.6
@@ -501,6 +185,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.6
   - @0xsequence/core@1.9.6
+  - @0xsequence/network@1.9.6
+  - @0xsequence/relayer@1.9.6
+  - @0xsequence/signhub@1.9.6
   - @0xsequence/utils@1.9.6
 
 ## 1.9.5
@@ -511,6 +198,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.5
   - @0xsequence/core@1.9.5
+  - @0xsequence/network@1.9.5
+  - @0xsequence/relayer@1.9.5
+  - @0xsequence/signhub@1.9.5
   - @0xsequence/utils@1.9.5
 
 ## 1.9.4
@@ -521,6 +211,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.4
   - @0xsequence/core@1.9.4
+  - @0xsequence/network@1.9.4
+  - @0xsequence/relayer@1.9.4
+  - @0xsequence/signhub@1.9.4
   - @0xsequence/utils@1.9.4
 
 ## 1.9.3
@@ -531,6 +224,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.3
   - @0xsequence/core@1.9.3
+  - @0xsequence/network@1.9.3
+  - @0xsequence/relayer@1.9.3
+  - @0xsequence/signhub@1.9.3
   - @0xsequence/utils@1.9.3
 
 ## 1.9.2
@@ -541,6 +237,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.2
   - @0xsequence/core@1.9.2
+  - @0xsequence/network@1.9.2
+  - @0xsequence/relayer@1.9.2
+  - @0xsequence/signhub@1.9.2
   - @0xsequence/utils@1.9.2
 
 ## 1.9.1
@@ -551,6 +250,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.1
   - @0xsequence/core@1.9.1
+  - @0xsequence/network@1.9.1
+  - @0xsequence/relayer@1.9.1
+  - @0xsequence/signhub@1.9.1
   - @0xsequence/utils@1.9.1
 
 ## 1.9.0
@@ -564,6 +266,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.9.0
   - @0xsequence/core@1.9.0
+  - @0xsequence/network@1.9.0
+  - @0xsequence/relayer@1.9.0
+  - @0xsequence/signhub@1.9.0
   - @0xsequence/utils@1.9.0
 
 ## 1.8.8
@@ -574,6 +279,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.8
   - @0xsequence/core@1.8.8
+  - @0xsequence/network@1.8.8
+  - @0xsequence/relayer@1.8.8
+  - @0xsequence/signhub@1.8.8
   - @0xsequence/utils@1.8.8
 
 ## 1.8.7
@@ -584,6 +292,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.7
   - @0xsequence/core@1.8.7
+  - @0xsequence/network@1.8.7
+  - @0xsequence/relayer@1.8.7
+  - @0xsequence/signhub@1.8.7
   - @0xsequence/utils@1.8.7
 
 ## 1.8.6
@@ -594,6 +305,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.6
   - @0xsequence/core@1.8.6
+  - @0xsequence/network@1.8.6
+  - @0xsequence/relayer@1.8.6
+  - @0xsequence/signhub@1.8.6
   - @0xsequence/utils@1.8.6
 
 ## 1.8.5
@@ -604,6 +318,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.5
   - @0xsequence/core@1.8.5
+  - @0xsequence/network@1.8.5
+  - @0xsequence/relayer@1.8.5
+  - @0xsequence/signhub@1.8.5
   - @0xsequence/utils@1.8.5
 
 ## 1.8.4
@@ -614,6 +331,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.4
   - @0xsequence/core@1.8.4
+  - @0xsequence/network@1.8.4
+  - @0xsequence/relayer@1.8.4
+  - @0xsequence/signhub@1.8.4
   - @0xsequence/utils@1.8.4
 
 ## 1.8.3
@@ -624,6 +344,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.3
   - @0xsequence/core@1.8.3
+  - @0xsequence/network@1.8.3
+  - @0xsequence/relayer@1.8.3
+  - @0xsequence/signhub@1.8.3
   - @0xsequence/utils@1.8.3
 
 ## 1.8.2
@@ -634,6 +357,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.2
   - @0xsequence/core@1.8.2
+  - @0xsequence/network@1.8.2
+  - @0xsequence/relayer@1.8.2
+  - @0xsequence/signhub@1.8.2
   - @0xsequence/utils@1.8.2
 
 ## 1.8.1
@@ -644,6 +370,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.1
   - @0xsequence/core@1.8.1
+  - @0xsequence/network@1.8.1
+  - @0xsequence/relayer@1.8.1
+  - @0xsequence/signhub@1.8.1
   - @0xsequence/utils@1.8.1
 
 ## 1.8.0
@@ -657,6 +386,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.8.0
   - @0xsequence/core@1.8.0
+  - @0xsequence/network@1.8.0
+  - @0xsequence/relayer@1.8.0
+  - @0xsequence/signhub@1.8.0
   - @0xsequence/utils@1.8.0
 
 ## 1.7.2
@@ -669,6 +401,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.7.2
   - @0xsequence/core@1.7.2
+  - @0xsequence/network@1.7.2
+  - @0xsequence/relayer@1.7.2
+  - @0xsequence/signhub@1.7.2
   - @0xsequence/utils@1.7.2
 
 ## 1.7.1
@@ -679,6 +414,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.7.1
   - @0xsequence/core@1.7.1
+  - @0xsequence/network@1.7.1
+  - @0xsequence/relayer@1.7.1
+  - @0xsequence/signhub@1.7.1
   - @0xsequence/utils@1.7.1
 
 ## 1.7.0
@@ -694,6 +432,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.7.0
   - @0xsequence/core@1.7.0
+  - @0xsequence/network@1.7.0
+  - @0xsequence/relayer@1.7.0
+  - @0xsequence/signhub@1.7.0
   - @0xsequence/utils@1.7.0
 
 ## 1.6.3
@@ -704,6 +445,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.6.3
   - @0xsequence/core@1.6.3
+  - @0xsequence/network@1.6.3
+  - @0xsequence/relayer@1.6.3
+  - @0xsequence/signhub@1.6.3
   - @0xsequence/utils@1.6.3
 
 ## 1.6.2
@@ -716,6 +460,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.6.2
   - @0xsequence/core@1.6.2
+  - @0xsequence/network@1.6.2
+  - @0xsequence/relayer@1.6.2
+  - @0xsequence/signhub@1.6.2
   - @0xsequence/utils@1.6.2
 
 ## 1.6.1
@@ -730,6 +477,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.6.1
   - @0xsequence/core@1.6.1
+  - @0xsequence/network@1.6.1
+  - @0xsequence/relayer@1.6.1
+  - @0xsequence/signhub@1.6.1
   - @0xsequence/utils@1.6.1
 
 ## 1.6.0
@@ -745,6 +495,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.6.0
   - @0xsequence/core@1.6.0
+  - @0xsequence/network@1.6.0
+  - @0xsequence/relayer@1.6.0
+  - @0xsequence/signhub@1.6.0
   - @0xsequence/utils@1.6.0
 
 ## 1.5.0
@@ -762,6 +515,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.5.0
   - @0xsequence/core@1.5.0
+  - @0xsequence/network@1.5.0
+  - @0xsequence/relayer@1.5.0
+  - @0xsequence/signhub@1.5.0
   - @0xsequence/utils@1.5.0
 
 ## 1.4.9
@@ -772,6 +528,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.9
   - @0xsequence/core@1.4.9
+  - @0xsequence/network@1.4.9
+  - @0xsequence/relayer@1.4.9
+  - @0xsequence/signhub@1.4.9
   - @0xsequence/utils@1.4.9
 
 ## 1.4.8
@@ -782,6 +541,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.8
   - @0xsequence/core@1.4.8
+  - @0xsequence/network@1.4.8
+  - @0xsequence/relayer@1.4.8
+  - @0xsequence/signhub@1.4.8
   - @0xsequence/utils@1.4.8
 
 ## 1.4.7
@@ -792,6 +554,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.7
   - @0xsequence/core@1.4.7
+  - @0xsequence/network@1.4.7
+  - @0xsequence/relayer@1.4.7
+  - @0xsequence/signhub@1.4.7
   - @0xsequence/utils@1.4.7
 
 ## 1.4.6
@@ -803,6 +568,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.6
   - @0xsequence/core@1.4.6
+  - @0xsequence/network@1.4.6
+  - @0xsequence/relayer@1.4.6
+  - @0xsequence/signhub@1.4.6
   - @0xsequence/utils@1.4.6
 
 ## 1.4.5
@@ -815,6 +583,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.5
   - @0xsequence/core@1.4.5
+  - @0xsequence/network@1.4.5
+  - @0xsequence/relayer@1.4.5
+  - @0xsequence/signhub@1.4.5
   - @0xsequence/utils@1.4.5
 
 ## 1.4.4
@@ -827,6 +598,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.4
   - @0xsequence/core@1.4.4
+  - @0xsequence/network@1.4.4
+  - @0xsequence/relayer@1.4.4
+  - @0xsequence/signhub@1.4.4
   - @0xsequence/utils@1.4.4
 
 ## 1.4.3
@@ -837,6 +611,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.3
   - @0xsequence/core@1.4.3
+  - @0xsequence/network@1.4.3
+  - @0xsequence/relayer@1.4.3
+  - @0xsequence/signhub@1.4.3
   - @0xsequence/utils@1.4.3
 
 ## 1.4.2
@@ -847,6 +624,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.2
   - @0xsequence/core@1.4.2
+  - @0xsequence/network@1.4.2
+  - @0xsequence/relayer@1.4.2
+  - @0xsequence/signhub@1.4.2
   - @0xsequence/utils@1.4.2
 
 ## 1.4.1
@@ -865,6 +645,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.1
   - @0xsequence/core@1.4.1
+  - @0xsequence/network@1.4.1
+  - @0xsequence/relayer@1.4.1
+  - @0xsequence/signhub@1.4.1
   - @0xsequence/utils@1.4.1
 
 ## 1.4.0
@@ -878,6 +661,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.4.0
   - @0xsequence/core@1.4.0
+  - @0xsequence/network@1.4.0
+  - @0xsequence/relayer@1.4.0
+  - @0xsequence/signhub@1.4.0
   - @0xsequence/utils@1.4.0
 
 ## 1.3.0
@@ -895,6 +681,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.3.0
   - @0xsequence/core@1.3.0
+  - @0xsequence/network@1.3.0
+  - @0xsequence/relayer@1.3.0
+  - @0xsequence/signhub@1.3.0
   - @0xsequence/utils@1.3.0
 
 ## 1.2.9
@@ -907,6 +696,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.9
   - @0xsequence/core@1.2.9
+  - @0xsequence/network@1.2.9
+  - @0xsequence/relayer@1.2.9
+  - @0xsequence/signhub@1.2.9
   - @0xsequence/utils@1.2.9
 
 ## 1.2.8
@@ -917,6 +709,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.8
   - @0xsequence/core@1.2.8
+  - @0xsequence/network@1.2.8
+  - @0xsequence/relayer@1.2.8
+  - @0xsequence/signhub@1.2.8
   - @0xsequence/utils@1.2.8
 
 ## 1.2.7
@@ -927,6 +722,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.7
   - @0xsequence/core@1.2.7
+  - @0xsequence/network@1.2.7
+  - @0xsequence/relayer@1.2.7
+  - @0xsequence/signhub@1.2.7
   - @0xsequence/utils@1.2.7
 
 ## 1.2.6
@@ -937,6 +735,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.6
   - @0xsequence/core@1.2.6
+  - @0xsequence/network@1.2.6
+  - @0xsequence/relayer@1.2.6
+  - @0xsequence/signhub@1.2.6
   - @0xsequence/utils@1.2.6
 
 ## 1.2.5
@@ -947,6 +748,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.5
   - @0xsequence/core@1.2.5
+  - @0xsequence/network@1.2.5
+  - @0xsequence/relayer@1.2.5
+  - @0xsequence/signhub@1.2.5
   - @0xsequence/utils@1.2.5
 
 ## 1.2.4
@@ -959,6 +763,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.4
   - @0xsequence/core@1.2.4
+  - @0xsequence/network@1.2.4
+  - @0xsequence/relayer@1.2.4
+  - @0xsequence/signhub@1.2.4
   - @0xsequence/utils@1.2.4
 
 ## 1.2.3
@@ -969,6 +776,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.3
   - @0xsequence/core@1.2.3
+  - @0xsequence/network@1.2.3
+  - @0xsequence/relayer@1.2.3
+  - @0xsequence/signhub@1.2.3
   - @0xsequence/utils@1.2.3
 
 ## 1.2.2
@@ -981,6 +791,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.2
   - @0xsequence/core@1.2.2
+  - @0xsequence/network@1.2.2
+  - @0xsequence/relayer@1.2.2
+  - @0xsequence/signhub@1.2.2
   - @0xsequence/utils@1.2.2
 
 ## 1.2.1
@@ -991,6 +804,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.1
   - @0xsequence/core@1.2.1
+  - @0xsequence/network@1.2.1
+  - @0xsequence/relayer@1.2.1
+  - @0xsequence/signhub@1.2.1
   - @0xsequence/utils@1.2.1
 
 ## 1.2.0
@@ -1004,6 +820,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.2.0
   - @0xsequence/core@1.2.0
+  - @0xsequence/network@1.2.0
+  - @0xsequence/relayer@1.2.0
+  - @0xsequence/signhub@1.2.0
   - @0xsequence/utils@1.2.0
 
 ## 1.1.15
@@ -1014,6 +833,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.15
   - @0xsequence/core@1.1.15
+  - @0xsequence/network@1.1.15
+  - @0xsequence/relayer@1.1.15
+  - @0xsequence/signhub@1.1.15
   - @0xsequence/utils@1.1.15
 
 ## 1.1.14
@@ -1024,6 +846,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.14
   - @0xsequence/core@1.1.14
+  - @0xsequence/network@1.1.14
+  - @0xsequence/relayer@1.1.14
+  - @0xsequence/signhub@1.1.14
   - @0xsequence/utils@1.1.14
 
 ## 1.1.13
@@ -1036,6 +861,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.13
   - @0xsequence/core@1.1.13
+  - @0xsequence/network@1.1.13
+  - @0xsequence/relayer@1.1.13
+  - @0xsequence/signhub@1.1.13
   - @0xsequence/utils@1.1.13
 
 ## 1.1.12
@@ -1046,6 +874,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.12
   - @0xsequence/core@1.1.12
+  - @0xsequence/network@1.1.12
+  - @0xsequence/relayer@1.1.12
+  - @0xsequence/signhub@1.1.12
   - @0xsequence/utils@1.1.12
 
 ## 1.1.11
@@ -1056,6 +887,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.11
   - @0xsequence/core@1.1.11
+  - @0xsequence/network@1.1.11
+  - @0xsequence/relayer@1.1.11
+  - @0xsequence/signhub@1.1.11
   - @0xsequence/utils@1.1.11
 
 ## 1.1.10
@@ -1066,6 +900,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.10
   - @0xsequence/core@1.1.10
+  - @0xsequence/network@1.1.10
+  - @0xsequence/relayer@1.1.10
+  - @0xsequence/signhub@1.1.10
   - @0xsequence/utils@1.1.10
 
 ## 1.1.9
@@ -1076,6 +913,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.9
   - @0xsequence/core@1.1.9
+  - @0xsequence/network@1.1.9
+  - @0xsequence/relayer@1.1.9
+  - @0xsequence/signhub@1.1.9
   - @0xsequence/utils@1.1.9
 
 ## 1.1.8
@@ -1086,6 +926,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.8
   - @0xsequence/core@1.1.8
+  - @0xsequence/network@1.1.8
+  - @0xsequence/relayer@1.1.8
+  - @0xsequence/signhub@1.1.8
   - @0xsequence/utils@1.1.8
 
 ## 1.1.7
@@ -1096,6 +939,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.7
   - @0xsequence/core@1.1.7
+  - @0xsequence/network@1.1.7
+  - @0xsequence/relayer@1.1.7
+  - @0xsequence/signhub@1.1.7
   - @0xsequence/utils@1.1.7
 
 ## 1.1.6
@@ -1106,6 +952,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.6
   - @0xsequence/core@1.1.6
+  - @0xsequence/network@1.1.6
+  - @0xsequence/relayer@1.1.6
+  - @0xsequence/signhub@1.1.6
   - @0xsequence/utils@1.1.6
 
 ## 1.1.5
@@ -1116,6 +965,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.5
   - @0xsequence/core@1.1.5
+  - @0xsequence/network@1.1.5
+  - @0xsequence/relayer@1.1.5
+  - @0xsequence/signhub@1.1.5
   - @0xsequence/utils@1.1.5
 
 ## 1.1.4
@@ -1128,6 +980,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.4
   - @0xsequence/core@1.1.4
+  - @0xsequence/network@1.1.4
+  - @0xsequence/relayer@1.1.4
+  - @0xsequence/signhub@1.1.4
   - @0xsequence/utils@1.1.4
 
 ## 1.1.3
@@ -1140,6 +995,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.3
   - @0xsequence/core@1.1.3
+  - @0xsequence/network@1.1.3
+  - @0xsequence/relayer@1.1.3
+  - @0xsequence/signhub@1.1.3
   - @0xsequence/utils@1.1.3
 
 ## 1.1.2
@@ -1150,6 +1008,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.2
   - @0xsequence/core@1.1.2
+  - @0xsequence/network@1.1.2
+  - @0xsequence/relayer@1.1.2
+  - @0xsequence/signhub@1.1.2
   - @0xsequence/utils@1.1.2
 
 ## 1.1.1
@@ -1162,6 +1023,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.1
   - @0xsequence/core@1.1.1
+  - @0xsequence/network@1.1.1
+  - @0xsequence/relayer@1.1.1
+  - @0xsequence/signhub@1.1.1
   - @0xsequence/utils@1.1.1
 
 ## 1.1.0
@@ -1175,6 +1039,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.1.0
   - @0xsequence/core@1.1.0
+  - @0xsequence/network@1.1.0
+  - @0xsequence/relayer@1.1.0
+  - @0xsequence/signhub@1.1.0
   - @0xsequence/utils@1.1.0
 
 ## 1.0.5
@@ -1189,6 +1056,9 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.5
   - @0xsequence/core@1.0.5
+  - @0xsequence/network@1.0.5
+  - @0xsequence/relayer@1.0.5
+  - @0xsequence/signhub@1.0.5
   - @0xsequence/utils@1.0.5
 
 ## 1.0.4
@@ -1199,6 +1069,10 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.4
   - @0xsequence/core@1.0.4
+  - @0xsequence/guard@1.0.4
+  - @0xsequence/network@1.0.4
+  - @0xsequence/relayer@1.0.4
+  - @0xsequence/signhub@1.0.4
   - @0xsequence/utils@1.0.4
 
 ## 1.0.3
@@ -1209,6 +1083,10 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.3
   - @0xsequence/core@1.0.3
+  - @0xsequence/guard@1.0.3
+  - @0xsequence/network@1.0.3
+  - @0xsequence/relayer@1.0.3
+  - @0xsequence/signhub@1.0.3
   - @0xsequence/utils@1.0.3
 
 ## 1.0.2
@@ -1219,6 +1097,10 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.2
   - @0xsequence/core@1.0.2
+  - @0xsequence/guard@1.0.2
+  - @0xsequence/network@1.0.2
+  - @0xsequence/relayer@1.0.2
+  - @0xsequence/signhub@1.0.2
   - @0xsequence/utils@1.0.2
 
 ## 1.0.1
@@ -1229,6 +1111,10 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.1
   - @0xsequence/core@1.0.1
+  - @0xsequence/guard@1.0.1
+  - @0xsequence/network@1.0.1
+  - @0xsequence/relayer@1.0.1
+  - @0xsequence/signhub@1.0.1
   - @0xsequence/utils@1.0.1
 
 ## 1.0.0
@@ -1242,6 +1128,10 @@
 - Updated dependencies
   - @0xsequence/abi@1.0.0
   - @0xsequence/core@1.0.0
+  - @0xsequence/guard@1.0.0
+  - @0xsequence/network@1.0.0
+  - @0xsequence/relayer@1.0.0
+  - @0xsequence/signhub@1.0.0
   - @0xsequence/utils@1.0.0
 
 ## 0.43.34
@@ -1252,7 +1142,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.34
   - @0xsequence/config@0.43.34
+  - @0xsequence/guard@0.43.34
   - @0xsequence/network@0.43.34
+  - @0xsequence/relayer@0.43.34
   - @0xsequence/transactions@0.43.34
   - @0xsequence/utils@0.43.34
 
@@ -1264,7 +1156,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.33
   - @0xsequence/config@0.43.33
+  - @0xsequence/guard@0.43.33
   - @0xsequence/network@0.43.33
+  - @0xsequence/relayer@0.43.33
   - @0xsequence/transactions@0.43.33
   - @0xsequence/utils@0.43.33
 
@@ -1276,7 +1170,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.32
   - @0xsequence/config@0.43.32
+  - @0xsequence/guard@0.43.32
   - @0xsequence/network@0.43.32
+  - @0xsequence/relayer@0.43.32
   - @0xsequence/transactions@0.43.32
   - @0xsequence/utils@0.43.32
 
@@ -1288,7 +1184,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.31
   - @0xsequence/config@0.43.31
+  - @0xsequence/guard@0.43.31
   - @0xsequence/network@0.43.31
+  - @0xsequence/relayer@0.43.31
   - @0xsequence/transactions@0.43.31
   - @0xsequence/utils@0.43.31
 
@@ -1300,7 +1198,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.30
   - @0xsequence/config@0.43.30
+  - @0xsequence/guard@0.43.30
   - @0xsequence/network@0.43.30
+  - @0xsequence/relayer@0.43.30
   - @0xsequence/transactions@0.43.30
   - @0xsequence/utils@0.43.30
 
@@ -1312,7 +1212,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.29
   - @0xsequence/config@0.43.29
+  - @0xsequence/guard@0.43.29
   - @0xsequence/network@0.43.29
+  - @0xsequence/relayer@0.43.29
   - @0xsequence/transactions@0.43.29
   - @0xsequence/utils@0.43.29
 
@@ -1324,7 +1226,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.28
   - @0xsequence/config@0.43.28
+  - @0xsequence/guard@0.43.28
   - @0xsequence/network@0.43.28
+  - @0xsequence/relayer@0.43.28
   - @0xsequence/transactions@0.43.28
   - @0xsequence/utils@0.43.28
 
@@ -1336,7 +1240,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.27
   - @0xsequence/config@0.43.27
+  - @0xsequence/guard@0.43.27
   - @0xsequence/network@0.43.27
+  - @0xsequence/relayer@0.43.27
   - @0xsequence/transactions@0.43.27
   - @0xsequence/utils@0.43.27
 
@@ -1348,7 +1254,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.26
   - @0xsequence/config@0.43.26
+  - @0xsequence/guard@0.43.26
   - @0xsequence/network@0.43.26
+  - @0xsequence/relayer@0.43.26
   - @0xsequence/transactions@0.43.26
   - @0xsequence/utils@0.43.26
 
@@ -1360,7 +1268,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.25
   - @0xsequence/config@0.43.25
+  - @0xsequence/guard@0.43.25
   - @0xsequence/network@0.43.25
+  - @0xsequence/relayer@0.43.25
   - @0xsequence/transactions@0.43.25
   - @0xsequence/utils@0.43.25
 
@@ -1372,7 +1282,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.24
   - @0xsequence/config@0.43.24
+  - @0xsequence/guard@0.43.24
   - @0xsequence/network@0.43.24
+  - @0xsequence/relayer@0.43.24
   - @0xsequence/transactions@0.43.24
   - @0xsequence/utils@0.43.24
 
@@ -1384,7 +1296,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.23
   - @0xsequence/config@0.43.23
+  - @0xsequence/guard@0.43.23
   - @0xsequence/network@0.43.23
+  - @0xsequence/relayer@0.43.23
   - @0xsequence/transactions@0.43.23
   - @0xsequence/utils@0.43.23
 
@@ -1396,7 +1310,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.22
   - @0xsequence/config@0.43.22
+  - @0xsequence/guard@0.43.22
   - @0xsequence/network@0.43.22
+  - @0xsequence/relayer@0.43.22
   - @0xsequence/transactions@0.43.22
   - @0xsequence/utils@0.43.22
 
@@ -1408,7 +1324,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.21
   - @0xsequence/config@0.43.21
+  - @0xsequence/guard@0.43.21
   - @0xsequence/network@0.43.21
+  - @0xsequence/relayer@0.43.21
   - @0xsequence/transactions@0.43.21
   - @0xsequence/utils@0.43.21
 
@@ -1420,7 +1338,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.20
   - @0xsequence/config@0.43.20
+  - @0xsequence/guard@0.43.20
   - @0xsequence/network@0.43.20
+  - @0xsequence/relayer@0.43.20
   - @0xsequence/transactions@0.43.20
   - @0xsequence/utils@0.43.20
 
@@ -1432,7 +1352,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.19
   - @0xsequence/config@0.43.19
+  - @0xsequence/guard@0.43.19
   - @0xsequence/network@0.43.19
+  - @0xsequence/relayer@0.43.19
   - @0xsequence/transactions@0.43.19
   - @0xsequence/utils@0.43.19
 
@@ -1444,7 +1366,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.18
   - @0xsequence/config@0.43.18
+  - @0xsequence/guard@0.43.18
   - @0xsequence/network@0.43.18
+  - @0xsequence/relayer@0.43.18
   - @0xsequence/transactions@0.43.18
   - @0xsequence/utils@0.43.18
 
@@ -1456,7 +1380,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.17
   - @0xsequence/config@0.43.17
+  - @0xsequence/guard@0.43.17
   - @0xsequence/network@0.43.17
+  - @0xsequence/relayer@0.43.17
   - @0xsequence/transactions@0.43.17
   - @0xsequence/utils@0.43.17
 
@@ -1468,7 +1394,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.16
   - @0xsequence/config@0.43.16
+  - @0xsequence/guard@0.43.16
   - @0xsequence/network@0.43.16
+  - @0xsequence/relayer@0.43.16
   - @0xsequence/transactions@0.43.16
   - @0xsequence/utils@0.43.16
 
@@ -1480,7 +1408,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.15
   - @0xsequence/config@0.43.15
+  - @0xsequence/guard@0.43.15
   - @0xsequence/network@0.43.15
+  - @0xsequence/relayer@0.43.15
   - @0xsequence/transactions@0.43.15
   - @0xsequence/utils@0.43.15
 
@@ -1492,7 +1422,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.14
   - @0xsequence/config@0.43.14
+  - @0xsequence/guard@0.43.14
   - @0xsequence/network@0.43.14
+  - @0xsequence/relayer@0.43.14
   - @0xsequence/transactions@0.43.14
   - @0xsequence/utils@0.43.14
 
@@ -1504,7 +1436,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.13
   - @0xsequence/config@0.43.13
+  - @0xsequence/guard@0.43.13
   - @0xsequence/network@0.43.13
+  - @0xsequence/relayer@0.43.13
   - @0xsequence/transactions@0.43.13
   - @0xsequence/utils@0.43.13
 
@@ -1516,7 +1450,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.12
   - @0xsequence/config@0.43.12
+  - @0xsequence/guard@0.43.12
   - @0xsequence/network@0.43.12
+  - @0xsequence/relayer@0.43.12
   - @0xsequence/transactions@0.43.12
   - @0xsequence/utils@0.43.12
 
@@ -1530,7 +1466,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.11
   - @0xsequence/config@0.43.11
+  - @0xsequence/guard@0.43.11
   - @0xsequence/network@0.43.11
+  - @0xsequence/relayer@0.43.11
   - @0xsequence/transactions@0.43.11
   - @0xsequence/utils@0.43.11
 
@@ -1542,7 +1480,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.10
   - @0xsequence/config@0.43.10
+  - @0xsequence/guard@0.43.10
   - @0xsequence/network@0.43.10
+  - @0xsequence/relayer@0.43.10
   - @0xsequence/transactions@0.43.10
   - @0xsequence/utils@0.43.10
 
@@ -1554,7 +1494,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.9
   - @0xsequence/config@0.43.9
+  - @0xsequence/guard@0.43.9
   - @0xsequence/network@0.43.9
+  - @0xsequence/relayer@0.43.9
   - @0xsequence/transactions@0.43.9
   - @0xsequence/utils@0.43.9
 
@@ -1566,7 +1508,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.8
   - @0xsequence/config@0.43.8
+  - @0xsequence/guard@0.43.8
   - @0xsequence/network@0.43.8
+  - @0xsequence/relayer@0.43.8
   - @0xsequence/transactions@0.43.8
   - @0xsequence/utils@0.43.8
 
@@ -1578,6 +1522,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.7
   - @0xsequence/config@0.43.7
+  - @0xsequence/guard@0.43.7
+  - @0xsequence/network@0.43.7
+  - @0xsequence/relayer@0.43.7
   - @0xsequence/transactions@0.43.7
   - @0xsequence/utils@0.43.7
 
@@ -1589,6 +1536,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.6
   - @0xsequence/config@0.43.6
+  - @0xsequence/guard@0.43.6
+  - @0xsequence/network@0.43.6
+  - @0xsequence/relayer@0.43.6
   - @0xsequence/transactions@0.43.6
   - @0xsequence/utils@0.43.6
 
@@ -1602,6 +1552,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.5
   - @0xsequence/config@0.43.5
+  - @0xsequence/guard@0.43.5
+  - @0xsequence/network@0.43.5
+  - @0xsequence/relayer@0.43.5
   - @0xsequence/transactions@0.43.5
   - @0xsequence/utils@0.43.5
 
@@ -1613,6 +1566,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.4
   - @0xsequence/config@0.43.4
+  - @0xsequence/guard@0.43.4
+  - @0xsequence/network@0.43.4
+  - @0xsequence/relayer@0.43.4
   - @0xsequence/transactions@0.43.4
   - @0xsequence/utils@0.43.4
 
@@ -1624,6 +1580,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.3
   - @0xsequence/config@0.43.3
+  - @0xsequence/guard@0.43.3
+  - @0xsequence/network@0.43.3
+  - @0xsequence/relayer@0.43.3
   - @0xsequence/transactions@0.43.3
   - @0xsequence/utils@0.43.3
 
@@ -1635,6 +1594,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.2
   - @0xsequence/config@0.43.2
+  - @0xsequence/guard@0.43.2
+  - @0xsequence/network@0.43.2
+  - @0xsequence/relayer@0.43.2
   - @0xsequence/transactions@0.43.2
   - @0xsequence/utils@0.43.2
 
@@ -1646,6 +1608,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.1
   - @0xsequence/config@0.43.1
+  - @0xsequence/guard@0.43.1
+  - @0xsequence/network@0.43.1
+  - @0xsequence/relayer@0.43.1
   - @0xsequence/transactions@0.43.1
   - @0xsequence/utils@0.43.1
 
@@ -1660,6 +1625,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.43.0
   - @0xsequence/config@0.43.0
+  - @0xsequence/guard@0.43.0
+  - @0xsequence/network@0.43.0
+  - @0xsequence/relayer@0.43.0
   - @0xsequence/transactions@0.43.0
   - @0xsequence/utils@0.43.0
 
@@ -1671,6 +1639,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.10
   - @0xsequence/config@0.42.10
+  - @0xsequence/guard@0.42.10
+  - @0xsequence/network@0.42.10
+  - @0xsequence/relayer@0.42.10
   - @0xsequence/transactions@0.42.10
   - @0xsequence/utils@0.42.10
 
@@ -1682,6 +1653,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.9
   - @0xsequence/config@0.42.9
+  - @0xsequence/guard@0.42.9
+  - @0xsequence/network@0.42.9
+  - @0xsequence/relayer@0.42.9
   - @0xsequence/transactions@0.42.9
   - @0xsequence/utils@0.42.9
 
@@ -1693,6 +1667,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.8
   - @0xsequence/config@0.42.8
+  - @0xsequence/guard@0.42.8
+  - @0xsequence/network@0.42.8
+  - @0xsequence/relayer@0.42.8
   - @0xsequence/transactions@0.42.8
   - @0xsequence/utils@0.42.8
 
@@ -1704,6 +1681,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.7
   - @0xsequence/config@0.42.7
+  - @0xsequence/guard@0.42.7
+  - @0xsequence/network@0.42.7
+  - @0xsequence/relayer@0.42.7
   - @0xsequence/transactions@0.42.7
   - @0xsequence/utils@0.42.7
 
@@ -1715,6 +1695,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.6
   - @0xsequence/config@0.42.6
+  - @0xsequence/guard@0.42.6
+  - @0xsequence/network@0.42.6
+  - @0xsequence/relayer@0.42.6
   - @0xsequence/transactions@0.42.6
   - @0xsequence/utils@0.42.6
 
@@ -1726,6 +1709,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.5
   - @0xsequence/config@0.42.5
+  - @0xsequence/guard@0.42.5
+  - @0xsequence/network@0.42.5
+  - @0xsequence/relayer@0.42.5
   - @0xsequence/transactions@0.42.5
   - @0xsequence/utils@0.42.5
 
@@ -1737,6 +1723,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.4
   - @0xsequence/config@0.42.4
+  - @0xsequence/guard@0.42.4
+  - @0xsequence/network@0.42.4
+  - @0xsequence/relayer@0.42.4
   - @0xsequence/transactions@0.42.4
   - @0xsequence/utils@0.42.4
 
@@ -1748,6 +1737,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.3
   - @0xsequence/config@0.42.3
+  - @0xsequence/guard@0.42.3
+  - @0xsequence/network@0.42.3
+  - @0xsequence/relayer@0.42.3
   - @0xsequence/transactions@0.42.3
   - @0xsequence/utils@0.42.3
 
@@ -1759,6 +1751,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.2
   - @0xsequence/config@0.42.2
+  - @0xsequence/guard@0.42.2
+  - @0xsequence/network@0.42.2
+  - @0xsequence/relayer@0.42.2
   - @0xsequence/transactions@0.42.2
   - @0xsequence/utils@0.42.2
 
@@ -1770,6 +1765,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.1
   - @0xsequence/config@0.42.1
+  - @0xsequence/guard@0.42.1
+  - @0xsequence/network@0.42.1
+  - @0xsequence/relayer@0.42.1
   - @0xsequence/transactions@0.42.1
   - @0xsequence/utils@0.42.1
 
@@ -1792,6 +1790,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.42.0
   - @0xsequence/config@0.42.0
+  - @0xsequence/guard@0.42.0
+  - @0xsequence/network@0.42.0
+  - @0xsequence/relayer@0.42.0
   - @0xsequence/transactions@0.42.0
   - @0xsequence/utils@0.42.0
 
@@ -1803,6 +1804,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.41.3
   - @0xsequence/config@0.41.3
+  - @0xsequence/guard@0.41.3
+  - @0xsequence/network@0.41.3
+  - @0xsequence/relayer@0.41.3
   - @0xsequence/transactions@0.41.3
   - @0xsequence/utils@0.41.3
 
@@ -1814,6 +1818,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.41.2
   - @0xsequence/config@0.41.2
+  - @0xsequence/guard@0.41.2
+  - @0xsequence/network@0.41.2
+  - @0xsequence/relayer@0.41.2
   - @0xsequence/transactions@0.41.2
   - @0xsequence/utils@0.41.2
 
@@ -1825,6 +1832,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.41.1
   - @0xsequence/config@0.41.1
+  - @0xsequence/guard@0.41.1
+  - @0xsequence/network@0.41.1
+  - @0xsequence/relayer@0.41.1
   - @0xsequence/transactions@0.41.1
   - @0xsequence/utils@0.41.1
 
@@ -1859,6 +1869,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.41.0
   - @0xsequence/config@0.41.0
+  - @0xsequence/guard@0.41.0
+  - @0xsequence/network@0.41.0
+  - @0xsequence/relayer@0.41.0
   - @0xsequence/transactions@0.41.0
   - @0xsequence/utils@0.41.0
 
@@ -1870,6 +1883,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.6
   - @0xsequence/config@0.40.6
+  - @0xsequence/guard@0.40.6
+  - @0xsequence/network@0.40.6
+  - @0xsequence/relayer@0.40.6
   - @0xsequence/transactions@0.40.6
   - @0xsequence/utils@0.40.6
 
@@ -1881,6 +1897,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.5
   - @0xsequence/config@0.40.5
+  - @0xsequence/guard@0.40.5
+  - @0xsequence/network@0.40.5
+  - @0xsequence/relayer@0.40.5
   - @0xsequence/transactions@0.40.5
   - @0xsequence/utils@0.40.5
 
@@ -1892,6 +1911,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.4
   - @0xsequence/config@0.40.4
+  - @0xsequence/guard@0.40.4
+  - @0xsequence/network@0.40.4
+  - @0xsequence/relayer@0.40.4
   - @0xsequence/transactions@0.40.4
   - @0xsequence/utils@0.40.4
 
@@ -1903,6 +1925,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.3
   - @0xsequence/config@0.40.3
+  - @0xsequence/guard@0.40.3
+  - @0xsequence/network@0.40.3
+  - @0xsequence/relayer@0.40.3
   - @0xsequence/transactions@0.40.3
   - @0xsequence/utils@0.40.3
 
@@ -1914,6 +1939,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.2
   - @0xsequence/config@0.40.2
+  - @0xsequence/guard@0.40.2
+  - @0xsequence/network@0.40.2
+  - @0xsequence/relayer@0.40.2
   - @0xsequence/transactions@0.40.2
   - @0xsequence/utils@0.40.2
 
@@ -1925,6 +1953,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.1
   - @0xsequence/config@0.40.1
+  - @0xsequence/guard@0.40.1
+  - @0xsequence/network@0.40.1
+  - @0xsequence/relayer@0.40.1
   - @0xsequence/transactions@0.40.1
   - @0xsequence/utils@0.40.1
 
@@ -1939,6 +1970,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.40.0
   - @0xsequence/config@0.40.0
+  - @0xsequence/guard@0.40.0
+  - @0xsequence/network@0.40.0
+  - @0xsequence/relayer@0.40.0
   - @0xsequence/transactions@0.40.0
   - @0xsequence/utils@0.40.0
 
@@ -1950,6 +1984,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.6
   - @0xsequence/config@0.39.6
+  - @0xsequence/guard@0.39.6
+  - @0xsequence/network@0.39.6
+  - @0xsequence/relayer@0.39.6
   - @0xsequence/transactions@0.39.6
   - @0xsequence/utils@0.39.6
 
@@ -1961,6 +1998,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.5
   - @0xsequence/config@0.39.5
+  - @0xsequence/guard@0.39.5
+  - @0xsequence/network@0.39.5
+  - @0xsequence/relayer@0.39.5
   - @0xsequence/transactions@0.39.5
   - @0xsequence/utils@0.39.5
 
@@ -1972,6 +2012,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.4
   - @0xsequence/config@0.39.4
+  - @0xsequence/guard@0.39.4
+  - @0xsequence/network@0.39.4
+  - @0xsequence/relayer@0.39.4
   - @0xsequence/transactions@0.39.4
   - @0xsequence/utils@0.39.4
 
@@ -1983,6 +2026,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.3
   - @0xsequence/config@0.39.3
+  - @0xsequence/guard@0.39.3
+  - @0xsequence/network@0.39.3
+  - @0xsequence/relayer@0.39.3
   - @0xsequence/transactions@0.39.3
   - @0xsequence/utils@0.39.3
 
@@ -1994,6 +2040,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.2
   - @0xsequence/config@0.39.2
+  - @0xsequence/guard@0.39.2
+  - @0xsequence/network@0.39.2
+  - @0xsequence/relayer@0.39.2
   - @0xsequence/transactions@0.39.2
   - @0xsequence/utils@0.39.2
 
@@ -2007,6 +2056,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.1
   - @0xsequence/config@0.39.1
+  - @0xsequence/guard@0.39.1
+  - @0xsequence/network@0.39.1
+  - @0xsequence/relayer@0.39.1
   - @0xsequence/transactions@0.39.1
   - @0xsequence/utils@0.39.1
 
@@ -2021,6 +2073,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.39.0
   - @0xsequence/config@0.39.0
+  - @0xsequence/guard@0.39.0
+  - @0xsequence/network@0.39.0
+  - @0xsequence/relayer@0.39.0
   - @0xsequence/transactions@0.39.0
   - @0xsequence/utils@0.39.0
 
@@ -2032,6 +2087,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.38.2
   - @0xsequence/config@0.38.2
+  - @0xsequence/guard@0.38.2
+  - @0xsequence/network@0.38.2
+  - @0xsequence/relayer@0.38.2
   - @0xsequence/transactions@0.38.2
   - @0xsequence/utils@0.38.2
 
@@ -2043,6 +2101,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.38.1
   - @0xsequence/config@0.38.1
+  - @0xsequence/guard@0.38.1
+  - @0xsequence/network@0.38.1
+  - @0xsequence/relayer@0.38.1
   - @0xsequence/transactions@0.38.1
   - @0xsequence/utils@0.38.1
 
@@ -2061,6 +2122,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.38.0
   - @0xsequence/config@0.38.0
+  - @0xsequence/guard@0.38.0
+  - @0xsequence/network@0.38.0
+  - @0xsequence/relayer@0.38.0
   - @0xsequence/transactions@0.38.0
   - @0xsequence/utils@0.38.0
 
@@ -2072,6 +2136,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.37.1
   - @0xsequence/config@0.37.1
+  - @0xsequence/guard@0.37.1
+  - @0xsequence/network@0.37.1
+  - @0xsequence/relayer@0.37.1
   - @0xsequence/transactions@0.37.1
   - @0xsequence/utils@0.37.1
 
@@ -2088,6 +2155,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.37.0
   - @0xsequence/config@0.37.0
+  - @0xsequence/guard@0.37.0
+  - @0xsequence/network@0.37.0
+  - @0xsequence/relayer@0.37.0
   - @0xsequence/transactions@0.37.0
   - @0xsequence/utils@0.37.0
 
@@ -2099,6 +2169,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.13
   - @0xsequence/config@0.36.13
+  - @0xsequence/guard@0.36.13
+  - @0xsequence/network@0.36.13
+  - @0xsequence/relayer@0.36.13
   - @0xsequence/transactions@0.36.13
   - @0xsequence/utils@0.36.13
 
@@ -2112,6 +2185,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.12
   - @0xsequence/config@0.36.12
+  - @0xsequence/guard@0.36.12
+  - @0xsequence/network@0.36.12
+  - @0xsequence/relayer@0.36.12
   - @0xsequence/transactions@0.36.12
   - @0xsequence/utils@0.36.12
 
@@ -2123,6 +2199,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.11
   - @0xsequence/config@0.36.11
+  - @0xsequence/guard@0.36.11
+  - @0xsequence/network@0.36.11
+  - @0xsequence/relayer@0.36.11
   - @0xsequence/transactions@0.36.11
   - @0xsequence/utils@0.36.11
 
@@ -2134,6 +2213,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.10
   - @0xsequence/config@0.36.10
+  - @0xsequence/guard@0.36.10
+  - @0xsequence/network@0.36.10
+  - @0xsequence/relayer@0.36.10
   - @0xsequence/transactions@0.36.10
   - @0xsequence/utils@0.36.10
 
@@ -2145,6 +2227,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.9
   - @0xsequence/config@0.36.9
+  - @0xsequence/guard@0.36.9
+  - @0xsequence/network@0.36.9
+  - @0xsequence/relayer@0.36.9
   - @0xsequence/transactions@0.36.9
   - @0xsequence/utils@0.36.9
 
@@ -2156,6 +2241,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.8
   - @0xsequence/config@0.36.8
+  - @0xsequence/guard@0.36.8
+  - @0xsequence/network@0.36.8
+  - @0xsequence/relayer@0.36.8
   - @0xsequence/transactions@0.36.8
   - @0xsequence/utils@0.36.8
 
@@ -2167,6 +2255,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.7
   - @0xsequence/config@0.36.7
+  - @0xsequence/guard@0.36.7
+  - @0xsequence/network@0.36.7
+  - @0xsequence/relayer@0.36.7
   - @0xsequence/transactions@0.36.7
   - @0xsequence/utils@0.36.7
 
@@ -2178,6 +2269,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.6
   - @0xsequence/config@0.36.6
+  - @0xsequence/guard@0.36.6
+  - @0xsequence/network@0.36.6
+  - @0xsequence/relayer@0.36.6
   - @0xsequence/transactions@0.36.6
   - @0xsequence/utils@0.36.6
 
@@ -2192,6 +2286,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.5
   - @0xsequence/config@0.36.5
+  - @0xsequence/guard@0.36.5
+  - @0xsequence/network@0.36.5
+  - @0xsequence/relayer@0.36.5
   - @0xsequence/transactions@0.36.5
   - @0xsequence/utils@0.36.5
 
@@ -2203,6 +2300,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.4
   - @0xsequence/config@0.36.4
+  - @0xsequence/guard@0.36.4
+  - @0xsequence/network@0.36.4
+  - @0xsequence/relayer@0.36.4
   - @0xsequence/transactions@0.36.4
   - @0xsequence/utils@0.36.4
 
@@ -2214,6 +2314,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.3
   - @0xsequence/config@0.36.3
+  - @0xsequence/guard@0.36.3
+  - @0xsequence/network@0.36.3
+  - @0xsequence/relayer@0.36.3
   - @0xsequence/transactions@0.36.3
   - @0xsequence/utils@0.36.3
 
@@ -2225,6 +2328,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.2
   - @0xsequence/config@0.36.2
+  - @0xsequence/guard@0.36.2
+  - @0xsequence/network@0.36.2
+  - @0xsequence/relayer@0.36.2
   - @0xsequence/transactions@0.36.2
   - @0xsequence/utils@0.36.2
 
@@ -2236,6 +2342,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.1
   - @0xsequence/config@0.36.1
+  - @0xsequence/guard@0.36.1
+  - @0xsequence/network@0.36.1
+  - @0xsequence/relayer@0.36.1
   - @0xsequence/transactions@0.36.1
   - @0xsequence/utils@0.36.1
 
@@ -2250,6 +2359,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.36.0
   - @0xsequence/config@0.36.0
+  - @0xsequence/guard@0.36.0
+  - @0xsequence/network@0.36.0
+  - @0xsequence/relayer@0.36.0
   - @0xsequence/transactions@0.36.0
   - @0xsequence/utils@0.36.0
 
@@ -2261,6 +2373,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.12
   - @0xsequence/config@0.35.12
+  - @0xsequence/guard@0.35.12
+  - @0xsequence/network@0.35.12
+  - @0xsequence/relayer@0.35.12
   - @0xsequence/transactions@0.35.12
   - @0xsequence/utils@0.35.12
 
@@ -2272,6 +2387,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.11
   - @0xsequence/config@0.35.11
+  - @0xsequence/guard@0.35.11
+  - @0xsequence/network@0.35.11
+  - @0xsequence/relayer@0.35.11
   - @0xsequence/transactions@0.35.11
   - @0xsequence/utils@0.35.11
 
@@ -2283,6 +2401,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.10
   - @0xsequence/config@0.35.10
+  - @0xsequence/guard@0.35.10
+  - @0xsequence/network@0.35.10
+  - @0xsequence/relayer@0.35.10
   - @0xsequence/transactions@0.35.10
   - @0xsequence/utils@0.35.10
 
@@ -2294,6 +2415,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.9
   - @0xsequence/config@0.35.9
+  - @0xsequence/guard@0.35.9
+  - @0xsequence/network@0.35.9
+  - @0xsequence/relayer@0.35.9
   - @0xsequence/transactions@0.35.9
   - @0xsequence/utils@0.35.9
 
@@ -2305,6 +2429,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.8
   - @0xsequence/config@0.35.8
+  - @0xsequence/guard@0.35.8
+  - @0xsequence/network@0.35.8
+  - @0xsequence/relayer@0.35.8
   - @0xsequence/transactions@0.35.8
   - @0xsequence/utils@0.35.8
 
@@ -2316,6 +2443,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.7
   - @0xsequence/config@0.35.7
+  - @0xsequence/guard@0.35.7
+  - @0xsequence/network@0.35.7
+  - @0xsequence/relayer@0.35.7
   - @0xsequence/transactions@0.35.7
   - @0xsequence/utils@0.35.7
 
@@ -2327,6 +2457,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.6
   - @0xsequence/config@0.35.6
+  - @0xsequence/guard@0.35.6
+  - @0xsequence/network@0.35.6
+  - @0xsequence/relayer@0.35.6
   - @0xsequence/transactions@0.35.6
   - @0xsequence/utils@0.35.6
 
@@ -2338,6 +2471,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.5
   - @0xsequence/config@0.35.5
+  - @0xsequence/guard@0.35.5
+  - @0xsequence/network@0.35.5
+  - @0xsequence/relayer@0.35.5
   - @0xsequence/transactions@0.35.5
   - @0xsequence/utils@0.35.5
 
@@ -2349,6 +2485,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.4
   - @0xsequence/config@0.35.4
+  - @0xsequence/guard@0.35.4
+  - @0xsequence/network@0.35.4
+  - @0xsequence/relayer@0.35.4
   - @0xsequence/transactions@0.35.4
   - @0xsequence/utils@0.35.4
 
@@ -2360,6 +2499,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.3
   - @0xsequence/config@0.35.3
+  - @0xsequence/guard@0.35.3
+  - @0xsequence/network@0.35.3
+  - @0xsequence/relayer@0.35.3
   - @0xsequence/transactions@0.35.3
   - @0xsequence/utils@0.35.3
 
@@ -2371,6 +2513,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.2
   - @0xsequence/config@0.35.2
+  - @0xsequence/guard@0.35.2
+  - @0xsequence/network@0.35.2
+  - @0xsequence/relayer@0.35.2
   - @0xsequence/transactions@0.35.2
   - @0xsequence/utils@0.35.2
 
@@ -2382,6 +2527,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.1
   - @0xsequence/config@0.35.1
+  - @0xsequence/guard@0.35.1
+  - @0xsequence/network@0.35.1
+  - @0xsequence/relayer@0.35.1
   - @0xsequence/transactions@0.35.1
   - @0xsequence/utils@0.35.1
 
@@ -2404,6 +2552,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.35.0
   - @0xsequence/config@0.35.0
+  - @0xsequence/guard@0.35.0
+  - @0xsequence/network@0.35.0
+  - @0xsequence/relayer@0.35.0
   - @0xsequence/transactions@0.35.0
   - @0xsequence/utils@0.35.0
 
@@ -2418,8 +2569,17 @@
 - Updated dependencies
   - @0xsequence/abi@0.34.0
   - @0xsequence/config@0.34.0
+  - @0xsequence/guard@0.34.0
+  - @0xsequence/network@0.34.0
+  - @0xsequence/relayer@0.34.0
   - @0xsequence/transactions@0.34.0
   - @0xsequence/utils@0.34.0
+
+## 0.33.3
+
+### Patch Changes
+
+- wallet: fix Account.signTransactions
 
 ## 0.33.2
 
@@ -2427,12 +2587,14 @@
 
 - Updated dependencies
   - @0xsequence/transactions@0.33.2
+  - @0xsequence/relayer@0.33.2
 
 ## 0.31.1
 
 ### Patch Changes
 
-- relayer: add Relayer.simulate
+- Updated dependencies
+  - @0xsequence/relayer@0.31.1
 
 ## 0.31.0
 
@@ -2445,6 +2607,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.31.0
   - @0xsequence/config@0.31.0
+  - @0xsequence/guard@0.31.0
+  - @0xsequence/network@0.31.0
+  - @0xsequence/relayer@0.31.0
   - @0xsequence/transactions@0.31.0
   - @0xsequence/utils@0.31.0
 
@@ -2459,6 +2624,9 @@
 - Updated dependencies
   - @0xsequence/abi@0.30.0
   - @0xsequence/config@0.30.0
+  - @0xsequence/guard@0.30.0
+  - @0xsequence/network@0.30.0
+  - @0xsequence/relayer@0.30.0
   - @0xsequence/transactions@0.30.0
   - @0xsequence/utils@0.30.0
 
@@ -2470,15 +2638,27 @@
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.29.8
   - @0xsequence/config@0.29.8
+  - @0xsequence/guard@0.29.8
+  - @0xsequence/network@0.29.8
+  - @0xsequence/relayer@0.29.8
   - @0xsequence/transactions@0.29.8
   - @0xsequence/utils@0.29.8
+
+## 0.29.7
+
+### Patch Changes
+
+- override ethers getChainId method
 
 ## 0.29.6
 
 ### Patch Changes
 
-- @0xsequence/config@0.29.6
-- @0xsequence/transactions@0.29.6
+- Updated dependencies [undefined]
+  - @0xsequence/network@0.29.6
+  - @0xsequence/config@0.29.6
+  - @0xsequence/transactions@0.29.6
+  - @0xsequence/relayer@0.29.6
 
 ## 0.29.5
 
@@ -2486,12 +2666,14 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/config@0.29.5
+  - @0xsequence/relayer@0.29.5
 
 ## 0.29.2
 
 ### Patch Changes
 
-- relayer: don't pass nonce to GetMetaTxnNetworkFeeOptions
+- Updated dependencies [undefined]
+  - @0xsequence/relayer@0.29.2
 
 ## 0.29.0
 
@@ -2515,6 +2697,8 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/config@0.29.0
+  - @0xsequence/network@0.29.0
+  - @0xsequence/relayer@0.29.0
   - @0xsequence/transactions@0.29.0
   - @0xsequence/abi@0.29.0
   - @0xsequence/utils@0.29.0
@@ -2529,16 +2713,25 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.28.0
-  - @0xsequence/chaind@0.28.0
   - @0xsequence/config@0.28.0
+  - @0xsequence/guard@0.28.0
+  - @0xsequence/network@0.28.0
+  - @0xsequence/relayer@0.28.0
   - @0xsequence/transactions@0.28.0
   - @0xsequence/utils@0.28.0
+
+## 0.27.2
+
+### Patch Changes
+
+- add SignedTransactionsCallback
 
 ## 0.27.1
 
 ### Patch Changes
 
-- fix waitReceipt polling logic
+- Updated dependencies [undefined]
+  - @0xsequence/relayer@0.27.1
 
 ## 0.27.0
 
@@ -2550,8 +2743,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.27.0
-  - @0xsequence/chaind@0.27.0
   - @0xsequence/config@0.27.0
+  - @0xsequence/guard@0.27.0
+  - @0xsequence/network@0.27.0
+  - @0xsequence/relayer@0.27.0
   - @0xsequence/transactions@0.27.0
   - @0xsequence/utils@0.27.0
 
@@ -2563,6 +2758,11 @@
   provide the wallet's address for calls to SendMetaTxn
   modify the semantics of Relayer.getNonce() to allow relayers to select nonce spaces for clients
 
+### Patch Changes
+
+- Updated dependencies [undefined]
+  - @0xsequence/relayer@0.26.0
+
 ## 0.25.1
 
 ### Patch Changes
@@ -2570,8 +2770,10 @@
 - Fix build typescrypt issue
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.25.1
-  - @0xsequence/chaind@0.25.1
   - @0xsequence/config@0.25.1
+  - @0xsequence/guard@0.25.1
+  - @0xsequence/network@0.25.1
+  - @0xsequence/relayer@0.25.1
   - @0xsequence/transactions@0.25.1
   - @0xsequence/utils@0.25.1
 
@@ -2586,8 +2788,10 @@
 
 - Updated dependencies [10c8af8]
   - @0xsequence/abi@0.25.0
-  - @0xsequence/chaind@0.25.0
   - @0xsequence/config@0.25.0
+  - @0xsequence/guard@0.25.0
+  - @0xsequence/network@0.25.0
+  - @0xsequence/relayer@0.25.0
   - @0xsequence/transactions@0.25.0
   - @0xsequence/utils@0.25.0
 
@@ -2595,13 +2799,15 @@
 
 ### Patch Changes
 
-- relayer: wait for queued status instead of unknown
+- Updated dependencies [undefined]
+  - @0xsequence/relayer@0.24.1
 
 ## 0.24.0
 
-### Minor Changes
+### Patch Changes
 
-- pass wallet config and nonce to GetMetaTxnNetworkFeeOptions
+- Updated dependencies [undefined]
+  - @0xsequence/relayer@0.24.0
 
 ## 0.23.0
 
@@ -2613,8 +2819,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.23.0
-  - @0xsequence/chaind@0.23.0
   - @0xsequence/config@0.23.0
+  - @0xsequence/guard@0.23.0
+  - @0xsequence/network@0.23.0
+  - @0xsequence/relayer@0.23.0
   - @0xsequence/transactions@0.23.0
   - @0xsequence/utils@0.23.0
 
@@ -2625,8 +2833,10 @@
 - e1c109e: Fix authProof on expired sessions
 - Updated dependencies [e1c109e]
   - @0xsequence/abi@0.22.2
-  - @0xsequence/chaind@0.22.2
   - @0xsequence/config@0.22.2
+  - @0xsequence/guard@0.22.2
+  - @0xsequence/network@0.22.2
+  - @0xsequence/relayer@0.22.2
   - @0xsequence/transactions@0.22.2
   - @0xsequence/utils@0.22.2
 
@@ -2637,8 +2847,10 @@
 - transport session cache
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.22.1
-  - @0xsequence/chaind@0.22.1
   - @0xsequence/config@0.22.1
+  - @0xsequence/guard@0.22.1
+  - @0xsequence/network@0.22.1
+  - @0xsequence/relayer@0.22.1
   - @0xsequence/transactions@0.22.1
   - @0xsequence/utils@0.22.1
 
@@ -2652,9 +2864,11 @@
 
 - Updated dependencies [e667b65]
   - @0xsequence/abi@0.22.0
+  - @0xsequence/network@0.22.0
+  - @0xsequence/relayer@0.22.0
   - @0xsequence/utils@0.22.0
-  - @0xsequence/chaind@0.22.0
   - @0xsequence/config@0.22.0
+  - @0xsequence/guard@0.22.0
   - @0xsequence/transactions@0.22.0
 
 ## 0.21.5
@@ -2664,8 +2878,10 @@
 - Give priority to metaTxnId returned by relayer
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.21.5
-  - @0xsequence/chaind@0.21.5
   - @0xsequence/config@0.21.5
+  - @0xsequence/guard@0.21.5
+  - @0xsequence/network@0.21.5
+  - @0xsequence/relayer@0.21.5
   - @0xsequence/transactions@0.21.5
   - @0xsequence/utils@0.21.5
 
@@ -2676,8 +2892,10 @@
 - Add has enough signers method
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.21.4
-  - @0xsequence/chaind@0.21.4
   - @0xsequence/config@0.21.4
+  - @0xsequence/guard@0.21.4
+  - @0xsequence/network@0.21.4
+  - @0xsequence/relayer@0.21.4
   - @0xsequence/transactions@0.21.4
   - @0xsequence/utils@0.21.4
 
@@ -2688,8 +2906,10 @@
 - add window session cache
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.21.3
-  - @0xsequence/chaind@0.21.3
   - @0xsequence/config@0.21.3
+  - @0xsequence/guard@0.21.3
+  - @0xsequence/network@0.21.3
+  - @0xsequence/relayer@0.21.3
   - @0xsequence/transactions@0.21.3
   - @0xsequence/utils@0.21.3
 
@@ -2700,10 +2920,18 @@
 - exception handlind in relayer
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.21.2
-  - @0xsequence/chaind@0.21.2
   - @0xsequence/config@0.21.2
+  - @0xsequence/guard@0.21.2
+  - @0xsequence/network@0.21.2
+  - @0xsequence/relayer@0.21.2
   - @0xsequence/transactions@0.21.2
   - @0xsequence/utils@0.21.2
+
+## 0.21.1
+
+### Patch Changes
+
+- config updates must not be revertOnError
 
 ## 0.21.0
 
@@ -2716,8 +2944,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.21.0
-  - @0xsequence/chaind@0.21.0
   - @0xsequence/config@0.21.0
+  - @0xsequence/guard@0.21.0
+  - @0xsequence/network@0.21.0
+  - @0xsequence/relayer@0.21.0
   - @0xsequence/transactions@0.21.0
   - @0xsequence/utils@0.21.0
 
@@ -2728,8 +2958,10 @@
 - jwtAuth visibility, package version sync
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.19.3
-  - @0xsequence/chaind@0.19.3
   - @0xsequence/config@0.19.3
+  - @0xsequence/guard@0.19.3
+  - @0xsequence/network@0.19.3
+  - @0xsequence/relayer@0.19.3
   - @0xsequence/transactions@0.19.3
   - @0xsequence/utils@0.19.3
 
@@ -2740,6 +2972,7 @@
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.19.2
   - @0xsequence/config@0.19.2
+  - @0xsequence/relayer@0.19.2
   - @0xsequence/transactions@0.19.2
 
 ## 0.19.0
@@ -2752,8 +2985,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.19.0
-  - @0xsequence/chaind@0.19.0
   - @0xsequence/config@0.19.0
+  - @0xsequence/guard@0.19.0
+  - @0xsequence/network@0.19.0
+  - @0xsequence/relayer@0.19.0
   - @0xsequence/transactions@0.19.0
   - @0xsequence/utils@0.19.0
 
@@ -2767,8 +3002,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.18.0
-  - @0xsequence/chaind@0.18.0
   - @0xsequence/config@0.18.0
+  - @0xsequence/guard@0.18.0
+  - @0xsequence/network@0.18.0
+  - @0xsequence/relayer@0.18.0
   - @0xsequence/transactions@0.18.0
   - @0xsequence/utils@0.18.0
 
@@ -2782,8 +3019,10 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.16.0
-  - @0xsequence/chaind@0.16.0
   - @0xsequence/config@0.16.0
+  - @0xsequence/guard@0.16.0
+  - @0xsequence/network@0.16.0
+  - @0xsequence/relayer@0.16.0
   - @0xsequence/transactions@0.16.0
   - @0xsequence/utils@0.16.0
 
@@ -2794,22 +3033,19 @@
 - update api clients
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.15.1
-  - @0xsequence/chaind@0.15.1
   - @0xsequence/config@0.15.1
+  - @0xsequence/guard@0.15.1
+  - @0xsequence/network@0.15.1
+  - @0xsequence/relayer@0.15.1
   - @0xsequence/transactions@0.15.1
   - @0xsequence/utils@0.15.1
 
 ## 0.15.0
 
-### Minor Changes
-
-- - update chaind and api bindings
-  - replace EstimateMetaTxnGasReceipt with UpdateMetaTxnGasLimits and GetMetaTxnNetworkFeeOptions
-
 ### Patch Changes
 
 - Updated dependencies [undefined]
-  - @0xsequence/chaind@0.15.0
+  - @0xsequence/relayer@0.15.0
   - @0xsequence/transactions@0.15.0
 
 ## 0.14.3
@@ -2819,8 +3055,10 @@
 - Fix 0xSequence relayer dependencies
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.14.3
-  - @0xsequence/chaind@0.14.3
   - @0xsequence/config@0.14.3
+  - @0xsequence/guard@0.14.3
+  - @0xsequence/network@0.14.3
+  - @0xsequence/relayer@0.14.3
   - @0xsequence/transactions@0.14.3
   - @0xsequence/utils@0.14.3
 
@@ -2831,9 +3069,12 @@
 - Add debug logs to rpc-relayer
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.14.2
-  - @0xsequence/chaind@0.14.2
   - @0xsequence/config@0.14.2
+  - @0xsequence/guard@0.14.2
+  - @0xsequence/network@0.14.2
+  - @0xsequence/relayer@0.14.2
   - @0xsequence/transactions@0.14.2
+  - @0xsequence/utils@0.14.2
 
 ## 0.14.0
 
@@ -2845,9 +3086,12 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.14.0
-  - @0xsequence/chaind@0.14.0
   - @0xsequence/config@0.14.0
+  - @0xsequence/guard@0.14.0
+  - @0xsequence/network@0.14.0
+  - @0xsequence/relayer@0.14.0
   - @0xsequence/transactions@0.14.0
+  - @0xsequence/utils@0.14.0
 
 ## 0.13.0
 
@@ -2859,9 +3103,12 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.13.0
-  - @0xsequence/chaind@0.13.0
   - @0xsequence/config@0.13.0
+  - @0xsequence/guard@0.13.0
+  - @0xsequence/network@0.13.0
+  - @0xsequence/relayer@0.13.0
   - @0xsequence/transactions@0.13.0
+  - @0xsequence/utils@0.13.0
 
 ## 0.12.1
 
@@ -2870,9 +3117,12 @@
 - npm bump
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.12.1
-  - @0xsequence/chaind@0.12.1
   - @0xsequence/config@0.12.1
+  - @0xsequence/guard@0.12.1
+  - @0xsequence/network@0.12.1
+  - @0xsequence/relayer@0.12.1
   - @0xsequence/transactions@0.12.1
+  - @0xsequence/utils@0.12.1
 
 ## 0.12.0
 
@@ -2884,9 +3134,12 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.12.0
-  - @0xsequence/chaind@0.12.0
   - @0xsequence/config@0.12.0
+  - @0xsequence/guard@0.12.0
+  - @0xsequence/network@0.12.0
+  - @0xsequence/relayer@0.12.0
   - @0xsequence/transactions@0.12.0
+  - @0xsequence/utils@0.12.0
 
 ## 0.11.4
 
@@ -2895,9 +3148,12 @@
 - update api client
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.11.4
-  - @0xsequence/chaind@0.11.4
   - @0xsequence/config@0.11.4
+  - @0xsequence/guard@0.11.4
+  - @0xsequence/network@0.11.4
+  - @0xsequence/relayer@0.11.4
   - @0xsequence/transactions@0.11.4
+  - @0xsequence/utils@0.11.4
 
 ## 0.11.3
 
@@ -2906,9 +3162,12 @@
 - improve openWindow state options handling
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.11.3
-  - @0xsequence/chaind@0.11.3
   - @0xsequence/config@0.11.3
+  - @0xsequence/guard@0.11.3
+  - @0xsequence/network@0.11.3
+  - @0xsequence/relayer@0.11.3
   - @0xsequence/transactions@0.11.3
+  - @0xsequence/utils@0.11.3
 
 ## 0.11.2
 
@@ -2917,9 +3176,12 @@
 - Fix multicall proxy scopes
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.11.2
-  - @0xsequence/chaind@0.11.2
   - @0xsequence/config@0.11.2
+  - @0xsequence/guard@0.11.2
+  - @0xsequence/network@0.11.2
+  - @0xsequence/relayer@0.11.2
   - @0xsequence/transactions@0.11.2
+  - @0xsequence/utils@0.11.2
 
 ## 0.11.1
 
@@ -2928,9 +3190,12 @@
 - Add support for dynamic and nested signatures
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.11.1
-  - @0xsequence/chaind@0.11.1
   - @0xsequence/config@0.11.1
+  - @0xsequence/guard@0.11.1
+  - @0xsequence/network@0.11.1
+  - @0xsequence/relayer@0.11.1
   - @0xsequence/transactions@0.11.1
+  - @0xsequence/utils@0.11.1
 
 ## 0.11.0
 
@@ -2942,9 +3207,12 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.11.0
-  - @0xsequence/chaind@0.11.0
   - @0xsequence/config@0.11.0
+  - @0xsequence/guard@0.11.0
+  - @0xsequence/network@0.11.0
+  - @0xsequence/relayer@0.11.0
   - @0xsequence/transactions@0.11.0
+  - @0xsequence/utils@0.11.0
 
 ## 0.10.9
 
@@ -2953,9 +3221,12 @@
 - add support for public addresses as signers in session.open
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.9
-  - @0xsequence/chaind@0.10.9
   - @0xsequence/config@0.10.9
+  - @0xsequence/guard@0.10.9
+  - @0xsequence/network@0.10.9
+  - @0xsequence/relayer@0.10.9
   - @0xsequence/transactions@0.10.9
+  - @0xsequence/utils@0.10.9
 
 ## 0.10.8
 
@@ -2964,9 +3235,12 @@
 - Multicall production configuration
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.8
-  - @0xsequence/chaind@0.10.8
   - @0xsequence/config@0.10.8
+  - @0xsequence/guard@0.10.8
+  - @0xsequence/network@0.10.8
+  - @0xsequence/relayer@0.10.8
   - @0xsequence/transactions@0.10.8
+  - @0xsequence/utils@0.10.8
 
 ## 0.10.7
 
@@ -2975,9 +3249,12 @@
 - allow provider transport to force disconnect
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.7
-  - @0xsequence/chaind@0.10.7
   - @0xsequence/config@0.10.7
+  - @0xsequence/guard@0.10.7
+  - @0xsequence/network@0.10.7
+  - @0xsequence/relayer@0.10.7
   - @0xsequence/transactions@0.10.7
+  - @0xsequence/utils@0.10.7
 
 ## 0.10.6
 
@@ -2986,9 +3263,12 @@
 - - fix getWalletState method
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.6
-  - @0xsequence/chaind@0.10.6
   - @0xsequence/config@0.10.6
+  - @0xsequence/guard@0.10.6
+  - @0xsequence/network@0.10.6
+  - @0xsequence/relayer@0.10.6
   - @0xsequence/transactions@0.10.6
+  - @0xsequence/utils@0.10.6
 
 ## 0.10.5
 
@@ -2997,9 +3277,12 @@
 - update relayer gas refund options
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.5
-  - @0xsequence/chaind@0.10.5
   - @0xsequence/config@0.10.5
+  - @0xsequence/guard@0.10.5
+  - @0xsequence/network@0.10.5
+  - @0xsequence/relayer@0.10.5
   - @0xsequence/transactions@0.10.5
+  - @0xsequence/utils@0.10.5
 
 ## 0.10.4
 
@@ -3008,9 +3291,12 @@
 - Update api proto
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.4
-  - @0xsequence/chaind@0.10.4
   - @0xsequence/config@0.10.4
+  - @0xsequence/guard@0.10.4
+  - @0xsequence/network@0.10.4
+  - @0xsequence/relayer@0.10.4
   - @0xsequence/transactions@0.10.4
+  - @0xsequence/utils@0.10.4
 
 ## 0.10.3
 
@@ -3019,9 +3305,12 @@
 - Fix loading config cross-chain
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.3
-  - @0xsequence/chaind@0.10.3
   - @0xsequence/config@0.10.3
+  - @0xsequence/guard@0.10.3
+  - @0xsequence/network@0.10.3
+  - @0xsequence/relayer@0.10.3
   - @0xsequence/transactions@0.10.3
+  - @0xsequence/utils@0.10.3
 
 ## 0.10.2
 
@@ -3030,9 +3319,12 @@
 - - message digest fix
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.2
-  - @0xsequence/chaind@0.10.2
   - @0xsequence/config@0.10.2
+  - @0xsequence/guard@0.10.2
+  - @0xsequence/network@0.10.2
+  - @0xsequence/relayer@0.10.2
   - @0xsequence/transactions@0.10.2
+  - @0xsequence/utils@0.10.2
 
 ## 0.10.1
 
@@ -3041,9 +3333,12 @@
 - upgrade deps
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.1
-  - @0xsequence/chaind@0.10.1
   - @0xsequence/config@0.10.1
+  - @0xsequence/guard@0.10.1
+  - @0xsequence/network@0.10.1
+  - @0xsequence/relayer@0.10.1
   - @0xsequence/transactions@0.10.1
+  - @0xsequence/utils@0.10.1
 
 ## 0.10.0
 
@@ -3055,9 +3350,12 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.10.0
-  - @0xsequence/chaind@0.10.0
   - @0xsequence/config@0.10.0
+  - @0xsequence/guard@0.10.0
+  - @0xsequence/network@0.10.0
+  - @0xsequence/relayer@0.10.0
   - @0xsequence/transactions@0.10.0
+  - @0xsequence/utils@0.10.0
 
 ## 0.9.6
 
@@ -3066,9 +3364,12 @@
 - Update ABIs for latest sequence contracts
 - Updated dependencies [undefined]
   - @0xsequence/config@0.9.6
+  - @0xsequence/network@0.9.6
+  - @0xsequence/relayer@0.9.6
   - @0xsequence/transactions@0.9.6
+  - @0xsequence/utils@0.9.6
   - @0xsequence/abi@0.9.6
-  - @0xsequence/chaind@0.9.6
+  - @0xsequence/guard@0.9.6
 
 ## 0.9.5
 
@@ -3077,7 +3378,10 @@
 - Implemented session class
 - Updated dependencies [undefined]
   - @0xsequence/config@0.9.5
+  - @0xsequence/network@0.9.5
+  - @0xsequence/relayer@0.9.5
   - @0xsequence/transactions@0.9.5
+  - @0xsequence/utils@0.9.5
 
 ## 0.9.3
 
@@ -3086,9 +3390,12 @@
 - - minor improvements
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.9.3
-  - @0xsequence/chaind@0.9.3
   - @0xsequence/config@0.9.3
+  - @0xsequence/guard@0.9.3
+  - @0xsequence/network@0.9.3
+  - @0xsequence/relayer@0.9.3
   - @0xsequence/transactions@0.9.3
+  - @0xsequence/utils@0.9.3
 
 ## 0.9.1
 
@@ -3097,9 +3404,13 @@
 - - patch bump
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.9.1
-  - @0xsequence/chaind@0.9.1
+  - @0xsequence/api@0.9.1
   - @0xsequence/config@0.9.1
+  - @0xsequence/guard@0.9.1
+  - @0xsequence/network@0.9.1
+  - @0xsequence/relayer@0.9.1
   - @0xsequence/transactions@0.9.1
+  - @0xsequence/utils@0.9.1
 
 ## 0.9.0
 
@@ -3110,10 +3421,14 @@
 ### Patch Changes
 
 - Updated dependencies [undefined]
+  - @0xsequence/api@0.9.0
   - @0xsequence/abi@0.9.0
-  - @0xsequence/chaind@0.9.0
   - @0xsequence/config@0.9.0
+  - @0xsequence/guard@0.9.0
+  - @0xsequence/network@0.9.0
+  - @0xsequence/relayer@0.9.0
   - @0xsequence/transactions@0.9.0
+  - @0xsequence/utils@0.9.0
 
 ## 0.8.5
 
@@ -3122,9 +3437,13 @@
 - - use latest wallet-contracts
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.5
-  - @0xsequence/chaind@0.8.5
+  - @0xsequence/api@0.8.5
   - @0xsequence/config@0.8.5
+  - @0xsequence/guard@0.8.5
+  - @0xsequence/network@0.8.5
+  - @0xsequence/relayer@0.8.5
   - @0xsequence/transactions@0.8.5
+  - @0xsequence/utils@0.8.5
 
 ## 0.8.4
 
@@ -3133,9 +3452,13 @@
 - - minor improvements, name updates and comments
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.4
-  - @0xsequence/chaind@0.8.4
+  - @0xsequence/api@0.8.4
   - @0xsequence/config@0.8.4
+  - @0xsequence/guard@0.8.4
+  - @0xsequence/network@0.8.4
+  - @0xsequence/relayer@0.8.4
   - @0xsequence/transactions@0.8.4
+  - @0xsequence/utils@0.8.4
 
 ## 0.8.3
 
@@ -3149,9 +3472,13 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.3
-  - @0xsequence/chaind@0.8.3
+  - @0xsequence/api@0.8.3
   - @0xsequence/config@0.8.3
+  - @0xsequence/guard@0.8.3
+  - @0xsequence/network@0.8.3
+  - @0xsequence/relayer@0.8.3
   - @0xsequence/transactions@0.8.3
+  - @0xsequence/utils@0.8.3
 
 ## 0.8.2
 
@@ -3160,9 +3487,13 @@
 - - field rename and ethauth dependency bump
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.2
-  - @0xsequence/chaind@0.8.2
+  - @0xsequence/api@0.8.2
   - @0xsequence/config@0.8.2
+  - @0xsequence/guard@0.8.2
+  - @0xsequence/network@0.8.2
+  - @0xsequence/relayer@0.8.2
   - @0xsequence/transactions@0.8.2
+  - @0xsequence/utils@0.8.2
 
 ## 0.8.1
 
@@ -3171,9 +3502,13 @@
 - - variety of optimizations
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.1
-  - @0xsequence/chaind@0.8.1
+  - @0xsequence/api@0.8.1
   - @0xsequence/config@0.8.1
+  - @0xsequence/guard@0.8.1
+  - @0xsequence/network@0.8.1
+  - @0xsequence/relayer@0.8.1
   - @0xsequence/transactions@0.8.1
+  - @0xsequence/utils@0.8.1
 
 ## 0.8.0
 
@@ -3185,15 +3520,24 @@
 
 - Updated dependencies [undefined]
   - @0xsequence/abi@0.8.0
-  - @0xsequence/chaind@0.8.0
+  - @0xsequence/api@0.8.0
   - @0xsequence/config@0.8.0
+  - @0xsequence/guard@0.8.0
+  - @0xsequence/network@0.8.0
+  - @0xsequence/relayer@0.8.0
   - @0xsequence/transactions@0.8.0
+  - @0xsequence/utils@0.8.0
 
 ## 0.7.1
 
 ### Patch Changes
 
 - 02377ab: Minor improvements
+- Updated dependencies [02377ab]
+- Updated dependencies [1fe4379]
+  - @0xsequence/network@0.7.1
+  - @0xsequence/relayer@0.7.1
+  - @0xsequence/utils@0.7.1
 
 ## 0.7.0
 
@@ -3202,6 +3546,10 @@
 - 6f11ed7: sequence.js, init release
 - Updated dependencies [6f11ed7]
   - @0xsequence/abi@0.7.0
-  - @0xsequence/chaind@0.7.0
+  - @0xsequence/api@0.7.0
   - @0xsequence/config@0.7.0
+  - @0xsequence/guard@0.7.0
+  - @0xsequence/network@0.7.0
+  - @0xsequence/relayer@0.7.0
   - @0xsequence/transactions@0.7.0
+  - @0xsequence/utils@0.7.0

@@ -1,12 +1,14 @@
-export * from './marketplace.gen'
+export * from './indexer.gen'
 
-import { Marketplace as MarketplaceRpc } from './marketplace.gen'
+import { Indexer as IndexerRpc } from './indexer.gen'
 
-export class MarketplaceIndexer extends MarketplaceRpc {
+const fetch = typeof global === 'object' ? global.fetch : window.fetch
+
+export class SequenceIndexer extends IndexerRpc {
   constructor(
     hostname: string,
     public projectAccessKey?: string,
-    public jwtAuth?: string,
+    public jwtAuth?: string
   ) {
     super(hostname.endsWith('/') ? hostname.slice(0, -1) : hostname, fetch)
     this.fetch = this._fetch

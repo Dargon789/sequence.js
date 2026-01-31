@@ -2,11 +2,13 @@ export * from './metadata.gen'
 
 import { Metadata as MetadataRpc, Collections as CollectionsRpc } from './metadata.gen'
 
+const fetch = typeof global === 'object' ? global.fetch : window.fetch
+
 export class SequenceMetadata extends MetadataRpc {
   constructor(
     hostname: string = 'https://metadata.sequence.app',
     public projectAccessKey?: string,
-    public jwtAuth?: string,
+    public jwtAuth?: string
   ) {
     super(hostname.endsWith('/') ? hostname.slice(0, -1) : hostname, fetch)
     this.fetch = this._fetch
@@ -38,7 +40,7 @@ export class SequenceMetadata extends MetadataRpc {
 export class SequenceCollections extends CollectionsRpc {
   constructor(
     hostname: string = 'https://metadata.sequence.app',
-    public jwtAuth?: string,
+    public jwtAuth?: string
   ) {
     super(hostname.endsWith('/') ? hostname.slice(0, -1) : hostname, fetch)
     this.fetch = this._fetch

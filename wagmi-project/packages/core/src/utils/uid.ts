@@ -1,24 +1,49 @@
-import { randomBytes } from 'crypto'
+const size = 256
+let index = size
+let buffer: string
+
+function getRandomBytes(byteLength: number): Uint8Array {
+  if (
+    typeof globalThis !== 'undefined' &&
+    globalThis.crypto &&
+    typeof globalThis.crypto.getRandomValues === 'function'
+  ) {
+    const array = new Uint8Array(byteLength)
+    globalThis.crypto.getRandomValues(array)
+    return array
+  }
+
+  // Fallback for Node.js environments that expose `require('crypto')`.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const nodeCrypto = require('crypto') as {
+      randomBytes: (size: number) => { readonly [n: number]: number; length: number }
+    }
+    const buf = nodeCrypto.randomBytes(byteLength)
+    const array = new Uint8Array(byteLength)
+    for (let i = 0; i < byteLength; i++) array[i] = buf[i]
+    return array
+  } catch {
+    // ignore and fall through to non-cryptographic fallback
+  }
+
+  // Last-resort, non-cryptographic fallback (used only if no crypto APIs are available).
+  const array = new Uint8Array(byteLength)
+  for (let i = 0; i < byteLength; i++) {
+    array[i] = (Math.random() * 256) | 0
+  }
+  return array
+}
 
 export function uid(length = 11) {
-  if (length <= 0) return ''
-
-  // Each byte yields two hex characters.
-  const byteLength = Math.ceil(length / 2)
-  let bytes: Uint8Array
-
-  if (typeof globalThis !== 'undefined' && globalThis.crypto && 'getRandomValues' in globalThis.crypto) {
-    bytes = globalThis.crypto.getRandomValues(new Uint8Array(byteLength))
-  } else {
-    // Fallback for Node.js environments without Web Crypto.
-    bytes = randomBytes(byteLength)
+  if (!buffer || index + length > size * 2) {
+    buffer = ''
+    index = 0
+    const randomBytes = getRandomBytes(size)
+    for (let i = 0; i < size; i++) {
+      const byte = randomBytes[i]
+      buffer += byte.toString(16).padStart(2, '0')
+    }
   }
-
-  let hex = ''
-  for (let i = 0; i < bytes.length; i++) {
-    const byteHex = bytes[i].toString(16).padStart(2, '0')
-    hex += byteHex
-  }
-
-  return hex.substring(0, length)
+  return buffer.substring(index, index++ + length)
 }
