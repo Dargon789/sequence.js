@@ -1,5 +1,29 @@
 # @0xsequence/wallet-wdk
 
+## 3.0.0-beta.12
+
+### Patch Changes
+
+- Beta release with dapp connector fixes
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.12
+  - @0xsequence/identity-instrument@3.0.0-beta.12
+  - @0xsequence/relayer@3.0.0-beta.12
+  - @0xsequence/wallet-core@3.0.0-beta.12
+  - @0xsequence/wallet-primitives@3.0.0-beta.12
+
+## 3.0.0-beta.11
+
+### Patch Changes
+
+- 3.0.0 beta
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.11
+  - @0xsequence/identity-instrument@3.0.0-beta.11
+  - @0xsequence/relayer@3.0.0-beta.11
+  - @0xsequence/wallet-core@3.0.0-beta.11
+  - @0xsequence/wallet-primitives@3.0.0-beta.11
+
 ## 3.0.0-beta.10
 
 ### Patch Changes
