@@ -12,28 +12,6 @@ import {
   WalletSize,
 } from './types/index.js'
 
-const isBrowserEnvironment = typeof window !== 'undefined' && typeof document !== 'undefined'
-
-const base64Encode = (value: string) => {
-  if (typeof btoa !== 'undefined') {
-    return btoa(value)
-  }
-  if (typeof Buffer !== 'undefined') {
-    return Buffer.from(value, 'utf-8').toString('base64')
-  }
-  throw new Error('Base64 encoding is not supported in this environment.')
-}
-
-const base64Decode = (value: string) => {
-  if (typeof atob !== 'undefined') {
-    return atob(value)
-  }
-  if (typeof Buffer !== 'undefined') {
-    return Buffer.from(value, 'base64').toString('utf-8')
-  }
-  throw new Error('Base64 decoding is not supported in this environment.')
-}
-
 enum ConnectionState {
   DISCONNECTED = 'DISCONNECTED',
   CONNECTING = 'CONNECTING',
@@ -58,7 +36,6 @@ export class DappTransport {
   private readonly handshakeTimeoutMs: number
   private readonly sequenceSessionStorage: SequenceSessionStorage
   private readonly redirectActionHandler?: (url: string) => void
-  private readonly isBrowser: boolean
 
   public readonly walletOrigin: string
 
@@ -69,7 +46,6 @@ export class DappTransport {
     sequenceSessionStorage?: SequenceSessionStorage,
     redirectActionHandler?: (url: string) => void,
   ) {
-    this.isBrowser = isBrowserEnvironment
     try {
       this.walletOrigin = new URL(walletUrl).origin
     } catch (e) {
@@ -81,26 +57,18 @@ export class DappTransport {
       throw new Error('Invalid wallet origin derived from walletUrl.')
     }
 
-    this.sequenceSessionStorage =
-      sequenceSessionStorage ||
-      ({
-        getItem: (key: string) => (this.isBrowser && window.sessionStorage ? window.sessionStorage.getItem(key) : null),
-        setItem: (key: string, value: string) => {
-          if (this.isBrowser && window.sessionStorage) {
-            window.sessionStorage.setItem(key, value)
-          }
-        },
-        removeItem: (key: string) => {
-          if (this.isBrowser && window.sessionStorage) {
-            window.sessionStorage.removeItem(key)
-          }
-        },
-      } satisfies SequenceSessionStorage)
+    if (sequenceSessionStorage) {
+      this.sequenceSessionStorage = sequenceSessionStorage
+    } else if (typeof window !== 'undefined' && window.sessionStorage) {
+      this.sequenceSessionStorage = window.sessionStorage
+    } else {
+      throw new Error('A storage implementation must be provided for non-browser environments.')
+    }
 
     this.requestTimeoutMs = popupModeOptions.requestTimeoutMs ?? 300000
     this.handshakeTimeoutMs = popupModeOptions.handshakeTimeoutMs ?? 15000
 
-    if (this.mode === TransportMode.POPUP && this.isBrowser) {
+    if (this.mode === TransportMode.POPUP) {
       window.addEventListener('message', this.handleMessage)
     }
 
@@ -123,23 +91,13 @@ export class DappTransport {
     payload?: TRequest,
     options: SendRequestOptions = {},
   ): Promise<TResponse> {
-    if (!this.isBrowser && this.mode === TransportMode.POPUP) {
-      throw new Error(
-        'Popup transport requires a browser environment. Use redirect mode or provide a redirect handler.',
-      )
-    }
-
     if (this.mode === TransportMode.REDIRECT) {
       const url = await this.getRequestRedirectUrl(action, payload, redirectUrl, options.path)
       if (this.redirectActionHandler) {
         this.redirectActionHandler(url)
-      } else if (this.isBrowser) {
+      } else {
         console.info('[DappTransport] No redirectActionHandler provided. Using window.location.href to navigate.')
         window.location.href = url
-      } else {
-        throw new Error(
-          'Redirect navigation is not possible outside the browser without a redirectActionHandler. Provide a handler to perform navigation.',
-        )
       }
       return new Promise<TResponse>(() => {})
     }
@@ -190,7 +148,7 @@ export class DappTransport {
       throw new Error('Could not save redirect state to storage. Redirect flow is unavailable.')
     }
 
-    const serializedPayload = base64Encode(JSON.stringify(payload || {}, jsonReplacers))
+    const serializedPayload = btoa(JSON.stringify(payload || {}, jsonReplacers))
     const fullWalletUrl = path ? `${this.walletUrl}${path}` : this.walletUrl
     const url = new URL(fullWalletUrl)
     url.searchParams.set('action', action)
@@ -206,12 +164,7 @@ export class DappTransport {
     cleanState: boolean = true,
     url?: string,
   ): Promise<{ payload: TResponse; action: string } | { error: any; action: string } | null> {
-    if (!url && !this.isBrowser) {
-      throw new Error('A URL must be provided when handling redirect responses outside of a browser environment.')
-    }
-
-    const search = url ? new URL(url).search : this.isBrowser ? window.location.search : ''
-    const params = new URLSearchParams(search)
+    const params = new URLSearchParams(url ? new URL(url).search : window.location.search)
     const responseId = params.get('id')
     if (!responseId) return null
 
@@ -238,9 +191,11 @@ export class DappTransport {
     const responsePayloadB64 = params.get('payload')
     const responseErrorB64 = params.get('error')
 
+    const isBrowser = typeof window !== 'undefined' && window.history
+
     if (cleanState) {
       await this.sequenceSessionStorage.removeItem(REDIRECT_REQUEST_KEY)
-      if (this.isBrowser && !url && window.history) {
+      if (isBrowser && !url) {
         const cleanUrl = new URL(window.location.href)
         ;['id', 'payload', 'error', 'mode'].forEach((p) => cleanUrl.searchParams.delete(p))
         history.replaceState({}, document.title, cleanUrl.toString())
@@ -250,7 +205,7 @@ export class DappTransport {
     if (responseErrorB64) {
       try {
         return {
-          error: JSON.parse(base64Decode(responseErrorB64), jsonRevivers),
+          error: JSON.parse(atob(responseErrorB64), jsonRevivers),
           action: originalRequest.action,
         }
       } catch (e) {
@@ -264,7 +219,7 @@ export class DappTransport {
     if (responsePayloadB64) {
       try {
         return {
-          payload: JSON.parse(base64Decode(responsePayloadB64), jsonRevivers),
+          payload: JSON.parse(atob(responsePayloadB64), jsonRevivers),
           action: originalRequest.action,
         }
       } catch (e) {
@@ -284,9 +239,6 @@ export class DappTransport {
   public openWallet(path?: string): Promise<void> {
     if (this.mode === TransportMode.REDIRECT) {
       throw new Error("`openWallet` is not available in 'redirect' mode.")
-    }
-    if (!this.isBrowser) {
-      throw new Error('Popup transport requires a browser environment.')
     }
     if (this.connectionState !== ConnectionState.DISCONNECTED) {
       if (this.isWalletOpen) this.walletWindow?.focus()
@@ -362,13 +314,11 @@ export class DappTransport {
   }
 
   destroy(): void {
-    if (this.mode === TransportMode.POPUP && this.isBrowser) {
+    if (this.mode === TransportMode.POPUP) {
       window.removeEventListener('message', this.handleMessage)
       if (this.isWalletOpen) {
         this.walletWindow?.close()
       }
-      this._resetConnection(new Error('Transport destroyed.'), 'Destroying transport...')
-    } else {
       this._resetConnection(new Error('Transport destroyed.'), 'Destroying transport...')
     }
   }
@@ -541,7 +491,7 @@ export class DappTransport {
       const requestsToClear = new Map(this.pendingRequests)
       this.pendingRequests.clear()
       requestsToClear.forEach((pending) => {
-        clearTimeout(pending.timer)
+        window.clearTimeout(pending.timer)
         const errorToSend = reason instanceof Error ? reason : new Error(`Operation failed: ${reason}`)
         pending.reject(errorToSend)
       })
@@ -550,20 +500,25 @@ export class DappTransport {
 
   private clearTimeouts(): void {
     if (this.handshakeTimeoutId !== undefined) {
-      clearTimeout(this.handshakeTimeoutId)
+      window.clearTimeout(this.handshakeTimeoutId)
       this.handshakeTimeoutId = undefined
     }
     if (this.closeCheckIntervalId !== undefined) {
-      clearInterval(this.closeCheckIntervalId)
+      window.clearInterval(this.closeCheckIntervalId)
       this.closeCheckIntervalId = undefined
     }
   }
 
   private generateId(): string {
-    // Use crypto.getRandomValues for cryptographically secure randomness
-    const array = new Uint32Array(2);
-    window.crypto.getRandomValues(array);
-    const randStr = (array[0].toString(36) + array[1].toString(36)).slice(0, 9);
-    return `${Date.now().toString(36)}-${randStr}`;
+    // Use cryptographically secure randomness instead of Math.random
+    const bytes = new Uint8Array(8)
+    window.crypto.getRandomValues(bytes)
+    let randomPart = ''
+    for (let i = 0; i < bytes.length; i++) {
+      // Convert each byte to base36 (0-9a-z), pad to at least 2 chars, and append
+      randomPart += bytes[i].toString(36).padStart(2, '0')
+    }
+    // Keep overall format stable: "<timestampBase36>-<randomString>"
+    return `${Date.now().toString(36)}-${randomPart.substring(0, 7)}`
   }
 }
