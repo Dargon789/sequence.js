@@ -112,7 +112,7 @@ export class UniversalDeployer {
     if (universalDeployerCode === '0x') {
       await this.deployUniversalDeployer(txParams)
     } else {
-      ;('ALREADY DEPLOYED')
+      prompt.warn('ALREADY DEPLOYED: Universal Deployer 1');
     }
 
     // NOTE: in case the getCode below fails, double check the UNIVERSAL_DEPLOYER_2_ADDRESS address
