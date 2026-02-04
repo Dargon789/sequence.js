@@ -79,10 +79,7 @@ const defaultChainId = getDefaultChainId() || ChainId.MAINNET
 const urlParams = new URLSearchParams(window.location.search)
 
 const env = urlParams.get('env') ?? 'production'
-const envConfig = environments.find(x => x.name === env) ?? environments.find(x => x.name === 'production')
-if (!envConfig) {
-  throw new Error('Invalid environment configuration.')
-}
+const envConfig = environments.find(x => x.name === env)
 const walletAppURL = urlParams.get('walletAppURL') ?? envConfig.walletUrl
 const projectAccessKey = urlParams.get('projectAccessKey') ?? envConfig.projectAccessKey
 const showProhibitedActions = urlParams.has('showProhibitedActions')
@@ -112,15 +109,11 @@ const App = () => {
   const [isOpen, toggleModal] = useState(false)
   const [warning, setWarning] = useState(false)
 
-  useEffect(() => {
-    const handleChainChanged = (chainId: string) => {
+  useMemo(() => {
+    wallet.on('chainChanged', (chainId: string) => {
       setShowChainId(Number(BigInt(chainId)))
-    }
-    wallet.on('chainChanged', handleChainChanged)
-    return () => {
-      wallet.off('chainChanged', handleChainChanged)
-    }
-  }, [wallet])
+    })
+  }, [])
 
   useEffect(() => {
     setIsWalletConnected(wallet.isConnected())
@@ -133,20 +126,13 @@ const App = () => {
 
   useEffect(() => {
     // Wallet events
-    const onOpen = () => {
+    wallet.client.onOpen(() => {
       console.log('wallet window opened')
-    }
-    wallet.client.on('open', onOpen)
+    })
 
-    const onClose = () => {
+    wallet.client.onClose(() => {
       console.log('wallet window closed')
-    }
-    wallet.client.on('close', onClose)
-
-    return () => {
-      wallet.client.off('open', onOpen)
-      wallet.client.off('close', onClose)
-    }
+    })
   }, [wallet])
 
   const defaultConnectOptions: ConnectOptions = {
@@ -181,7 +167,7 @@ const App = () => {
       const connectDetails = await wallet.connect(connectOptions)
 
       // Example of how to verify using ETHAuth via Sequence API
-      if (connectOptions.authorize && connectDetails.connected && connectDetails.proof) {
+      if (connectOptions.authorize && connectDetails.connected) {
         let apiUrl = urlParams.get('apiUrl')
 
         if (!apiUrl || apiUrl.length === 0) {
@@ -195,7 +181,7 @@ const App = () => {
         const { isValid } = await api.isValidETHAuthProof({
           chainId: connectDetails.chainId,
           walletAddress: connectDetails.session.accountAddress,
-          ethAuthProofString: connectDetails.proof.proofString
+          ethAuthProofString: connectDetails.proof!.proofString
         })
 
         appendConsoleLine(`isValid (API)?: ${isValid}`)
