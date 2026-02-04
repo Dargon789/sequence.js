@@ -71,7 +71,7 @@
     "rimraf": "^3.0.2",
     "scrypt": "github:barrysteyn/node-scrypt#fb60a8d3c158fe115a624b5ffa7480f3a24b03fb",
     "solhint": "^3.6.2",
-    "solidity-coverage": "^0.7.22",
+    "solidity-coverage": "^0.8.17",
     "threads": "^1.7.0",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",
