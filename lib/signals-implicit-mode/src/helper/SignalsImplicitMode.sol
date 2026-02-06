@@ -19,7 +19,10 @@ abstract contract SignalsImplicitMode is ISignalsImplicitMode, ERC165 {
   /// @notice Initialize implicit mode validation
   /// @param validator The IImplicitProjectValidation address
   /// @param projectId The project id
-  function _initializeSignalsImplicitMode(address validator, bytes32 projectId) internal {
+  function _initializeSignalsImplicitMode(
+    address validator,
+    bytes32 projectId
+  ) internal {
     _validator = IImplicitProjectValidation(validator);
     _projectId = projectId;
   }

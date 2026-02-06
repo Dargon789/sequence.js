@@ -9,7 +9,10 @@ contract TestHelper {
     return keccak256(abi.encodePacked(url));
   }
 
-  function _projectId(bytes12 projectIdUpper, address owner) internal pure returns (bytes32 projectId) {
+  function _projectId(
+    bytes12 projectIdUpper,
+    address owner
+  ) internal pure returns (bytes32 projectId) {
     projectId = bytes32(abi.encodePacked(projectIdUpper, owner));
   }
 

@@ -1,3 +1,51 @@
-[submodule "lib/signals-implicit-mode"]
-	path = lib/signals-implicit-mode
+[submodule "lib/solady"]
+	path = lib/solady
+	url = https://github.com/vectorized/solady
+[submodule "counter/lib/forge-std"]
+	path = counter/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "Counter/lib/forge-std"]
+	path = Counter/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "dependencies/v4-core"]
+	path = dependencies/v4-core
+	url = https://github.com/uniswap/v4-core
+[submodule "dependencies/v4-periphery"]
+	path = dependencies/v4-periphery
+	url = https://github.com/Uniswap/v4-periphery
+[submodule "dependencies/permit2"]
+	path = dependencies/permit2
+	url = https://github.com/uniswap/permit2
+[submodule "dependencies/universal-router"]
+	path = dependencies/universal-router
+	url = https://github.com/uniswap/universal-router
+[submodule "dependencies/v3-core"]
+	path = dependencies/v3-core
+	url = https://github.com/uniswap/v3-core
+[submodule "dependencies/v2-core"]
+	path = dependencies/v2-core
+	url = https://github.com/uniswap/v2-core
+[submodule "dependencies/openzeppelin-contracts"]
+	path = dependencies/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "dependencies/signals-implicit-mode"]
+	path = dependencies/signals-implicit-mode
+	url = https://github.com/0xsequence/signals-implicit-mode
+[submodule "dependencies/solady"]
+	path = dependencies/solady
+	url = https://github.com/vectorized/solady
+[submodule "dependencies/forge-std"]
+	path = dependencies/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "dependencies/contracts-library"]
+	path = dependencies/contracts-library
+	url = https://github.com/Dargon789/contracts-library
+[submodule "lib/forge-std"]
+	path = lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "dependencies/ds-test"]
+	path = dependencies/ds-test
+	url = https://github.com/dapphub/ds-test
+[submodule "lib/signals-implicit-mode/lib/signals-implicit-mode"]
+	path = lib/signals-implicit-mode/lib/signals-implicit-mode
 	url = https://github.com/0xsequence/signals-implicit-mode
