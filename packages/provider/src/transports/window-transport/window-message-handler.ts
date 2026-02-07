@@ -139,8 +139,13 @@ export class WindowMessageHandler extends BaseWalletTransport {
     }
 
     if (init) {
-      // init message transmission to global target -- for 'init' payloads only
-      this.parentWindow.postMessage(message, '*')
+      // init message transmission. If we already know the app origin, restrict to it;
+      // otherwise, fall back to global target for the very first handshake.
+      if (this.appOrigin && this.appOrigin.length > 4) {
+        this.parentWindow.postMessage(message, this.appOrigin)
+      } else {
+        this.parentWindow.postMessage(message, '*')
+      }
     } else {
       // open message transmission
       if (this.appOrigin && this.appOrigin.length > 4) {
