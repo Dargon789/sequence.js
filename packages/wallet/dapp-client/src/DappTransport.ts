@@ -516,7 +516,7 @@ export class DappTransport {
     // Use crypto.getRandomValues for cryptographically secure randomness
     const array = new Uint32Array(1);
     window.crypto.getRandomValues(array);
-    const randStr = array[0].toString(36);
+    const randStr = array[0].toString(36).padStart(7, '0');
     return `${Date.now().toString(36)}-${randStr}`;
   }
 }
