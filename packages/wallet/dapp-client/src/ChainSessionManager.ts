@@ -84,6 +84,11 @@ export class ChainSessionManager {
   public loginMethod: LoginMethod | null = null
   public userEmail: string | null = null
   private guard?: GuardConfig
+  private lastSignedCallCache?: {
+    fingerprint: string
+    signedCall: { to: Address.Address; data: Hex.Hex }
+    createdAtMs: number
+  }
 
   /**
    * @param chainId The ID of the chain this manager is responsible for.
@@ -811,19 +816,6 @@ export class ChainSessionManager {
       await this.sessionManager.findSignersForCalls(this.wallet.address, this.chainId, calls)
       return true
     } catch (error) {
-      if (error instanceof Error && error.message.includes('Signer supporting call is expired')) {
-        // Extract the expired signer address from the message with address regex
-        const expiredSignerAddress = error.message.match(/(0x[0-9a-fA-F]{40})/)?.[1]
-        if (expiredSignerAddress) {
-          // Refresh the session
-          await this._refreshExplicitSession(Address.from(expiredSignerAddress))
-          // Retry the permission check
-          return this.hasPermission(transactions)
-        } else {
-          // Could not parse error message. Rethrow as this shouldn't happen.
-          throw error
-        }
-      }
       // An error from findSignersForCalls indicates a permission failure.
       console.warn(
         `Permission check failed for chain ${this.chainId}:`,
@@ -851,6 +843,14 @@ export class ChainSessionManager {
     }))
     try {
       const signedCall = await this._buildAndSignCalls(callsToSend)
+      const fingerprint = this._fingerprintCalls(callsToSend)
+      if (fingerprint) {
+        this.lastSignedCallCache = {
+          fingerprint,
+          signedCall,
+          createdAtMs: Date.now(),
+        }
+      }
       const feeOptions = await this.relayer.feeOptions(signedCall.to, this.chainId, callsToSend)
       return feeOptions.options
     } catch (err) {
@@ -907,7 +907,7 @@ export class ChainSessionManager {
           callsToSend.unshift(transferCall)
         }
       }
-      const signedCalls = await this._buildAndSignCalls(callsToSend)
+      const signedCalls = this._getCachedSignedCall(callsToSend) ?? (await this._buildAndSignCalls(callsToSend))
       const hash = await this.relayer.relay(signedCalls.to, signedCalls.data, this.chainId)
       const status = await this._waitForTransactionReceipt(hash.opHash, this.chainId)
       if (status.status === 'confirmed') {
@@ -1100,5 +1100,43 @@ export class ChainSessionManager {
     await this.sequenceStorage.clearImplicitSession()
     await this.sequenceStorage.clearExplicitSessions()
     await this.sequenceStorage.clearSessionlessConnection()
+  }
+
+  private _getCachedSignedCall(calls: Payload.Call[]): { to: Address.Address; data: Hex.Hex } | null {
+    if (!this.lastSignedCallCache) {
+      return null
+    }
+    const ttlMs = 30_000
+    if (Date.now() - this.lastSignedCallCache.createdAtMs > ttlMs) {
+      this.lastSignedCallCache = undefined
+      return null
+    }
+    const fingerprint = this._fingerprintCalls(calls)
+    if (!fingerprint) {
+      return null
+    }
+    if (fingerprint !== this.lastSignedCallCache.fingerprint) {
+      return null
+    }
+    return this.lastSignedCallCache.signedCall
+  }
+
+  private _fingerprintCalls(calls: Payload.Call[]): string | null {
+    try {
+      return JSON.stringify(
+        calls.map((call) => ({
+          to: call.to,
+          value: call.value?.toString() ?? '0',
+          data: call.data ?? '0x',
+          gasLimit: call.gasLimit?.toString() ?? '0',
+          delegateCall: call.delegateCall ?? false,
+          onlyFallback: call.onlyFallback ?? false,
+          behaviorOnError: call.behaviorOnError ?? 'revert',
+        })),
+      )
+    } catch (error) {
+      console.warn('ChainSessionManager._fingerprintCalls failed:', error)
+      return null
+    }
   }
 }
