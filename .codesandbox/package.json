@@ -13,7 +13,7 @@
     "dist": "pnpm build",
     "link-sequence": "pnpm run clear:vite:cache && ../sequence.js/scripts/pnpm-link.sh link",
     "unlink-sequence": "pnpm run clear:vite:cache && ../sequence.js/scripts/pnpm-link.sh unlink",
-    "clear:vite:cache": "rm -rf node_modules/.vite/"
+    "clear:vite:cache": "rimraf node_modules/.vite/"
   },
   "dependencies": {
     "0xsequence": "2.2.3",
