@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/identity-instrument",
-  "version": "3.0.0-beta.12",
+  "version": "0.0.0",
   "license": "Apache-2.0",
   "type": "module",
   "publishConfig": {
@@ -20,13 +20,13 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
-    "@types/node": "^25.0.2",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.1"
   },
   "dependencies": {
     "json-canonicalize": "^2.0.0",
     "jwt-decode": "^4.0.0",
-    "ox": "^0.9.17"
+    "ox": "^0.7.2"
   }
 }
