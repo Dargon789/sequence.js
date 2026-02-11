@@ -1,5 +1,5 @@
-[submodule "lib/solady"]
-	path = lib/solady
+[submodule "lib/solar"]
+	path = lib/solar
 	url = https://github.com/vectorized/solady
 [submodule "counter/lib/forge-std"]
 	path = counter/lib/forge-std
