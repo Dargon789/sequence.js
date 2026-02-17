@@ -12,9 +12,10 @@ import { Kinds, SignerWithKind, WitnessExtraSignerKind } from './types/signer.js
 import { Wallet, WalletSelectionUiHandler } from './types/wallet.js'
 import { PasskeysHandler } from './handlers/passkeys.js'
 import { GuardRole } from './guards.js'
+import type { PasskeySigner } from './passkeys-provider.js'
 
 export type StartSignUpWithRedirectArgs = {
-  kind: 'google-pkce' | 'apple'
+  kind: 'google-pkce' | 'apple' | `custom-${string}`
   target: string
   metadata: { [key: string]: string }
 }
@@ -55,7 +56,7 @@ export type CompleteRedirectArgs = CommonSignupArgs & {
 }
 
 export type AuthCodeSignupArgs = CommonSignupArgs & {
-  kind: 'google-pkce' | 'apple'
+  kind: 'google-pkce' | 'apple' | `custom-${string}`
   commitment: AuthCommitment
   code: string
   target: string
@@ -434,7 +435,7 @@ function toConfig(
   loginTopology: Config.Topology,
   devicesTopology: Config.Topology,
   modules: Module[],
-  guardTopology?: Config.NestedLeaf,
+  guardTopology?: Config.Topology,
 ): Config.Config {
   if (!guardTopology) {
     return {
@@ -467,7 +468,7 @@ function toModulesTopology(modules: Module[]): Config.Topology {
       return {
         type: 'nested',
         weight: module.weight,
-        threshold: module.sapientLeaf.weight + module.guardLeaf.weight,
+        threshold: module.sapientLeaf.weight + Config.getWeight(module.guardLeaf, () => true).maxWeight,
         tree: [module.sapientLeaf, module.guardLeaf],
       } as Config.NestedLeaf
     } else {
@@ -491,8 +492,7 @@ function fromModulesTopology(topology: Config.Topology): Module[] {
   } else if (
     Config.isNestedLeaf(topology) &&
     Config.isNode(topology.tree) &&
-    Config.isSapientSignerLeaf(topology.tree[0]) &&
-    Config.isNestedLeaf(topology.tree[1])
+    Config.isSapientSignerLeaf(topology.tree[0])
   ) {
     modules.push({
       sapientLeaf: topology.tree[0],
@@ -513,7 +513,7 @@ function fromConfig(config: Config.Config): {
   loginTopology: Config.Topology
   devicesTopology: Config.Topology
   modules: Module[]
-  guardTopology?: Config.NestedLeaf
+  guardTopology?: Config.Topology
 } {
   if (config.threshold === 1n) {
     if (Config.isNode(config.topology) && Config.isNode(config.topology[0])) {
@@ -530,7 +530,7 @@ function fromConfig(config: Config.Config): {
       Config.isNode(config.topology) &&
       Config.isNode(config.topology[0]) &&
       Config.isNode(config.topology[0][0]) &&
-      Config.isNestedLeaf(config.topology[0][1])
+      Config.isTopology(config.topology[0][1])
     ) {
       return {
         loginTopology: config.topology[0][0][0],
@@ -627,7 +627,7 @@ export class Wallets implements WalletsInterface {
   }> {
     switch (args.kind) {
       case 'passkey':
-        const passkeySigner = await Signers.Passkey.Passkey.create(this.shared.sequence.extensions, {
+        const passkeySigner = await this.shared.passkeyProvider.create(this.shared.sequence.extensions, {
           stateProvider: this.shared.sequence.stateProvider,
           credentialName: args.name,
         })
@@ -693,10 +693,30 @@ export class Wallets implements WalletsInterface {
         }
       }
     }
+
+    if (args.kind.startsWith('custom-')) {
+      // TODO: support other custom auth methods (e.g. id-token)
+      const handler = this.shared.handlers.get(args.kind) as AuthCodeHandler
+      if (!handler) {
+        throw new Error('handler-not-registered')
+      }
+
+      const [signer, metadata] = await handler.completeAuth(args.commitment, args.code)
+      return {
+        signer,
+        extra: {
+          signerKind: args.kind,
+        },
+        loginEmail: metadata.email,
+      }
+    }
+
+    throw new Error('invalid-signup-kind')
   }
 
   async startSignUpWithRedirect(args: StartSignUpWithRedirectArgs) {
-    const handler = this.shared.handlers.get('login-' + args.kind) as AuthCodeHandler
+    const kind = args.kind.startsWith('custom-') ? args.kind : 'login-' + args.kind
+    const handler = this.shared.handlers.get(kind) as AuthCodeHandler
     if (!handler) {
       throw new Error('handler-not-registered')
     }
@@ -721,7 +741,8 @@ export class Wallets implements WalletsInterface {
         use4337: args.use4337,
       })
     } else {
-      const handler = this.shared.handlers.get('login-' + commitment.kind) as AuthCodeHandler
+      const kind = commitment.kind.startsWith('custom-') ? commitment.kind : 'login-' + commitment.kind
+      const handler = this.shared.handlers.get(kind) as AuthCodeHandler
       if (!handler) {
         throw new Error('handler-not-registered')
       }
@@ -817,30 +838,12 @@ export class Wallets implements WalletsInterface {
     let modules: Module[] = []
 
     if (!args.noSessionManager) {
-      //  Calculate image hash with the identity signer
-      const sessionsTopology = SessionConfig.emptySessionsTopology(loginSignerAddress)
-      // Store this tree in the state provider
-      const sessionsConfigTree = SessionConfig.sessionsTopologyToConfigurationTree(sessionsTopology)
-      this.shared.sequence.stateProvider.saveTree(sessionsConfigTree)
-      // Prepare the configuration leaf
-      const sessionsImageHash = GenericTree.hash(sessionsConfigTree)
-      const signer = {
-        ...ManagerOptionsDefaults.defaultSessionsTopology,
-        address: this.shared.sequence.extensions.sessions,
-        imageHash: sessionsImageHash,
+      const identitySigners = [device.address]
+      if (!Signers.isSapientSigner(loginSigner.signer)) {
+        // Add non sapient login signer to the identity signers
+        identitySigners.unshift(loginSignerAddress)
       }
-      if (sessionsGuardTopology) {
-        modules.push({
-          sapientLeaf: signer,
-          weight: 255n,
-          guardLeaf: sessionsGuardTopology,
-        })
-      } else {
-        modules.push({
-          sapientLeaf: signer,
-          weight: 255n,
-        })
-      }
+      await this.shared.modules.sessions.initSessionModule(modules, identitySigners, sessionsGuardTopology)
     }
 
     if (!args.noRecovery) {
@@ -889,7 +892,7 @@ export class Wallets implements WalletsInterface {
     }
 
     // Store passkey credential ID mapping if this is a passkey signup
-    if (args.kind === 'passkey' && loginSigner.signer instanceof Signers.Passkey.Passkey) {
+    if (args.kind === 'passkey' && this.isPasskeySigner(loginSigner.signer)) {
       try {
         await this.shared.databases.passkeyCredentials.saveCredential(
           loginSigner.signer.credentialId,
@@ -1008,6 +1011,10 @@ export class Wallets implements WalletsInterface {
           await this.shared.modules.recovery.addRecoverySignerToModules(modules, device.address)
         }
 
+        if (this.shared.modules.sessions.hasSessionModule(modules)) {
+          await this.shared.modules.sessions.addIdentitySignerToModules(modules, device.address)
+        }
+
         const walletEntryToUpdate: Wallet = {
           ...(existingWallet as Wallet),
           address: args.wallet,
@@ -1069,7 +1076,7 @@ export class Wallets implements WalletsInterface {
     }
 
     if (isLoginToPasskeyArgs(args)) {
-      let passkeySigner: Signers.Passkey.Passkey
+      let passkeySigner: PasskeySigner
 
       if (args.credentialId) {
         // Application-controlled login: use the provided credentialId
@@ -1081,7 +1088,7 @@ export class Wallets implements WalletsInterface {
         }
 
         // Create passkey signer from stored credential
-        passkeySigner = new Signers.Passkey.Passkey({
+        passkeySigner = this.shared.passkeyProvider.fromCredential({
           credentialId: credential.credentialId,
           publicKey: credential.publicKey,
           extensions: this.shared.sequence.extensions,
@@ -1092,7 +1099,7 @@ export class Wallets implements WalletsInterface {
         // Default discovery behavior: use WebAuthn discovery
         this.shared.modules.logger.log('No credentialId provided, using discovery method')
 
-        const foundPasskeySigner = await Signers.Passkey.Passkey.find(
+        const foundPasskeySigner = await this.shared.passkeyProvider.find(
           this.shared.sequence.stateProvider,
           this.shared.sequence.extensions,
         )
@@ -1147,6 +1154,20 @@ export class Wallets implements WalletsInterface {
     throw new Error('invalid-login-args')
   }
 
+  private isPasskeySigner(signer: unknown): signer is PasskeySigner {
+    const guard = this.shared.passkeyProvider.isSigner
+    if (guard) {
+      return guard(signer)
+    }
+    return (
+      typeof signer === 'object' &&
+      signer !== null &&
+      'credentialId' in signer &&
+      'publicKey' in signer &&
+      'imageHash' in signer
+    )
+  }
+
   async completeLogin(requestId: string) {
     const request = await this.shared.modules.signatures.get(requestId)
 
@@ -1173,18 +1194,18 @@ export class Wallets implements WalletsInterface {
       throw new Error('wallet-not-found')
     }
 
-    // Prevent starting logout if already logging out or not ready
-    if (walletEntry.status !== 'ready') {
-      console.warn(`Logout called on wallet ${wallet} with status ${walletEntry.status}. Aborting.`)
-      throw new Error(`Wallet is not in 'ready' state for logout (current: ${walletEntry.status})`)
-    }
-
     if (options?.skipRemoveDevice) {
       await Promise.all([
         this.shared.databases.manager.del(wallet),
         this.shared.modules.devices.remove(walletEntry.device),
       ])
       return undefined as any
+    }
+
+    // Prevent starting logout if already logging out or not ready
+    if (walletEntry.status !== 'ready') {
+      console.warn(`Logout called on wallet ${wallet} with status ${walletEntry.status}. Aborting.`)
+      throw new Error(`Wallet is not in 'ready' state for logout (current: ${walletEntry.status})`)
     }
 
     const device = await this.shared.modules.devices.get(walletEntry.device)
@@ -1374,6 +1395,11 @@ export class Wallets implements WalletsInterface {
     // Remove the device from the recovery module's topology as well.
     if (this.shared.modules.recovery.hasRecoveryModule(modules)) {
       await this.shared.modules.recovery.removeRecoverySignerFromModules(modules, deviceToRemove)
+    }
+
+    // Remove the device from the session module's topology as well.
+    if (this.shared.modules.sessions.hasSessionModule(modules)) {
+      await this.shared.modules.sessions.removeIdentitySignerFromModules(modules, deviceToRemove)
     }
 
     // Request the configuration update.

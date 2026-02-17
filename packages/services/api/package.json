@@ -1,9 +1,9 @@
 {
   "name": "@0xsequence/api",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.17",
   "description": "api sub-package for Sequence",
-  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/api",
-  "author": "Sequence Platforms Inc.",
+  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/services/api",
+  "author": "Sequence Platforms ULC",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
@@ -16,13 +16,13 @@
   },
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",
-    "@types/node": "^22.15.29",
-    "typescript": "^5.8.3"
+    "@types/node": "^25.0.2",
+    "typescript": "^5.9.3"
   }
 }
