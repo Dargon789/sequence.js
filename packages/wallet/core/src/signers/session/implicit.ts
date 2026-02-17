@@ -8,11 +8,11 @@ import {
 } from '@0xsequence/wallet-primitives'
 import { AbiFunction, Address, Bytes, Hex, Provider, Secp256k1, Signature } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
-import { ImplicitSessionSigner, SessionSignerValidity } from './session.js'
+import { SessionSigner, SessionSignerValidity } from './session.js'
 
 export type AttestationParams = Omit<Attestation.Attestation, 'approvedSigner'>
 
-export class Implicit implements ImplicitSessionSigner {
+export class Implicit implements SessionSigner {
   private readonly _privateKey: PkStore
   private readonly _identitySignature: SequenceSignature.RSY
   public readonly address: Address.Address
@@ -43,10 +43,12 @@ export class Implicit implements ImplicitSessionSigner {
   }
 
   isValid(sessionTopology: SessionConfig.SessionsTopology, _chainId: number): SessionSignerValidity {
-    const implicitSigners = SessionConfig.getIdentitySigners(sessionTopology)
-    const thisIdentitySigner = this.identitySigner
-    if (!implicitSigners.some((s) => Address.isEqual(s, thisIdentitySigner))) {
+    const implicitSigner = SessionConfig.getIdentitySigner(sessionTopology)
+    if (!implicitSigner) {
       return { isValid: false, invalidReason: 'Identity signer not found' }
+    }
+    if (!Address.isEqual(implicitSigner, this.identitySigner)) {
+      return { isValid: false, invalidReason: 'Identity signer mismatch' }
     }
     const blacklist = SessionConfig.getImplicitBlacklist(sessionTopology)
     if (blacklist?.some((b) => Address.isEqual(b, this.address))) {
@@ -115,7 +117,10 @@ export class Implicit implements ImplicitSessionSigner {
     if (!isSupported) {
       throw new Error('Unsupported call')
     }
-    const callHash = SessionSignature.hashPayloadWithCallIdx(wallet, payload, callIdx, chainId, sessionManagerAddress)
+    const useDeprecatedHash =
+      Address.isEqual(sessionManagerAddress, Extensions.Dev1.sessions) ||
+      Address.isEqual(sessionManagerAddress, Extensions.Dev2.sessions)
+    const callHash = SessionSignature.hashCallWithReplayProtection(payload, callIdx, chainId, useDeprecatedHash)
     const sessionSignature = await this._privateKey.signDigest(Bytes.fromHex(callHash))
     return {
       attestation: this._attestation,
