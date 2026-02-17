@@ -9,13 +9,17 @@ import {
   TransactionRequest,
 } from 'ox'
 import { normalizeAddressKeys, Provider as ProviderInterface } from '../index.js'
-import { Sessions, SignatureType } from './sessions.gen.js'
+import { Sessions, SignatureType, type Fetch } from './sessions.gen.js'
 
 export class Provider implements ProviderInterface {
   private readonly service: Sessions
 
-  constructor(host = 'https://v3-keymachine.sequence-dev.app') {
-    this.service = new Sessions(host, fetch)
+  constructor(host = 'https://keymachine.sequence.app', fetcher?: Fetch) {
+    const resolvedFetch = fetcher ?? (globalThis as any).fetch
+    if (!resolvedFetch) {
+      throw new Error('fetch is not available')
+    }
+    this.service = new Sessions(host, resolvedFetch)
   }
 
   async getConfiguration(imageHash: Hex.Hex): Promise<Config.Config | undefined> {
@@ -364,9 +368,13 @@ export class Provider implements ProviderInterface {
   }
 }
 
-const passkeySigners = [Extensions.Dev1.passkeys, Extensions.Dev2.passkeys, Extensions.Rc3.passkeys].map(
-  Address.checksum,
-)
+const passkeySigners = [
+  Extensions.Dev1.passkeys,
+  Extensions.Dev2.passkeys,
+  Extensions.Rc3.passkeys,
+  Extensions.Rc4.passkeys,
+  Extensions.Rc5.passkeys,
+].map(Address.checksum)
 
 const recoverSapientSignatureCompactSignature =
   'function recoverSapientSignatureCompact(bytes32 _digest, bytes _signature) view returns (bytes32)'
@@ -374,10 +382,14 @@ const recoverSapientSignatureCompactSignature =
 const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSignatureCompactSignature)
 
 class PasskeySignatureValidator implements oxProvider.Provider {
-  request: oxProvider.Provider['request'] = (({ method, params }: { method: string; params: unknown }) => {
-    switch (method) {
+  request: oxProvider.Provider['request'] = (async (request) => {
+    switch (request.method) {
       case 'eth_call':
-        const transaction: TransactionRequest.Rpc = (params as any)[0]
+        if (!request.params || !Array.isArray(request.params) || request.params.length === 0) {
+          throw new Error('eth_call requires transaction parameters')
+        }
+
+        const transaction: TransactionRequest.Rpc = request.params[0]
 
         if (!transaction.data?.startsWith(AbiFunction.getSelector(recoverSapientSignatureCompactFunction))) {
           throw new Error(
@@ -400,15 +412,15 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         }
 
       default:
-        throw new Error(`method ${method} not implemented`)
+        throw new Error(`method ${request.method} not implemented`)
     }
-  }) as any
+  }) as oxProvider.Provider['request']
 
-  on(event: string) {
+  on: oxProvider.Provider['on'] = (event: string) => {
     throw new Error(`unable to listen for ${event}: not implemented`)
   }
 
-  removeListener(event: string) {
+  removeListener: oxProvider.Provider['removeListener'] = (event: string) => {
     throw new Error(`unable to remove listener for ${event}: not implemented`)
   }
 }
