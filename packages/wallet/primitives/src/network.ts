@@ -1,3 +1,8 @@
+import { Address } from 'ox'
+
+const DEFAULT_MULTICALL3_ADDRESS: Address.Address = '0xcA11bde05977b3631167028862bE2a173976CA11'
+const SEQUENCE_MULTICALL3_ADDRESS: Address.Address = '0xae96419a81516f063744206d4b5E36f3168280f8'
+
 export enum NetworkType {
   MAINNET = 'mainnet',
   TESTNET = 'testnet',
@@ -21,8 +26,11 @@ export interface Network {
     name: string
     decimals: number
   }
-  ensAddress?: string
   deprecated?: true
+  contracts?: {
+    multicall3?: Address.Address
+    ensUniversalResolver?: Address.Address
+  }
 }
 
 export const ChainId = {
@@ -102,14 +110,6 @@ export const ChainId = {
   IMMUTABLE_ZKEVM: 13371,
   IMMUTABLE_ZKEVM_TESTNET: 13473,
 
-  // The Root Network
-  ROOT_NETWORK: 7668,
-  ROOT_NETWORK_PORCINI: 7672,
-
-  // LAOS
-  LAOS: 6283,
-  LAOS_SIGMA_TESTNET: 62850,
-
   // ETHERLINK
   ETHERLINK: 42793,
   ETHERLINK_TESTNET: 128123,
@@ -120,6 +120,7 @@ export const ChainId = {
   MOONBASE_ALPHA: 1287,
 
   // MONAD
+  MONAD: 143,
   MONAD_TESTNET: 10143,
 
   // SOMNIA
@@ -134,6 +135,18 @@ export const ChainId = {
 
   // SANDBOX
   SANDBOX_TESTNET: 6252,
+
+  // ARC
+  ARC_TESTNET: 5042002,
+
+  // HYPEREVM
+  HYPEREVM: 999,
+
+  // SONIC
+  SONIC: 146,
+
+  // BERACHAIN
+  BERACHAIN: 80094,
 } as const
 
 export type ChainId = (typeof ChainId)[keyof typeof ChainId]
@@ -155,7 +168,10 @@ export const ALL: Network[] = [
       name: 'Ether',
       decimals: 18,
     },
-    ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+      ensUniversalResolver: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    },
   },
   {
     chainId: ChainId.SEPOLIA,
@@ -172,6 +188,9 @@ export const ALL: Network[] = [
       symbol: 'sETH',
       name: 'Sepolia Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -190,6 +209,9 @@ export const ALL: Network[] = [
       name: 'POL',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.POLYGON_AMOY,
@@ -206,6 +228,9 @@ export const ALL: Network[] = [
       symbol: 'aPOL',
       name: 'Amoy POL',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -224,6 +249,9 @@ export const ALL: Network[] = [
       name: 'Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.BSC,
@@ -240,6 +268,9 @@ export const ALL: Network[] = [
       symbol: 'BNB',
       name: 'BNB',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -258,6 +289,9 @@ export const ALL: Network[] = [
       name: 'Testnet BNB',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.OPTIMISM,
@@ -274,6 +308,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -292,6 +329,9 @@ export const ALL: Network[] = [
       name: 'Sepolia Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.ARBITRUM,
@@ -308,6 +348,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -326,6 +369,9 @@ export const ALL: Network[] = [
       name: 'Sepolia Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.ARBITRUM_NOVA,
@@ -342,6 +388,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -360,6 +409,9 @@ export const ALL: Network[] = [
       name: 'AVAX',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.AVALANCHE_TESTNET,
@@ -376,6 +428,9 @@ export const ALL: Network[] = [
       symbol: 'tAVAX',
       name: 'Testnet AVAX',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -394,6 +449,9 @@ export const ALL: Network[] = [
       name: 'XDAI',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.BASE,
@@ -410,6 +468,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -428,6 +489,9 @@ export const ALL: Network[] = [
       name: 'Sepolia Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.HOMEVERSE,
@@ -444,6 +508,9 @@ export const ALL: Network[] = [
       symbol: 'OAS',
       name: 'OAS',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -462,6 +529,9 @@ export const ALL: Network[] = [
       name: 'Testnet OAS',
       decimals: 18,
     },
+    contracts: {
+      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.XAI,
@@ -478,6 +548,9 @@ export const ALL: Network[] = [
       symbol: 'XAI',
       name: 'XAI',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -496,6 +569,9 @@ export const ALL: Network[] = [
       name: 'Sepolia XAI',
       decimals: 18,
     },
+    contracts: {
+      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.B3,
@@ -512,6 +588,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -530,6 +609,9 @@ export const ALL: Network[] = [
       name: 'Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.APECHAIN,
@@ -546,6 +628,9 @@ export const ALL: Network[] = [
       symbol: 'APE',
       name: 'ApeCoin',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -564,6 +649,9 @@ export const ALL: Network[] = [
       name: 'ApeCoin',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.BLAST,
@@ -580,6 +668,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -598,6 +689,9 @@ export const ALL: Network[] = [
       name: 'Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.TELOS,
@@ -614,6 +708,9 @@ export const ALL: Network[] = [
       symbol: 'TLOS',
       name: 'TLOS',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -632,6 +729,9 @@ export const ALL: Network[] = [
       name: 'TLOS',
       decimals: 18,
     },
+    contracts: {
+      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.SKALE_NEBULA,
@@ -648,6 +748,9 @@ export const ALL: Network[] = [
       symbol: 'sFUEL',
       name: 'SKALE Fuel',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -666,6 +769,9 @@ export const ALL: Network[] = [
       name: 'SKALE Fuel',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.SONEIUM,
@@ -682,6 +788,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'Ether',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -700,6 +809,9 @@ export const ALL: Network[] = [
       name: 'Ether',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.TOY_TESTNET,
@@ -716,6 +828,9 @@ export const ALL: Network[] = [
       symbol: 'TOY',
       name: 'TOY',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -734,6 +849,9 @@ export const ALL: Network[] = [
       name: 'IMX',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.IMMUTABLE_ZKEVM_TESTNET,
@@ -751,73 +869,8 @@ export const ALL: Network[] = [
       name: 'IMX',
       decimals: 18,
     },
-  },
-  {
-    chainId: ChainId.ROOT_NETWORK,
-    type: NetworkType.MAINNET,
-    name: 'rootnet',
-    title: 'The Root Network',
-    rpcUrl: getRpcUrl('rootnet'),
-    logoUrl: getLogoUrl(ChainId.ROOT_NETWORK),
-    blockExplorer: {
-      name: 'The Root Network Explorer',
-      url: 'https://rootscan.io/',
-    },
-    nativeCurrency: {
-      symbol: 'XRP',
-      name: 'XRP',
-      decimals: 18,
-    },
-  },
-  {
-    chainId: ChainId.ROOT_NETWORK_PORCINI,
-    type: NetworkType.TESTNET,
-    name: 'rootnet-porcini',
-    title: 'The Root Network Porcini Testnet',
-    rpcUrl: getRpcUrl('rootnet-porcini'),
-    logoUrl: getLogoUrl(ChainId.ROOT_NETWORK_PORCINI),
-    blockExplorer: {
-      name: 'The Root Network Porcini Testnet Explorer',
-      url: 'https://porcini.rootscan.io/',
-    },
-    nativeCurrency: {
-      symbol: 'XRP',
-      name: 'XRP',
-      decimals: 18,
-    },
-  },
-  {
-    chainId: ChainId.LAOS,
-    type: NetworkType.MAINNET,
-    name: 'laos',
-    title: 'LAOS',
-    rpcUrl: getRpcUrl('laos'),
-    logoUrl: getLogoUrl(ChainId.LAOS),
-    blockExplorer: {
-      name: 'LAOS Explorer',
-      url: 'https://blockscout.laos.laosfoundation.io/',
-    },
-    nativeCurrency: {
-      symbol: 'LAOS',
-      name: 'LAOS',
-      decimals: 18,
-    },
-  },
-  {
-    chainId: ChainId.LAOS_SIGMA_TESTNET,
-    type: NetworkType.TESTNET,
-    name: 'laos-sigma-testnet',
-    title: 'LAOS Sigma Testnet',
-    rpcUrl: getRpcUrl('laos-sigma-testnet'),
-    logoUrl: getLogoUrl(ChainId.LAOS_SIGMA_TESTNET),
-    blockExplorer: {
-      name: 'LAOS Sigma Testnet Explorer',
-      url: 'https://sigma.explorer.laosnetwork.io/',
-    },
-    nativeCurrency: {
-      symbol: 'SIGMA',
-      name: 'SIGMA',
-      decimals: 18,
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -836,6 +889,9 @@ export const ALL: Network[] = [
       name: 'GLMR',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.MOONBASE_ALPHA,
@@ -852,6 +908,9 @@ export const ALL: Network[] = [
       symbol: 'GLMR',
       name: 'GLMR',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
   {
@@ -870,6 +929,9 @@ export const ALL: Network[] = [
       name: 'Tez',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.ETHERLINK_SHADOWNET_TESTNET,
@@ -887,6 +949,29 @@ export const ALL: Network[] = [
       name: 'Tez',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
+  },
+  {
+    chainId: ChainId.MONAD,
+    type: NetworkType.MAINNET,
+    name: 'monad',
+    title: 'Monad',
+    rpcUrl: getRpcUrl('monad'),
+    logoUrl: getLogoUrl(ChainId.MONAD),
+    blockExplorer: {
+      name: 'Monad Explorer',
+      url: 'https://mainnet-beta.monvision.io/',
+    },
+    nativeCurrency: {
+      symbol: 'MON',
+      name: 'MON',
+      decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
   {
     chainId: ChainId.MONAD_TESTNET,
@@ -903,6 +988,9 @@ export const ALL: Network[] = [
       symbol: 'MON',
       name: 'MON',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
 
@@ -922,6 +1010,9 @@ export const ALL: Network[] = [
       name: 'SOMI',
       decimals: 18,
     },
+    contracts: {
+      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
+    },
   },
 
   {
@@ -939,6 +1030,9 @@ export const ALL: Network[] = [
       symbol: 'STT',
       name: 'STT',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
     },
   },
 
@@ -958,6 +1052,9 @@ export const ALL: Network[] = [
       name: 'TCENT',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
 
   {
@@ -975,6 +1072,9 @@ export const ALL: Network[] = [
       symbol: 'ETH',
       name: 'ETH',
       decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
     },
   },
 
@@ -994,7 +1094,86 @@ export const ALL: Network[] = [
       name: 'SAND',
       decimals: 18,
     },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
   },
+
+  {
+    chainId: ChainId.ARC_TESTNET,
+    type: NetworkType.TESTNET,
+    name: 'arc-testnet',
+    title: 'Arc Testnet',
+    rpcUrl: getRpcUrl('arc-testnet'),
+    logoUrl: getLogoUrl(ChainId.ARC_TESTNET),
+    blockExplorer: {
+      name: 'Arc Testnet Explorer',
+      url: 'https://1jr2dw1zdqvyes8u.blockscout.com/',
+    },
+    nativeCurrency: {
+      symbol: 'USDC',
+      name: 'USDC',
+      decimals: 6,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
+  },
+
+  {
+    chainId: ChainId.HYPEREVM,
+    type: NetworkType.MAINNET,
+    name: 'hyperevm',
+    title: 'HyperEVM',
+    rpcUrl: getRpcUrl('hyperevm'),
+    logoUrl: getLogoUrl(ChainId.HYPEREVM),
+    blockExplorer: {
+      name: 'HyperEVM Explorer',
+      url: 'https://www.hyperscan.com/',
+    },
+    nativeCurrency: {
+      symbol: 'HYPE',
+      name: 'HYPE',
+      decimals: 18,
+    },
+  },
+
+  {
+    chainId: ChainId.BERACHAIN,
+    type: NetworkType.MAINNET,
+    name: 'berachain',
+    title: 'Berachain',
+    rpcUrl: getRpcUrl('berachain'),
+    logoUrl: getLogoUrl(ChainId.BERACHAIN),
+    blockExplorer: {
+      name: 'Berachain Explorer',
+      url: 'https://berascan.com/',
+    },
+    nativeCurrency: {
+      symbol: 'BEAR',
+      name: 'BEAR',
+      decimals: 18,
+    },
+  },
+
+  {
+    chainId: ChainId.SONIC,
+    type: NetworkType.MAINNET,
+    name: 'sonic',
+    title: 'Sonic',
+    rpcUrl: getRpcUrl('sonic'),
+    logoUrl: getLogoUrl(ChainId.SONIC),
+    blockExplorer: {
+      name: 'Sonic Explorer',
+      url: 'https://sonicscan.com/',
+    },
+    nativeCurrency: {
+      symbol: 'S',
+      name: 'Sonic',
+      decimals: 18,
+    },
+  },
+
 ]
 
 function getRpcUrl(networkName: string): string {
