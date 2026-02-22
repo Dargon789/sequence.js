@@ -1,5 +1,149 @@
 # @0xsequence/relayer
 
+## 3.0.0-beta.18
+
+### Patch Changes
+
+- multicall3 optimization
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.18
+
+## 3.0.0-beta.17
+
+### Patch Changes
+
+- New chains, relayer rpc fix
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.17
+
+## 3.0.0-beta.16
+
+### Patch Changes
+
+- ethauth support
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.16
+
+## 3.0.0-beta.15
+
+### Patch Changes
+
+- New chains, minor fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.15
+
+## 3.0.0-beta.14
+
+### Patch Changes
+
+- Relayer fee options fix
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.14
+
+## 3.0.0-beta.13
+
+### Patch Changes
+
+- Userdata service updates
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.13
+
+## 3.0.0-beta.12
+
+### Patch Changes
+
+- Beta release with dapp connector fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.12
+
+## 3.0.0-beta.11
+
+### Patch Changes
+
+- 3.0.0 beta
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.11
+
+## 3.0.0-beta.10
+
+### Patch Changes
+
+- dapp-client updates
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.10
+
+## 3.0.0-beta.9
+
+### Patch Changes
+
+- dapp client updates for EOA login
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.9
+
+## 3.0.0-beta.8
+
+### Patch Changes
+
+- Apple auth fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.8
+
+## 3.0.0-beta.7
+
+### Patch Changes
+
+- Apple auth fix
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.7
+
+## 3.0.0-beta.6
+
+### Patch Changes
+
+- Fix signer 404 error, minor fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.6
+
+## 3.0.0-beta.5
+
+### Patch Changes
+
+- Beta release for v3
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.5
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.4
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.3
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.2
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.0-beta.1
+
 ## 2.3.8
 
 ### Patch Changes
@@ -2476,7 +2620,6 @@
 - relayer: fix Relayer.wait() interface
 
   The interface for calling Relayer.wait() has changed. Instead of a single optional ill-defined timeout/delay parameter, there are three optional parameters, in order:
-
   - timeout: the maximum time to wait for the transaction receipt
   - delay: the polling interval, i.e. the time to wait between requests
   - maxFails: the maximum number of hard failures to tolerate before giving up
@@ -3139,7 +3282,6 @@
 ### Minor Changes
 
 - major architectural changes in Sequence design
-
   - only one API instance, API is no longer a per-chain service
   - separate per-chain indexer service, API no longer handles indexing
   - single contract metadata service, API no longer serves metadata

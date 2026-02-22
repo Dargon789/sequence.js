@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ExplicitSession } from '@0xsequence/wallet-core'
 import { Attestation, Payload } from '@0xsequence/wallet-primitives'
+import { Signers } from '@0xsequence/wallet-core'
 import { Address, Hex } from 'ox'
 import type { TypedData } from 'ox/TypedData'
 
@@ -22,25 +22,48 @@ export interface GuardConfig {
   moduleAddresses: Map<Address.Address, Address.Address>
 }
 
+export interface EthAuthSettings {
+  app?: string
+  /** expiry number (in seconds) that is used for ETHAuth proof. Default is 1 week in seconds. */
+  expiry?: number
+  /** origin hint of the dapp's host opening the wallet. This value will automatically
+   * be determined and verified for integrity, and can be omitted. */
+  origin?: string
+  /** authorizeNonce is an optional number to be passed as ETHAuth's nonce claim for replay protection. **/
+  nonce?: number
+}
+
+export interface ETHAuthProof {
+  // eip712 typed-data payload for ETHAuth domain as input
+  typedData: Payload.TypedDataToSign
+
+  // signature encoded in an ETHAuth proof string
+  ewtString: string
+}
+
 // --- Payloads for Transport ---
 
 export interface CreateNewSessionPayload {
-  origin?: string
-  session?: ExplicitSession
+  sessionAddress: Address.Address
+  origin: string
+  permissions?: Signers.Session.ExplicitParams
   includeImplicitSession?: boolean
+  ethAuth?: EthAuthSettings
   preferredLoginMethod?: LoginMethod
   email?: string
 }
 
 export interface AddExplicitSessionPayload {
-  session: ExplicitSession
+  sessionAddress: Address.Address
+  permissions: Signers.Session.ExplicitParams
   preferredLoginMethod?: LoginMethod
   email?: string
 }
 
-export interface ModifyExplicitSessionPayload {
+export interface ModifySessionPayload {
   walletAddress: Address.Address
-  session: ExplicitSession
+  sessionAddress: Address.Address
+  permissions: Signers.Session.ExplicitParams
 }
 
 export interface SignMessagePayload {
@@ -55,12 +78,6 @@ export interface SignTypedDataPayload {
   chainId: number
 }
 
-export interface SendWalletTransactionPayload {
-  address: Address.Address
-  transactionRequest: TransactionRequest
-  chainId: number
-}
-
 export type TransactionRequest = {
   to: Address.Address
   value?: bigint
@@ -68,31 +85,43 @@ export type TransactionRequest = {
   gasLimit?: bigint
 }
 
-export interface CreateNewSessionResponse {
+export interface SendWalletTransactionPayload {
+  address: Address.Address
+  transactionRequest: TransactionRequest
+  chainId: number
+}
+
+export interface ConnectSuccessResponsePayload {
   walletAddress: string
   attestation?: Attestation.Attestation
   signature?: Hex.Hex
   userEmail?: string
   loginMethod?: LoginMethod
   guard?: GuardConfig
+  ethAuthProof?: ETHAuthProof
 }
 
-export interface SignatureResponse {
+export interface AddExplicitSessionSuccessResponsePayload {
+  walletAddress: string
+  sessionAddress: string
+}
+
+export interface ModifySessionSuccessResponsePayload {
+  walletAddress: string
+  sessionAddress: string
+}
+
+export interface SignatureSuccessResponse {
   signature: Hex.Hex
   walletAddress: string
 }
 
-export interface SendWalletTransactionResponse {
+export interface SendWalletTransactionSuccessResponse {
   transactionHash: Hex.Hex
   walletAddress: string
 }
 
-export type WalletActionResponse = SignatureResponse | SendWalletTransactionResponse
-
-export interface SessionResponse {
-  walletAddress: string
-  sessionAddress: string
-}
+export type WalletActionResponse = SignatureSuccessResponse | SendWalletTransactionSuccessResponse
 
 // --- Dapp-facing Types ---
 
@@ -106,11 +135,20 @@ export type Transaction =
     // All other properties from Payload.Call, but optional
     Partial<Omit<Payload.Call, RequiredKeys>>
 
+export type Session = {
+  address: Address.Address
+  isImplicit: boolean
+  permissions?: Signers.Session.ExplicitParams
+  chainId?: number
+}
+
 // --- Event Types ---
+
+export type ChainSessionManagerEvent = 'sessionsUpdated' | 'explicitSessionResponse'
 
 export type ExplicitSessionEventListener = (data: {
   action: (typeof RequestActionType)['ADD_EXPLICIT_SESSION' | 'MODIFY_EXPLICIT_SESSION']
-  response?: SessionResponse
+  response?: AddExplicitSessionSuccessResponsePayload | ModifySessionSuccessResponsePayload
   error?: any
 }) => void
 
@@ -124,9 +162,12 @@ export type DappClientWalletActionEventListener = (data: {
   chainId: number
 }) => void
 
-export type DappClientExplicitSessionEventListener = ExplicitSessionEventListener & {
+export type DappClientExplicitSessionEventListener = (data: {
+  action: (typeof RequestActionType)['ADD_EXPLICIT_SESSION' | 'MODIFY_EXPLICIT_SESSION']
+  response?: AddExplicitSessionSuccessResponsePayload | ModifySessionSuccessResponsePayload
+  error?: any
   chainId: number
-}
+}) => void
 
 // --- DappTransport Types ---
 
@@ -162,6 +203,24 @@ export interface TransportMessage<T = any> {
   error?: any
 }
 
+export interface BaseRequest {
+  type: string
+}
+
+export interface MessageSignatureRequest extends BaseRequest {
+  type: 'message_signature'
+  message: string
+  address: Address.Address
+  chainId: number
+}
+
+export interface TypedDataSignatureRequest extends BaseRequest {
+  type: 'typed_data_signature'
+  typedData: unknown
+  address: Address.Address
+  chainId: number
+}
+
 export const WalletSize = {
   width: 380,
   height: 600,
@@ -173,6 +232,7 @@ export interface PendingRequest {
   timer: number
   action: string
 }
+
 export interface SendRequestOptions {
   timeout?: number
   path?: string

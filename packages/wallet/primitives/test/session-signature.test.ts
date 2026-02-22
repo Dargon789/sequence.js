@@ -280,7 +280,7 @@ describe('Session Signature', () => {
     describe('encodeSessionCallSignatures', () => {
       it('should encode single explicit session call signature', () => {
         const callSignatures = [sampleExplicitSignature]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology)
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -289,7 +289,7 @@ describe('Session Signature', () => {
       // Skip implicit signature tests that cause encoding issues
       it.skip('should encode single implicit session call signature', () => {
         const callSignatures = [sampleImplicitSignature]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology)
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -297,7 +297,7 @@ describe('Session Signature', () => {
 
       it.skip('should encode multiple mixed session call signatures', () => {
         const callSignatures = [sampleImplicitSignature, sampleExplicitSignature]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology)
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -311,7 +311,7 @@ describe('Session Signature', () => {
             sessionSignature: sampleRSY2, // Different session signature
           },
         ]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology)
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -347,7 +347,7 @@ describe('Session Signature', () => {
           // Missing identity signer, but has 2 elements for valid SessionBranch
         ]
 
-        expect(() => encodeSessionCallSignatures([sampleExplicitSignature], incompleteTopology, testAddress1)).toThrow(
+        expect(() => encodeSessionCallSignatures([sampleExplicitSignature], incompleteTopology)).toThrow(
           'Incomplete topology',
         )
       })
@@ -358,7 +358,7 @@ describe('Session Signature', () => {
           sessionSignature: sampleRSY,
         }
 
-        expect(() => encodeSessionCallSignatures([largeIndexSignature], completeTopology, testAddress1)).toThrow(
+        expect(() => encodeSessionCallSignatures([largeIndexSignature], completeTopology)).toThrow(
           'Permission index is too large',
         )
       })
@@ -372,13 +372,13 @@ describe('Session Signature', () => {
             sessionSignature: sampleRSY,
           }))
 
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology)
         expect(result).toBeInstanceOf(Uint8Array)
       })
 
       it('should handle explicit signers parameter', () => {
         const callSignatures = [sampleExplicitSignature]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology, [testAddress1])
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -386,7 +386,7 @@ describe('Session Signature', () => {
 
       it('should handle implicit signers parameter', () => {
         const callSignatures = [sampleExplicitSignature]
-        const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1, [], [testAddress2])
+        const result = encodeSessionCallSignatures(callSignatures, completeTopology, [], [testAddress2])
 
         expect(result).toBeInstanceOf(Uint8Array)
         expect(result.length).toBeGreaterThan(0)
@@ -394,16 +394,9 @@ describe('Session Signature', () => {
 
       it('should throw for invalid call signature type', () => {
         const invalidSignature = {} as any
-        expect(() => encodeSessionCallSignatures([invalidSignature], completeTopology, testAddress1)).toThrow(
+        expect(() => encodeSessionCallSignatures([invalidSignature], completeTopology)).toThrow(
           'Invalid call signature',
         )
-      })
-
-      it('should throw for identity signer not found', () => {
-        const callSignatures = [sampleExplicitSignature]
-        expect(() =>
-          encodeSessionCallSignatures(callSignatures, completeTopology, testAddress2, [], [testAddress2]),
-        ).toThrow('Identity signer not found')
       })
     })
   })
@@ -532,7 +525,7 @@ describe('Session Signature', () => {
 
   describe('Edge Cases and Error Handling', () => {
     it('should handle empty call signatures array', () => {
-      const result = encodeSessionCallSignatures([], completeTopology, testAddress1)
+      const result = encodeSessionCallSignatures([], completeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
       expect(result.length).toBeGreaterThan(0) // Should still contain topology
     })
@@ -543,7 +536,7 @@ describe('Session Signature', () => {
         sessionSignature: sampleRSY,
       }
 
-      const result = encodeSessionCallSignatures([maxIndexSignature], completeTopology, testAddress1)
+      const result = encodeSessionCallSignatures([maxIndexSignature], completeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
     })
 
@@ -553,7 +546,7 @@ describe('Session Signature', () => {
         sessionSignature: sampleRSY,
       }
 
-      const result = encodeSessionCallSignatures([zeroIndexSignature], completeTopology, testAddress1)
+      const result = encodeSessionCallSignatures([zeroIndexSignature], completeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
     })
 
@@ -602,7 +595,7 @@ describe('Session Signature', () => {
         sessionSignature: sampleRSY2,
       }
 
-      const result = encodeSessionCallSignatures([minimalImplicitSignature], completeTopology, testAddress1)
+      const result = encodeSessionCallSignatures([minimalImplicitSignature], completeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
     })
 
@@ -646,7 +639,7 @@ describe('Session Signature', () => {
 
       // This test may not actually trigger the error since creating a 3-byte overflow is complex
       // We'll test that the function works with a large but valid topology
-      const result = encodeSessionCallSignatures(callSignatures, largeTopology, testAddress1)
+      const result = encodeSessionCallSignatures(callSignatures, largeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
     })
 
@@ -669,7 +662,7 @@ describe('Session Signature', () => {
       const callSignatures: ExplicitSessionCallSignature[] = [invalidExplicitSignature]
 
       expect(() => {
-        encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+        encodeSessionCallSignatures(callSignatures, completeTopology)
       }).toThrow() // Should throw due to permission index validation
     })
   })
@@ -685,7 +678,7 @@ describe('Session Signature', () => {
       ]
 
       // Encode
-      const encoded = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+      const encoded = encodeSessionCallSignatures(callSignatures, completeTopology, [testAddress1])
       expect(encoded).toBeInstanceOf(Uint8Array)
 
       // Test encoding for each signature
@@ -733,7 +726,7 @@ describe('Session Signature', () => {
         },
       ]
 
-      const result = encodeSessionCallSignatures(callSignatures, completeTopology, testAddress1)
+      const result = encodeSessionCallSignatures(callSignatures, completeTopology)
       expect(result).toBeInstanceOf(Uint8Array)
       expect(result.length).toBeGreaterThan(0)
     })

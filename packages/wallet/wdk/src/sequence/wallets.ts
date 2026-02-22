@@ -12,6 +12,7 @@ import { Kinds, SignerWithKind, WitnessExtraSignerKind } from './types/signer.js
 import { Wallet, WalletSelectionUiHandler } from './types/wallet.js'
 import { PasskeysHandler } from './handlers/passkeys.js'
 import { GuardRole } from './guards.js'
+import type { PasskeySigner } from './passkeys-provider.js'
 
 export type StartSignUpWithRedirectArgs = {
   kind: 'google-pkce' | 'apple'
@@ -627,7 +628,7 @@ export class Wallets implements WalletsInterface {
   }> {
     switch (args.kind) {
       case 'passkey':
-        const passkeySigner = await Signers.Passkey.Passkey.create(this.shared.sequence.extensions, {
+        const passkeySigner = await this.shared.passkeyProvider.create(this.shared.sequence.extensions, {
           stateProvider: this.shared.sequence.stateProvider,
           credentialName: args.name,
         })
@@ -817,12 +818,30 @@ export class Wallets implements WalletsInterface {
     let modules: Module[] = []
 
     if (!args.noSessionManager) {
-      const identitySigners = [device.address]
-      if (!Signers.isSapientSigner(loginSigner.signer)) {
-        // Add non sapient login signer to the identity signers
-        identitySigners.unshift(loginSignerAddress)
+      //  Calculate image hash with the identity signer
+      const sessionsTopology = SessionConfig.emptySessionsTopology(loginSignerAddress)
+      // Store this tree in the state provider
+      const sessionsConfigTree = SessionConfig.sessionsTopologyToConfigurationTree(sessionsTopology)
+      this.shared.sequence.stateProvider.saveTree(sessionsConfigTree)
+      // Prepare the configuration leaf
+      const sessionsImageHash = GenericTree.hash(sessionsConfigTree)
+      const signer = {
+        ...ManagerOptionsDefaults.defaultSessionsTopology,
+        address: this.shared.sequence.extensions.sessions,
+        imageHash: sessionsImageHash,
       }
-      await this.shared.modules.sessions.initSessionModule(modules, identitySigners, sessionsGuardTopology)
+      if (sessionsGuardTopology) {
+        modules.push({
+          sapientLeaf: signer,
+          weight: 255n,
+          guardLeaf: sessionsGuardTopology,
+        })
+      } else {
+        modules.push({
+          sapientLeaf: signer,
+          weight: 255n,
+        })
+      }
     }
 
     if (!args.noRecovery) {
@@ -871,7 +890,7 @@ export class Wallets implements WalletsInterface {
     }
 
     // Store passkey credential ID mapping if this is a passkey signup
-    if (args.kind === 'passkey' && loginSigner.signer instanceof Signers.Passkey.Passkey) {
+    if (args.kind === 'passkey' && this.isPasskeySigner(loginSigner.signer)) {
       try {
         await this.shared.databases.passkeyCredentials.saveCredential(
           loginSigner.signer.credentialId,
@@ -990,10 +1009,6 @@ export class Wallets implements WalletsInterface {
           await this.shared.modules.recovery.addRecoverySignerToModules(modules, device.address)
         }
 
-        if (this.shared.modules.sessions.hasSessionModule(modules)) {
-          await this.shared.modules.sessions.addIdentitySignerToModules(modules, device.address)
-        }
-
         const walletEntryToUpdate: Wallet = {
           ...(existingWallet as Wallet),
           address: args.wallet,
@@ -1055,7 +1070,7 @@ export class Wallets implements WalletsInterface {
     }
 
     if (isLoginToPasskeyArgs(args)) {
-      let passkeySigner: Signers.Passkey.Passkey
+      let passkeySigner: PasskeySigner
 
       if (args.credentialId) {
         // Application-controlled login: use the provided credentialId
@@ -1067,7 +1082,7 @@ export class Wallets implements WalletsInterface {
         }
 
         // Create passkey signer from stored credential
-        passkeySigner = new Signers.Passkey.Passkey({
+        passkeySigner = this.shared.passkeyProvider.fromCredential({
           credentialId: credential.credentialId,
           publicKey: credential.publicKey,
           extensions: this.shared.sequence.extensions,
@@ -1078,7 +1093,7 @@ export class Wallets implements WalletsInterface {
         // Default discovery behavior: use WebAuthn discovery
         this.shared.modules.logger.log('No credentialId provided, using discovery method')
 
-        const foundPasskeySigner = await Signers.Passkey.Passkey.find(
+        const foundPasskeySigner = await this.shared.passkeyProvider.find(
           this.shared.sequence.stateProvider,
           this.shared.sequence.extensions,
         )
@@ -1131,6 +1146,20 @@ export class Wallets implements WalletsInterface {
     }
 
     throw new Error('invalid-login-args')
+  }
+
+  private isPasskeySigner(signer: unknown): signer is PasskeySigner {
+    const guard = this.shared.passkeyProvider.isSigner
+    if (guard) {
+      return guard(signer)
+    }
+    return (
+      typeof signer === 'object' &&
+      signer !== null &&
+      'credentialId' in signer &&
+      'publicKey' in signer &&
+      'imageHash' in signer
+    )
   }
 
   async completeLogin(requestId: string) {
@@ -1360,11 +1389,6 @@ export class Wallets implements WalletsInterface {
     // Remove the device from the recovery module's topology as well.
     if (this.shared.modules.recovery.hasRecoveryModule(modules)) {
       await this.shared.modules.recovery.removeRecoverySignerFromModules(modules, deviceToRemove)
-    }
-
-    // Remove the device from the session module's topology as well.
-    if (this.shared.modules.sessions.hasSessionModule(modules)) {
-      await this.shared.modules.sessions.removeIdentitySignerFromModules(modules, deviceToRemove)
     }
 
     // Request the configuration update.
