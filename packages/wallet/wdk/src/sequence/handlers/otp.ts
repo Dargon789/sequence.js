@@ -8,6 +8,7 @@ import { SignerUnavailable, SignerReady, SignerActionable, BaseSignatureRequest 
 import { Kinds } from '../types/signer.js'
 import { IdentityHandler } from './identity.js'
 import { AnswerIncorrectError, ChallengeExpiredError, TooManyAttemptsError } from '../errors.js'
+import type { WdkEnv } from '../../env.js'
 
 type RespondFn = (otp: string) => Promise<void>
 
@@ -16,8 +17,8 @@ export class OtpHandler extends IdentityHandler implements Handler {
 
   private onPromptOtp: undefined | ((recipient: string, respond: RespondFn) => Promise<void>)
 
-  constructor(nitro: Identity.IdentityInstrument, signatures: Signatures, authKeys: Db.AuthKeys) {
-    super(nitro, authKeys, signatures, Identity.IdentityType.Email)
+  constructor(nitro: Identity.IdentityInstrument, signatures: Signatures, authKeys: Db.AuthKeys, env?: WdkEnv) {
+    super(nitro, authKeys, signatures, Identity.IdentityType.Email, env)
   }
 
   public registerUI(onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>) {

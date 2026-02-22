@@ -1,5 +1,105 @@
 # @0xsequence/wallet-core
 
+## 3.0.0-beta.18
+
+### Patch Changes
+
+- multicall3 optimization
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.18
+  - @0xsequence/relayer@3.0.0-beta.18
+  - @0xsequence/wallet-primitives@3.0.0-beta.18
+
+## 3.0.0-beta.17
+
+### Patch Changes
+
+- New chains, relayer rpc fix
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.17
+  - @0xsequence/relayer@3.0.0-beta.17
+  - @0xsequence/wallet-primitives@3.0.0-beta.17
+
+## 3.0.0-beta.16
+
+### Patch Changes
+
+- ethauth support
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.16
+  - @0xsequence/relayer@3.0.0-beta.16
+  - @0xsequence/wallet-primitives@3.0.0-beta.16
+
+## 3.0.0-beta.15
+
+### Patch Changes
+
+- New chains, minor fixes
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.15
+  - @0xsequence/relayer@3.0.0-beta.15
+  - @0xsequence/wallet-primitives@3.0.0-beta.15
+
+## 3.0.0-beta.14
+
+### Patch Changes
+
+- Relayer fee options fix
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.14
+  - @0xsequence/relayer@3.0.0-beta.14
+  - @0xsequence/wallet-primitives@3.0.0-beta.14
+
+## 3.0.0-beta.13
+
+### Patch Changes
+
+- Userdata service updates
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.13
+  - @0xsequence/relayer@3.0.0-beta.13
+  - @0xsequence/wallet-primitives@3.0.0-beta.13
+
+## 3.0.0-beta.12
+
+### Patch Changes
+
+- Beta release with dapp connector fixes
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.12
+  - @0xsequence/relayer@3.0.0-beta.12
+  - @0xsequence/wallet-primitives@3.0.0-beta.12
+
+## 3.0.0-beta.11
+
+### Patch Changes
+
+- 3.0.0 beta
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.11
+  - @0xsequence/relayer@3.0.0-beta.11
+  - @0xsequence/wallet-primitives@3.0.0-beta.11
+
+## 3.0.0-beta.10
+
+### Patch Changes
+
+- dapp-client updates
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.10
+  - @0xsequence/relayer@3.0.0-beta.10
+  - @0xsequence/wallet-primitives@3.0.0-beta.10
+
+## 3.0.0-beta.9
+
+### Patch Changes
+
+- dapp client updates for EOA login
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.9
+  - @0xsequence/relayer@3.0.0-beta.9
+  - @0xsequence/wallet-primitives@3.0.0-beta.9
+
 ## 3.0.0-beta.8
 
 ### Patch Changes
