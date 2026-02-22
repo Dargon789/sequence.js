@@ -145,7 +145,7 @@ export class RpcRelayer implements Relayer {
     // This works for undeployed wallets and avoids guest-module simulation pitfalls.
     const callsStruct: Payload.Calls = { type: 'call', space: 0n, nonce: 0n, calls: calls }
 
-    const feeOptionsTo = wallet
+    const feeOptionsTo = to
     const data = Payload.encode(callsStruct, wallet)
 
     try {
