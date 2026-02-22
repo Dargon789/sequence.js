@@ -16,22 +16,24 @@ export const Console = ({ message, loading }: ConsoleProps) => {
   }
 
   return (
-    <Collapsible label="Console" defaultOpen>
-      <Box as="pre" color="text80" style={{ fontFamily: 'monospace', whiteSpace: 'break-spaces', overflowWrap: 'anywhere' }}>
-        {message}
-        {loading && getLoadingDots()}
-        {
-          <Box
-            className={styles.cursor}
-            display="inline-block"
-            fontSize="large"
-            lineHeight="4"
-            style={{ top: '-4px', position: 'relative' }}
-          >
-            _
-          </Box>
-        }
-      </Box>
-    </Collapsible>
+    newFunction(message, loading, getLoadingDots)
   )
 }
+function newFunction(message: string | null, loading: boolean, getLoadingDots: () => "\n..." | "...") {
+  return <Collapsible label="Console" defaultOpen>
+    <Box as="pre" color="text80" style={{ fontFamily: 'monospace', whiteSpace: 'break-spaces', overflowWrap: 'anywhere' }}>
+      {message}
+      {loading && getLoadingDots()}
+      {<Box
+        className={styles.cursor}
+        display="inline-block"
+        fontSize="large"
+        lineHeight="4"
+        style={{ top: '-4px', position: 'relative' }}
+      >
+        _
+      </Box>}
+    </Box>
+  </Collapsible>
+}
+
