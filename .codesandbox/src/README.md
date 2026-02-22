@@ -10,14 +10,14 @@ For complete documentation on Sequence, please see: [https://docs.sequence.build
 ## Usage
 
 1. pnpm install
-2. pnpm dev
+2. pnpm start
 3. Open browser to http://localhost:4000 to access the demo dapp
 4. Open browser inspector to see responses from the remote Sequence Wallet
 
 ## Development
 
-See https://github.com/0xsequence/demo-dapp/blob/master/src/routes/HomeRoute.tsx for the source
-usage for a variety of functions. be sure t open your browser's dev inspector to see output.
+See [src/App.tsx](./src/App.tsx) for the source
+usage for a variety of functions. Be sure to open your browser's dev inspector to see output.
 Think of these functions as a "cookbook" for how you can perform these functions in your dapps.
 
 Also note, sequence.js is built on top of ethers.js, and is API-compatible.
