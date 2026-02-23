@@ -1,10 +1,11 @@
-import { Signers as CoreSigners, Relayer, State } from '@0xsequence/wallet-core'
-
+import { Bundler, Signers as CoreSigners, State } from '@0xsequence/wallet-core'
+import { Relayer } from '@0xsequence/relayer'
 import { IdentityInstrument } from '@0xsequence/identity-instrument'
 import { createAttestationVerifyingFetch } from '@0xsequence/tee-verifier'
 import { Config, Constants, Context, Extensions, Network } from '@0xsequence/wallet-primitives'
 import { Address } from 'ox'
 import * as Db from '../dbs/index.js'
+import { resolveWdkEnv, type WdkEnv } from '../env.js'
 import { Cron } from './cron.js'
 import { Devices } from './devices.js'
 import { Guards, GuardRole } from './guards.js'
@@ -27,14 +28,18 @@ import { Signers } from './signers.js'
 import { Transactions, TransactionsInterface } from './transactions.js'
 import { Kinds } from './types/signer.js'
 import { Wallets, WalletsInterface } from './wallets.js'
-import { GuardHandler } from './handlers/guard.js'
+import { GuardHandler, PromptCodeHandler } from './handlers/guard.js'
 import { PasskeyCredential } from '../dbs/index.js'
+import { PromptMnemonicHandler } from './handlers/mnemonic.js'
+import { PromptOtpHandler } from './handlers/otp.js'
+import { defaultPasskeyProvider, type PasskeyProvider } from './passkeys-provider.js'
 
 export type ManagerOptions = {
   verbose?: boolean
 
   extensions?: Extensions.Extensions
   context?: Context.Context
+  context4337?: Context.Context
   guest?: Address.Address
 
   encryptedPksDb?: CoreSigners.Pk.Encrypted.EncryptedPksDb
@@ -49,14 +54,20 @@ export type ManagerOptions = {
 
   dbPruningInterval?: number
 
+  env?: WdkEnv
+  passkeyProvider?: PasskeyProvider
+
   stateProvider?: State.Provider
   networks?: Network.Network[]
   relayers?: Relayer.Relayer[] | (() => Relayer.Relayer[])
-  bundlers?: Relayer.Bundler[]
+  bundlers?: Bundler.Bundler[]
   guardUrl?: string
   guardAddresses?: Record<GuardRole, Address.Address>
 
-  defaultGuardTopology?: Config.SignerLeaf
+  nonWitnessableSigners?: Address.Address[]
+
+  // The default guard topology MUST have a placeholder address for the guard address
+  defaultGuardTopology?: Config.Topology
   defaultRecoverySettings?: RecoverySettings
 
   // EIP-6963 support
@@ -64,7 +75,7 @@ export type ManagerOptions = {
 
   identity?: {
     url?: string
-    fetch?: typeof window.fetch
+    fetch?: typeof fetch
     verifyAttestation?: boolean
     expectedPcr0?: string[]
     scope?: string
@@ -79,15 +90,88 @@ export type ManagerOptions = {
       enabled: boolean
       clientId: string
     }
+    customProviders?: {
+      kind: `custom-${string}`
+      authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
+      issuer: string
+      oauthUrl: string
+      clientId: string
+    }[]
   }
+}
+
+export type ResolvedIdentityOptions = {
+  url: string
+  fetch?: typeof fetch
+  verifyAttestation: boolean
+  expectedPcr0?: string[]
+  scope?: string
+  email: {
+    enabled: boolean
+  }
+  google: {
+    enabled: boolean
+    clientId: string
+  }
+  apple: {
+    enabled: boolean
+    clientId: string
+  }
+  customProviders?: {
+    kind: `custom-${string}`
+    authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
+    issuer: string
+    oauthUrl: string
+    clientId: string
+  }[]
+}
+
+export type ResolvedManagerOptions = {
+  verbose: boolean
+
+  extensions: Extensions.Extensions
+  context: Context.Context
+  context4337: Context.Context
+  guest: Address.Address
+
+  encryptedPksDb: CoreSigners.Pk.Encrypted.EncryptedPksDb
+  managerDb: Db.Wallets
+  transactionsDb: Db.Transactions
+  signaturesDb: Db.Signatures
+  messagesDb: Db.Messages
+  authCommitmentsDb: Db.AuthCommitments
+  authKeysDb: Db.AuthKeys
+  recoveryDb: Db.Recovery
+  passkeyCredentialsDb: Db.PasskeyCredentials
+
+  dbPruningInterval: number
+
+  env: WdkEnv
+  passkeyProvider: PasskeyProvider
+
+  stateProvider: State.Provider
+  networks: Network.Network[]
+  relayers: Relayer.Relayer[] | (() => Relayer.Relayer[])
+  bundlers: Bundler.Bundler[]
+  guardUrl: string
+  guardAddresses: Record<GuardRole, Address.Address>
+
+  nonWitnessableSigners: Address.Address[]
+
+  defaultGuardTopology: Config.Topology
+  defaultRecoverySettings: RecoverySettings
+
+  multiInjectedProviderDiscovery: boolean
+
+  identity: ResolvedIdentityOptions
 }
 
 export const ManagerOptionsDefaults = {
   verbose: false,
 
-  extensions: Extensions.Rc3,
-  context: Context.Rc3,
-  context4337: Context.Rc3_4337,
+  extensions: Extensions.Rc5,
+  context: Context.Rc5,
+  context4337: Context.Rc5_4337,
   guest: Constants.DefaultGuestAddress,
 
   encryptedPksDb: new CoreSigners.Pk.Encrypted.EncryptedPksDb(),
@@ -102,26 +186,46 @@ export const ManagerOptionsDefaults = {
 
   dbPruningInterval: 1000 * 60 * 60 * 24, // 24 hours
 
-  stateProvider: new State.Sequence.Provider(),
+  passkeyProvider: defaultPasskeyProvider,
+
+  stateProvider: typeof fetch !== 'undefined' ? new State.Sequence.Provider(undefined, fetch) : undefined,
   networks: Network.ALL,
-  relayers: () => [Relayer.Standard.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined),
+  relayers: () => {
+    if (typeof window !== 'undefined') {
+      return [Relayer.LocalRelayer.createFromWindow(window)].filter((r) => r !== undefined)
+    }
+    return []
+  },
   bundlers: [],
 
-  guardUrl: 'https://dev-guard.sequence.app',
+  nonWitnessableSigners: [] as Address.Address[],
+
+  guardUrl: 'https://guard.sequence.app',
   guardAddresses: {
-    wallet: '0xa2e70CeaB3Eb145F32d110383B75B330fA4e288a',
-    sessions: '0x18002Fc09deF9A47437cc64e270843dE094f5984',
-  } as Record<GuardRole, Address.Address>, // TODO: change to the actual guard address
+    wallet: '0x26f3D30F41FA897309Ae804A2AFf15CEb1dA5742',
+    sessions: '0xF6Bc87F5F2edAdb66737E32D37b46423901dfEF1',
+  } as Record<GuardRole, Address.Address>,
 
   defaultGuardTopology: {
-    // TODO: Move this somewhere else
-    type: 'signer',
-    address: '0x0000000000000000000000000000000000000000', // will be replaced by the actual guard address
+    type: 'nested',
     weight: 1n,
-  } as Config.SignerLeaf,
+    threshold: 1n,
+    tree: [
+      {
+        type: 'signer',
+        address: Constants.PlaceholderAddress,
+        weight: 1n,
+      },
+      {
+        type: 'signer',
+        // Sequence dev multisig, as recovery guard signer
+        address: '0x007a47e6BF40C1e0ed5c01aE42fDC75879140bc4',
+        weight: 1n,
+      },
+    ],
+  } as Config.NestedLeaf,
 
   defaultSessionsTopology: {
-    // TODO: Move this somewhere else
     type: 'sapient-signer',
     weight: 1n,
   } as Omit<Config.SapientSignerLeaf, 'imageHash' | 'address'>,
@@ -129,14 +233,14 @@ export const ManagerOptionsDefaults = {
   defaultRecoverySettings: {
     requiredDeltaTime: 2592000n, // 30 days (in seconds)
     minTimestamp: 0n,
+    includeTestnets: false,
   },
 
   multiInjectedProviderDiscovery: true,
 
   identity: {
-    // TODO: change to prod url once deployed
-    url: 'https://dev-identity.sequence-dev.app',
-    fetch: window.fetch,
+    url: 'https://identity.sequence.app',
+    fetch: typeof window !== 'undefined' ? window.fetch : undefined,
     verifyAttestation: true,
     email: {
       enabled: false,
@@ -156,17 +260,117 @@ export const CreateWalletOptionsDefaults = {
   useGuard: false,
 }
 
-export function applyManagerOptionsDefaults(options?: ManagerOptions) {
+export function applyManagerOptionsDefaults(options?: ManagerOptions): ResolvedManagerOptions {
+  const env = resolveWdkEnv(options?.env)
+
+  const identity: ResolvedIdentityOptions = {
+    ...ManagerOptionsDefaults.identity,
+    ...options?.identity,
+    email: { ...ManagerOptionsDefaults.identity.email, ...options?.identity?.email },
+    google: { ...ManagerOptionsDefaults.identity.google, ...options?.identity?.google },
+    apple: { ...ManagerOptionsDefaults.identity.apple, ...options?.identity?.apple },
+  }
+
+  if (!identity.fetch && env.fetch) {
+    identity.fetch = env.fetch
+  }
+
+  let encryptedPksDb = options?.encryptedPksDb ?? ManagerOptionsDefaults.encryptedPksDb
+  if (!options?.encryptedPksDb && options?.env) {
+    encryptedPksDb = new CoreSigners.Pk.Encrypted.EncryptedPksDb(undefined, undefined, env)
+  }
+
+  let authKeysDb = options?.authKeysDb ?? ManagerOptionsDefaults.authKeysDb
+  if (!options?.authKeysDb && options?.env) {
+    authKeysDb = new Db.AuthKeys(undefined, env)
+  }
+
+  let stateProvider = options?.stateProvider ?? ManagerOptionsDefaults.stateProvider
+  if (!options?.stateProvider && options?.env?.fetch) {
+    stateProvider = new State.Sequence.Provider(undefined, options.env.fetch)
+  } else if (!stateProvider && env.fetch) {
+    stateProvider = new State.Sequence.Provider(undefined, env.fetch)
+  }
+
+  if (!stateProvider) {
+    throw new Error('stateProvider is required. Provide ManagerOptions.stateProvider or env.fetch')
+  }
+
+  const extensions = options?.extensions ?? ManagerOptionsDefaults.extensions
+  const defaultGuardTopology = options?.defaultGuardTopology ?? ManagerOptionsDefaults.defaultGuardTopology
+
+  // Merge and normalize non-witnessable signers.
+  // We always include the sessions extension address for the active extensions set.
+  const nonWitnessable = new Set<string>()
+  for (const address of ManagerOptionsDefaults.nonWitnessableSigners ?? []) {
+    nonWitnessable.add(address.toLowerCase())
+  }
+  for (const address of options?.nonWitnessableSigners ?? []) {
+    nonWitnessable.add(address.toLowerCase())
+  }
+  nonWitnessable.add(extensions.sessions.toLowerCase())
+
+  // Include static signer leaves from the guard topology (e.g. recovery guard signer),
+  // but ignore the placeholder address that is later replaced per-role.
+  if (defaultGuardTopology) {
+    const guardTopologySigners = Config.getSigners(defaultGuardTopology)
+    for (const signer of guardTopologySigners.signers) {
+      if (Address.isEqual(signer, Constants.PlaceholderAddress)) {
+        continue
+      }
+      nonWitnessable.add(signer.toLowerCase())
+    }
+    for (const signer of guardTopologySigners.sapientSigners) {
+      nonWitnessable.add(signer.address.toLowerCase())
+    }
+  }
+
   return {
-    ...ManagerOptionsDefaults,
-    ...options,
-    identity: { ...ManagerOptionsDefaults.identity, ...options?.identity },
+    verbose: options?.verbose ?? ManagerOptionsDefaults.verbose,
+
+    extensions,
+    context: options?.context ?? ManagerOptionsDefaults.context,
+    context4337: options?.context4337 ?? ManagerOptionsDefaults.context4337,
+    guest: options?.guest ?? ManagerOptionsDefaults.guest,
+
+    encryptedPksDb,
+    managerDb: options?.managerDb ?? ManagerOptionsDefaults.managerDb,
+    transactionsDb: options?.transactionsDb ?? ManagerOptionsDefaults.transactionsDb,
+    signaturesDb: options?.signaturesDb ?? ManagerOptionsDefaults.signaturesDb,
+    messagesDb: options?.messagesDb ?? ManagerOptionsDefaults.messagesDb,
+    authCommitmentsDb: options?.authCommitmentsDb ?? ManagerOptionsDefaults.authCommitmentsDb,
+    recoveryDb: options?.recoveryDb ?? ManagerOptionsDefaults.recoveryDb,
+    authKeysDb,
+    passkeyCredentialsDb: options?.passkeyCredentialsDb ?? ManagerOptionsDefaults.passkeyCredentialsDb,
+
+    dbPruningInterval: options?.dbPruningInterval ?? ManagerOptionsDefaults.dbPruningInterval,
+
+    env,
+    passkeyProvider: options?.passkeyProvider ?? ManagerOptionsDefaults.passkeyProvider,
+
+    stateProvider,
+    networks: options?.networks ?? ManagerOptionsDefaults.networks,
+    relayers: options?.relayers ?? ManagerOptionsDefaults.relayers,
+    bundlers: options?.bundlers ?? ManagerOptionsDefaults.bundlers,
+    guardUrl: options?.guardUrl ?? ManagerOptionsDefaults.guardUrl,
+    guardAddresses: options?.guardAddresses ?? ManagerOptionsDefaults.guardAddresses,
+
+    nonWitnessableSigners: Array.from(nonWitnessable) as Address.Address[],
+
+    defaultGuardTopology,
+    defaultRecoverySettings: options?.defaultRecoverySettings ?? ManagerOptionsDefaults.defaultRecoverySettings,
+
+    multiInjectedProviderDiscovery:
+      options?.multiInjectedProviderDiscovery ?? ManagerOptionsDefaults.multiInjectedProviderDiscovery,
+
+    identity,
   }
 }
 
 export type RecoverySettings = {
   requiredDeltaTime: bigint
   minTimestamp: bigint
+  includeTestnets?: boolean
 }
 
 export type Databases = {
@@ -193,9 +397,11 @@ export type Sequence = {
 
   readonly networks: Network.Network[]
   readonly relayers: Relayer.Relayer[]
-  readonly bundlers: Relayer.Bundler[]
+  readonly bundlers: Bundler.Bundler[]
 
-  readonly defaultGuardTopology: Config.SignerLeaf
+  readonly nonWitnessableSigners: ReadonlySet<Address.Address>
+
+  readonly defaultGuardTopology: Config.Topology
   readonly defaultRecoverySettings: RecoverySettings
 
   readonly guardUrl: string
@@ -221,6 +427,8 @@ export type Shared = {
 
   readonly sequence: Sequence
   readonly databases: Databases
+  readonly env: WdkEnv
+  readonly passkeyProvider: PasskeyProvider
 
   readonly handlers: Map<string, Handler>
 
@@ -358,7 +566,7 @@ export class Manager {
     // Add EIP-6963 relayers if enabled
     if (ops.multiInjectedProviderDiscovery) {
       try {
-        relayers.push(...Relayer.Standard.EIP6963.getRelayers())
+        relayers.push(...Relayer.EIP6963.getRelayers())
       } catch (error) {
         console.warn('Failed to initialize EIP-6963 relayers:', error)
       }
@@ -382,6 +590,10 @@ export class Manager {
         relayers,
         bundlers: ops.bundlers,
 
+        nonWitnessableSigners: new Set(
+          (ops.nonWitnessableSigners ?? []).map((address) => address.toLowerCase() as Address.Address),
+        ),
+
         defaultGuardTopology: ops.defaultGuardTopology,
         defaultRecoverySettings: ops.defaultRecoverySettings,
 
@@ -402,6 +614,9 @@ export class Manager {
 
         pruningInterval: ops.dbPruningInterval,
       },
+
+      env: ops.env,
+      passkeyProvider: ops.passkeyProvider,
 
       modules: {} as any,
       handlers: new Map(),
@@ -435,6 +650,7 @@ export class Manager {
       modules.signatures,
       shared.sequence.extensions,
       shared.sequence.stateProvider,
+      shared.passkeyProvider,
     )
     shared.handlers.set(Kinds.LoginPasskey, this.passkeysHandler)
 
@@ -457,7 +673,7 @@ export class Manager {
     const identityInstrument = new IdentityInstrument(ops.identity.url, ops.identity.scope, verifyingFetch)
 
     if (ops.identity.email?.enabled) {
-      this.otpHandler = new OtpHandler(identityInstrument, modules.signatures, shared.databases.authKeys)
+      this.otpHandler = new OtpHandler(identityInstrument, modules.signatures, shared.databases.authKeys, shared.env)
       shared.handlers.set(Kinds.LoginEmailOtp, this.otpHandler)
     }
     if (ops.identity.google?.enabled) {
@@ -466,11 +682,13 @@ export class Manager {
         new AuthCodePkceHandler(
           'google-pkce',
           'https://accounts.google.com',
+          'https://accounts.google.com/o/oauth2/v2/auth',
           ops.identity.google.clientId,
           identityInstrument,
           modules.signatures,
           shared.databases.authCommitments,
           shared.databases.authKeys,
+          shared.env,
         ),
       )
     }
@@ -480,13 +698,57 @@ export class Manager {
         new AuthCodeHandler(
           'apple',
           'https://appleid.apple.com',
+          'https://appleid.apple.com/auth/authorize',
           ops.identity.apple.clientId,
           identityInstrument,
           modules.signatures,
           shared.databases.authCommitments,
           shared.databases.authKeys,
+          shared.env,
         ),
       )
+    }
+    if (ops.identity.customProviders?.length) {
+      for (const provider of ops.identity.customProviders) {
+        switch (provider.authMethod) {
+          case 'id-token':
+            throw new Error('id-token is not supported yet')
+          case 'authcode':
+            shared.handlers.set(
+              provider.kind,
+              new AuthCodeHandler(
+                provider.kind,
+                provider.issuer,
+                provider.oauthUrl,
+                provider.clientId,
+                identityInstrument,
+                modules.signatures,
+                shared.databases.authCommitments,
+                shared.databases.authKeys,
+                shared.env,
+              ),
+            )
+            break
+          case 'authcode-pkce':
+            shared.handlers.set(
+              provider.kind,
+              new AuthCodePkceHandler(
+                provider.kind,
+                provider.issuer,
+                provider.oauthUrl,
+                provider.clientId,
+                identityInstrument,
+                modules.signatures,
+                shared.databases.authCommitments,
+                shared.databases.authKeys,
+                shared.env,
+              ),
+            )
+            break
+          default:
+            throw new Error('unsupported auth method')
+        }
+      }
     }
 
     shared.modules = modules
@@ -500,18 +762,16 @@ export class Manager {
     }
   }
 
-  public registerMnemonicUI(onPromptMnemonic: (respond: (mnemonic: string) => Promise<void>) => Promise<void>) {
+  public registerMnemonicUI(onPromptMnemonic: PromptMnemonicHandler) {
     return this.mnemonicHandler.registerUI(onPromptMnemonic)
   }
 
-  public registerOtpUI(onPromptOtp: (recipient: string, respond: (otp: string) => Promise<void>) => Promise<void>) {
+  public registerOtpUI(onPromptOtp: PromptOtpHandler) {
     return this.otpHandler?.registerUI(onPromptOtp) || (() => {})
   }
 
-  public registerGuardUI(
-    onPromptOtp: (codeType: 'TOTP' | 'PIN', respond: (otp: string) => Promise<void>) => Promise<void>,
-  ) {
-    return this.guardHandler?.registerUI(onPromptOtp) || (() => {})
+  public registerGuardUI(onPromptCode: PromptCodeHandler) {
+    return this.guardHandler?.registerUI(onPromptCode) || (() => {})
   }
 
   public async setRedirectPrefix(prefix: string) {
