@@ -6,7 +6,7 @@ import { Payload } from '@0xsequence/wallet-primitives'
 import { IntentPrecondition } from './rpc/relayer.gen.js'
 
 export class EIP6963Relayer implements Relayer {
-  public readonly kind: 'relayer' = 'relayer'
+  public readonly kind = 'relayer'
   public readonly type = 'eip6963'
   public readonly id: string
   public readonly info: EIP6963ProviderInfo
@@ -55,7 +55,7 @@ export function getEIP6963Store() {
   return store
 }
 
-let relayers: Map<string, EIP6963Relayer> = new Map()
+const relayers: Map<string, EIP6963Relayer> = new Map()
 
 export function getRelayers(): EIP6963Relayer[] {
   const store = getEIP6963Store()

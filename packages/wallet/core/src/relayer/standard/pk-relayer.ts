@@ -4,7 +4,7 @@ import { LocalRelayer } from './local.js'
 import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
 
 export class PkRelayer implements Relayer {
-  public readonly kind: 'relayer' = 'relayer'
+  public readonly kind = 'relayer'
   public readonly type = 'pk'
   public readonly id = 'pk'
   private readonly relayer: LocalRelayer
@@ -127,7 +127,7 @@ export class PkRelayer implements Relayer {
     return this.relayer.status(opHash, chainId)
   }
 
-  async checkPrecondition(precondition: Precondition.Precondition): Promise<boolean> {
+  async checkPrecondition(_precondition: Precondition.Precondition): Promise<boolean> {
     // TODO: Implement precondition check
     return true
   }
