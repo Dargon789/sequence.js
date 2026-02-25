@@ -1,5 +1,75 @@
 # @0xsequence/wallet-core
 
+## 3.0.0-beta.19
+
+### Patch Changes
+
+- Final RC before 3.0.0
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.19
+  - @0xsequence/relayer@3.0.0-beta.19
+  - @0xsequence/wallet-primitives@3.0.0-beta.19
+
+## 3.0.0-beta.18
+
+### Patch Changes
+
+- multicall3 optimization
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.18
+  - @0xsequence/relayer@3.0.0-beta.18
+  - @0xsequence/wallet-primitives@3.0.0-beta.18
+
+## 3.0.0-beta.17
+
+### Patch Changes
+
+- New chains, relayer rpc fix
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.17
+  - @0xsequence/relayer@3.0.0-beta.17
+  - @0xsequence/wallet-primitives@3.0.0-beta.17
+
+## 3.0.0-beta.16
+
+### Patch Changes
+
+- ethauth support
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.16
+  - @0xsequence/relayer@3.0.0-beta.16
+  - @0xsequence/wallet-primitives@3.0.0-beta.16
+
+## 3.0.0-beta.15
+
+### Patch Changes
+
+- New chains, minor fixes
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.15
+  - @0xsequence/relayer@3.0.0-beta.15
+  - @0xsequence/wallet-primitives@3.0.0-beta.15
+
+## 3.0.0-beta.14
+
+### Patch Changes
+
+- Relayer fee options fix
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.14
+  - @0xsequence/relayer@3.0.0-beta.14
+  - @0xsequence/wallet-primitives@3.0.0-beta.14
+
+## 3.0.0-beta.13
+
+### Patch Changes
+
+- Userdata service updates
+- Updated dependencies
+  - @0xsequence/guard@3.0.0-beta.13
+  - @0xsequence/relayer@3.0.0-beta.13
+  - @0xsequence/wallet-primitives@3.0.0-beta.13
+
 ## 3.0.0-beta.12
 
 ### Patch Changes

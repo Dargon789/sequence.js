@@ -1,5 +1,47 @@
 # @0xsequence/wallet-primitives
 
+## 3.0.0-beta.19
+
+### Patch Changes
+
+- Final RC before 3.0.0
+
+## 3.0.0-beta.18
+
+### Patch Changes
+
+- multicall3 optimization
+
+## 3.0.0-beta.17
+
+### Patch Changes
+
+- New chains, relayer rpc fix
+
+## 3.0.0-beta.16
+
+### Patch Changes
+
+- ethauth support
+
+## 3.0.0-beta.15
+
+### Patch Changes
+
+- New chains, minor fixes
+
+## 3.0.0-beta.14
+
+### Patch Changes
+
+- Relayer fee options fix
+
+## 3.0.0-beta.13
+
+### Patch Changes
+
+- Userdata service updates
+
 ## 3.0.0-beta.12
 
 ### Patch Changes
