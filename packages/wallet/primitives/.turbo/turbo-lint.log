@@ -1,0 +1,8 @@
+
+> @0xsequence/wallet-primitives@3.0.0-beta.18 lint D:\GitHub\projects\sequence.js\packages\wallet\primitives
+> eslint . --max-warnings 0
+
+'eslint' is not recognized as an internal or external command,
+operable program or batch file.
+ ELIFECYCLE  Command failed with exit code 1.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?

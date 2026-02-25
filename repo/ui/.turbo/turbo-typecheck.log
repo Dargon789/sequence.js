@@ -1,0 +1,13 @@
+
+> @repo/ui@0.0.1-beta.1 typecheck D:\GitHub\projects\sequence.js\repo\ui
+> tsc --noEmit
+
+error TS2688: Cannot find type definition file for 'readable-stream'.
+  The file is in the program because:
+    Entry point for implicit type library 'readable-stream'
+error TS2688: Cannot find type definition file for 'trusted-types'.
+  The file is in the program because:
+    Entry point for implicit type library 'trusted-types'
+tsconfig.json(2,14): error TS6053: File '@repo/typescript-config/react-library.json' not found.
+ ELIFECYCLE  Command failed with exit code 2.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?

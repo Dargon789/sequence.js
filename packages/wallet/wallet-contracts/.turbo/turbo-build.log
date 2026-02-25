@@ -1,0 +1,17 @@
+
+> @0xsequence/wallet-contracts@3.0.1 build D:\GitHub\projects\sequence.js\packages\wallet\wallet-contracts
+> pnpm compile && pnpm adapter
+
+
+> @0xsequence/wallet-contracts@3.0.1 compile D:\GitHub\projects\sequence.js\packages\wallet\wallet-contracts
+> hardhat --max-memory 4096 compile
+
+Error HHE22: Trying to use a non-local installation of Hardhat, which is not supported.
+
+Please install Hardhat locally using pnpm, npm or yarn, and try again.
+
+For more info go to https://hardhat.org/HHE22 or run Hardhat with --show-stack-traces
+ ELIFECYCLE  Command failed with exit code 1.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
+ ELIFECYCLE  Command failed with exit code 1.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?

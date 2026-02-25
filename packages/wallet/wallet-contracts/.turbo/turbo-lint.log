@@ -1,0 +1,14 @@
+
+> @0xsequence/wallet-contracts@3.0.1 lint D:\GitHub\projects\sequence.js\packages\wallet\wallet-contracts
+> pnpm lint:ts && pnpm lint:sol
+
+
+> @0xsequence/wallet-contracts@3.0.1 lint:ts D:\GitHub\projects\sequence.js\packages\wallet\wallet-contracts
+> eslint -c .eslintrc.js "./**/*.ts"
+
+'eslint' is not recognized as an internal or external command,
+operable program or batch file.
+ ELIFECYCLE  Command failed with exit code 1.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
+ ELIFECYCLE  Command failed with exit code 1.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?
