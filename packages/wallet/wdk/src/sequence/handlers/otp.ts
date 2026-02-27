@@ -83,7 +83,7 @@ export class OtpHandler extends IdentityHandler implements Handler {
         try {
           await this.handleAuth(challenge, onPromptOtp)
           return true
-        } catch (e) {
+        } catch {
           return false
         }
       },
@@ -94,6 +94,7 @@ export class OtpHandler extends IdentityHandler implements Handler {
     challenge: Identity.OtpChallenge,
     onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>,
   ): Promise<{ signer: Signers.Signer & Signers.Witnessable; email: string }> {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
         const { loginHint, challenge: codeChallenge } = await this.nitroCommitVerifier(challenge)
