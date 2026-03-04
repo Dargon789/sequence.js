@@ -103,7 +103,7 @@ describe('Implicit Session', () => {
       const result = implicitSigner.isValid(topology, 1)
 
       expect(result.isValid).toBe(false)
-      expect(result.invalidReason).toBe('Identity signer mismatch')
+      expect(result.invalidReason).toBe('Identity signer not found')
     })
 
     it('should return true regardless of chainId', () => {
@@ -223,7 +223,7 @@ describe('Implicit Session', () => {
       const result = implicitSigner.isValid(topology, 1)
 
       expect(result.isValid).toBe(false)
-      expect(result.invalidReason).toBe('Identity signer mismatch')
+      expect(result.invalidReason).toBe('Identity signer not found')
     })
 
     it('should return false when attestation is issued in the future', () => {
@@ -236,7 +236,6 @@ describe('Implicit Session', () => {
         },
       }
       const identitySignature = createValidIdentitySignature(attestation)
-      const topology = createValidTopology()
 
       // This should throw an error during construction due to future issued time
       expect(() => {
@@ -250,7 +249,6 @@ describe('Implicit Session', () => {
         approvedSigner: randomAddress(), // Different approved signer
       }
       const identitySignature = createValidIdentitySignature(attestation)
-      const topology = createValidTopology()
 
       // This should throw an error during construction due to mismatched approved signer
       expect(() => {

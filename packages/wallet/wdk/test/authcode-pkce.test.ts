@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { Address, Hex, Bytes } from 'ox'
 import * as Identity from '@0xsequence/identity-instrument'
-import { AuthCodePkceHandler } from '../src/sequence/handlers/authcode-pkce'
-import { Signatures } from '../src/sequence/signatures'
-import * as Db from '../src/dbs'
-import { IdentitySigner } from '../src/identity/signer'
+import { AuthCodePkceHandler } from '../src/sequence/handlers/authcode-pkce.js'
+import { Signatures } from '../src/sequence/signatures.js'
+import * as Db from '../src/dbs/index.js'
+import { IdentitySigner } from '../src/identity/signer.js'
 
 describe('AuthCodePkceHandler', () => {
   let handler: AuthCodePkceHandler
@@ -56,6 +55,7 @@ describe('AuthCodePkceHandler', () => {
     handler = new AuthCodePkceHandler(
       'google-pkce',
       'https://accounts.google.com',
+      'https://accounts.google.com/o/oauth2/v2/auth',
       'test-google-client-id',
       mockNitroInstrument,
       mockSignatures,
@@ -67,7 +67,7 @@ describe('AuthCodePkceHandler', () => {
     handler.setRedirectUri('https://example.com/auth/callback')
 
     // Mock inherited methods
-    vi.spyOn(handler as any, 'nitroCommitVerifier').mockImplementation(async (challenge) => {
+    vi.spyOn(handler as any, 'nitroCommitVerifier').mockImplementation(async () => {
       return {
         verifier: 'mock-verifier-code',
         loginHint: 'user@example.com',
@@ -75,14 +75,12 @@ describe('AuthCodePkceHandler', () => {
       }
     })
 
-    vi.spyOn(handler as any, 'nitroCompleteAuth').mockImplementation(async (challenge) => {
+    vi.spyOn(handler as any, 'nitroCompleteAuth').mockImplementation(async () => {
       return {
         signer: mockIdentitySigner,
         email: 'user@example.com',
       }
     })
-
-    vi.spyOn(handler as any, 'oauthUrl').mockReturnValue('https://accounts.google.com/oauth/authorize')
   })
 
   afterEach(() => {
@@ -116,7 +114,7 @@ describe('AuthCodePkceHandler', () => {
       })
 
       // Verify OAuth URL is constructed correctly
-      expect(result).toMatch(/^https:\/\/accounts\.google\.com\/oauth\/authorize\?/)
+      expect(result).toMatch(/^https:\/\/accounts\.google\.com\/o\/oauth2\/v2\/auth\?/)
       expect(result).toContain('code_challenge=mock-challenge-hash')
       expect(result).toContain('code_challenge_method=S256')
       expect(result).toContain('client_id=test-google-client-id')
@@ -335,10 +333,6 @@ describe('AuthCodePkceHandler', () => {
       const newRedirectUri = 'https://newdomain.com/callback'
       handler.setRedirectUri(newRedirectUri)
 
-      // Verify redirect URI is used in OAuth URL construction
-      const mockUrl = 'https://accounts.google.com/oauth/authorize'
-      vi.spyOn(handler as any, 'oauthUrl').mockReturnValue(mockUrl)
-
       return handler.commitAuth('https://example.com/success', true).then((result) => {
         expect(result).toContain(`redirect_uri=${encodeURIComponent(newRedirectUri)}`)
       })
@@ -346,8 +340,9 @@ describe('AuthCodePkceHandler', () => {
 
     it('Should work with different issuer and audience configurations', () => {
       const customHandler = new AuthCodePkceHandler(
-        'google-pkce',
+        'custom-provider',
         'https://custom-issuer.com',
+        'https://custom-issuer.com/o/oauth2/v2/auth',
         'custom-client-id',
         mockNitroInstrument,
         mockSignatures,
@@ -357,7 +352,7 @@ describe('AuthCodePkceHandler', () => {
 
       expect(customHandler['issuer']).toBe('https://custom-issuer.com')
       expect(customHandler['audience']).toBe('custom-client-id')
-      expect(customHandler.signupKind).toBe('google-pkce')
+      expect(customHandler.signupKind).toBe('custom-provider')
     })
   })
 })

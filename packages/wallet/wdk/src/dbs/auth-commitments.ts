@@ -1,11 +1,11 @@
-import { Generic, Migration } from './generic.js'
+import { Generic } from './generic.js'
 import { IDBPDatabase, IDBPTransaction } from 'idb'
 
 const TABLE_NAME = 'auth-commitments'
 
 export type AuthCommitment = {
   id: string
-  kind: 'google-pkce' | 'apple'
+  kind: 'google-pkce' | 'apple' | `custom-${string}`
   metadata: { [key: string]: string }
   verifier?: string
   challenge?: string

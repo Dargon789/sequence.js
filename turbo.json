@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://v2-8-10.turborepo.dev/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
@@ -25,7 +25,9 @@
         "repo/**/*.ts",
         "repo/**/*.tsx",
         "test/**/*.ts",
-        "test/**/*.tsx"
+        "test/**/*.tsx",
+        "test/**/*.js",
+        "test/**/*.mjs"
       ],
       "outputs": []
     },
