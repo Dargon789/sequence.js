@@ -16,6 +16,7 @@ export interface Relayer {
   feeOptions(
     wallet: Address.Address,
     chainId: number,
+    to: Address.Address,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }>
 
@@ -26,8 +27,10 @@ export interface Relayer {
   checkPrecondition(precondition: Precondition.Precondition): Promise<boolean>
 }
 
-export function isRelayer(relayer: any): relayer is Relayer {
+export function isRelayer(relayer: unknown): relayer is Relayer {
   return (
+    typeof relayer === 'object' &&
+    relayer !== null &&
     'isAvailable' in relayer &&
     'feeOptions' in relayer &&
     'relay' in relayer &&
