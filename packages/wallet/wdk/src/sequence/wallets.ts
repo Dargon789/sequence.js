@@ -1,17 +1,17 @@
 import { Wallet as CoreWallet, Envelope, Signers, State } from '@0xsequence/wallet-core'
-import { Config, Constants, GenericTree, Payload, SessionConfig } from '@0xsequence/wallet-primitives'
+import { Config, Constants, Payload } from '@0xsequence/wallet-primitives'
 import { Address, Hex, Provider, RpcTransport } from 'ox'
 import { AuthCommitment } from '../dbs/auth-commitments.js'
 import { AuthCodeHandler } from './handlers/authcode.js'
 import { MnemonicHandler } from './handlers/mnemonic.js'
 import { OtpHandler } from './handlers/otp.js'
-import { ManagerOptionsDefaults, Shared } from './manager.js'
+import { Shared } from './manager.js'
 import { Device } from './types/device.js'
 import { Action, Module } from './types/index.js'
 import { Kinds, SignerWithKind, WitnessExtraSignerKind } from './types/signer.js'
 import { Wallet, WalletSelectionUiHandler } from './types/wallet.js'
 import { PasskeysHandler } from './handlers/passkeys.js'
-import { GuardRole } from './guards.js'
+import type { PasskeySigner } from './passkeys-provider.js'
 
 export type StartSignUpWithRedirectArgs = {
   kind: 'google-pkce' | 'apple' | `custom-${string}`
@@ -417,17 +417,17 @@ function buildCappedTree(members: { address: Address.Address; imageHash?: Hex.He
   } as Config.NestedLeaf
 }
 
-function buildCappedTreeFromTopology(weight: bigint, topology: Config.Topology): Config.Topology {
-  // We may optimize this for some topology types
-  // but it is not worth it, because the topology
-  // that we will use for prod won't be optimizable
-  return {
-    type: 'nested',
-    weight: weight,
-    threshold: weight,
-    tree: topology,
-  }
-}
+// function buildCappedTreeFromTopology(weight: bigint, topology: Config.Topology): Config.Topology {
+//   // We may optimize this for some topology types
+//   // but it is not worth it, because the topology
+//   // that we will use for prod won't be optimizable
+//   return {
+//     type: 'nested',
+//     weight: weight,
+//     threshold: weight,
+//     tree: topology,
+//   }
+// }
 
 function toConfig(
   checkpoint: bigint,
@@ -625,8 +625,8 @@ export class Wallets implements WalletsInterface {
     loginEmail?: string
   }> {
     switch (args.kind) {
-      case 'passkey':
-        const passkeySigner = await Signers.Passkey.Passkey.create(this.shared.sequence.extensions, {
+      case 'passkey': {
+        const passkeySigner = await this.shared.passkeyProvider.create(this.shared.sequence.extensions, {
           stateProvider: this.shared.sequence.stateProvider,
           credentialName: args.name,
         })
@@ -638,8 +638,9 @@ export class Wallets implements WalletsInterface {
             signerKind: Kinds.LoginPasskey,
           },
         }
+      }
 
-      case 'mnemonic':
+      case 'mnemonic': {
         const mnemonicSigner = MnemonicHandler.toSigner(args.mnemonic)
         if (!mnemonicSigner) {
           throw new Error('invalid-mnemonic')
@@ -653,6 +654,7 @@ export class Wallets implements WalletsInterface {
             signerKind: Kinds.LoginMnemonic,
           },
         }
+      }
 
       case 'email-otp': {
         const handler = this.shared.handlers.get(Kinds.LoginEmailOtp) as OtpHandler
@@ -834,7 +836,7 @@ export class Wallets implements WalletsInterface {
     const sessionsGuardTopology = args.noGuard ? undefined : this.shared.modules.guards.topology('sessions')
 
     // Add modules
-    let modules: Module[] = []
+    const modules: Module[] = []
 
     if (!args.noSessionManager) {
       const identitySigners = [device.address]
@@ -891,7 +893,7 @@ export class Wallets implements WalletsInterface {
     }
 
     // Store passkey credential ID mapping if this is a passkey signup
-    if (args.kind === 'passkey' && loginSigner.signer instanceof Signers.Passkey.Passkey) {
+    if (args.kind === 'passkey' && this.isPasskeySigner(loginSigner.signer)) {
       try {
         await this.shared.databases.passkeyCredentials.saveCredential(
           loginSigner.signer.credentialId,
@@ -1043,8 +1045,6 @@ export class Wallets implements WalletsInterface {
         })
 
         return requestId
-      } catch (error) {
-        throw error
       } finally {
         this.pendingMnemonicOrPasskeyLogin = undefined
       }
@@ -1075,7 +1075,7 @@ export class Wallets implements WalletsInterface {
     }
 
     if (isLoginToPasskeyArgs(args)) {
-      let passkeySigner: Signers.Passkey.Passkey
+      let passkeySigner: PasskeySigner
 
       if (args.credentialId) {
         // Application-controlled login: use the provided credentialId
@@ -1087,7 +1087,7 @@ export class Wallets implements WalletsInterface {
         }
 
         // Create passkey signer from stored credential
-        passkeySigner = new Signers.Passkey.Passkey({
+        passkeySigner = this.shared.passkeyProvider.fromCredential({
           credentialId: credential.credentialId,
           publicKey: credential.publicKey,
           extensions: this.shared.sequence.extensions,
@@ -1098,7 +1098,7 @@ export class Wallets implements WalletsInterface {
         // Default discovery behavior: use WebAuthn discovery
         this.shared.modules.logger.log('No credentialId provided, using discovery method')
 
-        const foundPasskeySigner = await Signers.Passkey.Passkey.find(
+        const foundPasskeySigner = await this.shared.passkeyProvider.find(
           this.shared.sequence.stateProvider,
           this.shared.sequence.extensions,
         )
@@ -1151,6 +1151,20 @@ export class Wallets implements WalletsInterface {
     }
 
     throw new Error('invalid-login-args')
+  }
+
+  private isPasskeySigner(signer: unknown): signer is PasskeySigner {
+    const guard = this.shared.passkeyProvider.isSigner
+    if (guard) {
+      return guard(signer)
+    }
+    return (
+      typeof signer === 'object' &&
+      signer !== null &&
+      'credentialId' in signer &&
+      'publicKey' in signer &&
+      'imageHash' in signer
+    )
   }
 
   async completeLogin(requestId: string) {
@@ -1220,7 +1234,7 @@ export class Wallets implements WalletsInterface {
     return requestId
   }
 
-  async completeLogout(requestId: string, options?: { skipValidateSave?: boolean }) {
+  async completeLogout(requestId: string, _options?: { skipValidateSave?: boolean }) {
     const request = await this.shared.modules.signatures.get(requestId)
     const walletEntry = await this.shared.databases.manager.get(request.wallet)
     if (!walletEntry) {

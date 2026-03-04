@@ -3,7 +3,7 @@ import { Payload } from '@0xsequence/wallet-primitives'
 import { AbiFunction, Address, Bytes, Hex } from 'ox'
 import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../index.js'
 export class SequenceRelayer implements Relayer {
-  public readonly kind: 'relayer' = 'relayer'
+  public readonly kind = 'relayer'
   public readonly type = 'sequence'
   readonly id = 'sequence'
 
@@ -36,9 +36,9 @@ export class SequenceRelayer implements Relayer {
   async feeOptions(
     wallet: Address.Address,
     _chainId: number,
+    to: Address.Address,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
-    const to = wallet // TODO: this might be the guest module
     const execute = AbiFunction.from('function execute(bytes calldata _payload, bytes calldata _signature)')
     const payload = Payload.encode({ type: 'call', space: 0n, nonce: 0n, calls }, to)
     const signature = '0x0001' // TODO: use a stub signature
@@ -52,7 +52,7 @@ export class SequenceRelayer implements Relayer {
     }
   }
 
-  async checkPrecondition(precondition: TransactionPrecondition): Promise<boolean> {
+  async checkPrecondition(_precondition: TransactionPrecondition): Promise<boolean> {
     // TODO: implement
     return false
   }
