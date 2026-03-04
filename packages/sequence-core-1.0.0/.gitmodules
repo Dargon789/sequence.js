@@ -1,0 +1,3 @@
+[submodule "lib/signals-implicit-mode"]
+	path = lib/signals-implicit-mode
+	url = https://github.com/0xsequence/signals-implicit-mode

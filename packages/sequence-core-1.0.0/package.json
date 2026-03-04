@@ -1,0 +1,60 @@
+{
+  "name": "sequence-core",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "lefthook": "^1.13.6",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.1.0",
+    "turbo": "^2.6.1",
+    "typescript": "5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "0xsequence": "^2.3.33",
+    "@0xsequence/connect": "0.0.0-20250924112110",
+    "@0xsequence/waas": "^2.3.33",
+    "@0xsequence/wallet": "~2.3.33",
+    "@0xsequence/wallet-contracts": "~3.0.1",
+    "@0xsequence/wallet-primitives": "0.0.0-20250915145821",
+    "@vercel/analytics": "^1.5.0",
+    "ethers": "^6.15.0",
+    "flag": "^5.0.1",
+    "prettier-plugin-solidity": "^2.2.0",
+    "vercel": "^48.10.2"
+  },
+  "version": "1.0.0",
+  "description": "**NOTE: please see [v2](https://github.com/0xsequence/sequence.js/tree/v2) branch for sequence.js 2.x.x**",
+  "main": "sequence.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dargon789/sequence.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Dargon789/sequence.js/issues"
+  },
+  "homepage": "https://github.com/Dargon789/sequence.js#readme",
+  "scripts": {
+    "build:all": "turbo build",
+    "build:packages": "turbo build --filter=\"./packages/**/*\"",
+    "build": "pnpm build:packages",
+    "dev": "turbo dev",
+    "test": "turbo test --concurrency=1",
+    "lint": "turbo lint",
+    "format": "prettier --list-different --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo typecheck",
+    "postinstall": "lefthook install",
+    "dev:server": "node packages/wallet/primitives-cli/dist/index.js server",
+    "reinstall": "rimraf -g ./**/node_modules && pnpm install",
+    "test:anvil": "anvil --fork-url https://nodes.sequence.app/arbitrum",
+    "clean": "turbo clean"
+  }
+}

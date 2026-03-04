@@ -1,0 +1,63 @@
+on: [push]
+
+name: tests
+
+jobs:
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+
+  build:
+    name: Run build
+    runs-on: ubuntu-latest
+    needs: [install]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - run: pnpm clean
+      - run: pnpm build
+
+  tests:
+    name: Run all tests
+    runs-on: ubuntu-latest
+    needs: [install]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: Start Anvil in background
+        run: anvil --fork-url https://nodes.sequence.app/arbitrum &
+      - run: pnpm test
+
+  # NOTE: if you'd like to see example of how to run
+  # tests per package in parallel, see 'v2' branch
+  # .github/workflows/tests.yml
+
+  # coverage:
+  #   name: Run coverage
+  #   runs-on: ubuntu-latest
+  #   needs: [install]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #     - uses: actions/cache@v4
+  #       id: pnpm-cache
+  #       with:
+  #         path: |
+  #           node_modules
+  #           */*/node_modules
+  #         key: ${{ runner.os }}-install-${{ hashFiles('**/package.json', '**/pnpm.lock') }}
+  #     - run: pnpm dev && (pnpm coverage || true)
+  #     - uses: codecov/codecov-action@v1
+  #       with:
+  #         fail_ci_if_error: true
+  #         verbose: true
+  #         directory: ./coverage

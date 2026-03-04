@@ -1,41 +1,39 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# Dependencies
+.DS_Store
+.next
+.nuxt
+.pnpm-debug.log*
+cache
+coverage
+dist
 node_modules
-.pnp
-.pnp.js
+tsconfig.tsbuildinfo
+*.vitest-temp.json
 
-# Local env files
+# local env files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.envrc
 
-# Testing
-coverage
-
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
-
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Misc
-.DS_Store
-*.pem
-
-# Husky
-.husky/
+# proxy packages
+packages/cli/config
+packages/cli/plugins
+packages/core/actions
+packages/core/chains
+packages/core/codegen
+packages/core/experimental
+packages/core/internal
+packages/core/query
+packages/react/actions
+packages/react/chains
+packages/react/codegen
+packages/react/connectors
+packages/react/experimental
+packages/react/query
+packages/vue/actions
+packages/vue/chains
+packages/vue/connectors
+packages/vue/nuxt
+packages/vue/query
