@@ -37,12 +37,14 @@ import {
   TransportMode,
   GuardConfig,
   CreateNewSessionPayload,
+  EthAuthSettings,
   ModifyExplicitSessionPayload,
   SessionResponse,
   AddExplicitSessionPayload,
   FeeOption,
   OperationFailedStatus,
   OperationStatus,
+  ETHAuthProof,
 } from './types/index.js'
 import { CACHE_DB_NAME, VALUE_FORWARDER_ADDRESS } from './utils/constants.js'
 import { ExplicitSession, ImplicitSession, ExplicitSessionConfig } from './index.js'
@@ -156,11 +158,11 @@ export class ChainSessionManager {
     listener: ChainSessionManagerEventMap[K],
   ): () => void {
     if (!this.eventListeners[event]) {
-      this.eventListeners[event] = new Set() as any
+      this.eventListeners[event] = new Set<ChainSessionManagerEventMap[K]>()
     }
-    ;(this.eventListeners[event] as any).add(listener)
+    this.eventListeners[event].add(listener)
     return () => {
-      ;(this.eventListeners[event] as any)?.delete(listener)
+      this.eventListeners[event]?.delete(listener)
     }
   }
 
@@ -285,6 +287,7 @@ export class ChainSessionManager {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (this.isInitialized) {
@@ -311,6 +314,7 @@ export class ChainSessionManager {
         origin,
         session: completeSession as ExplicitSession | undefined,
         includeImplicitSession: options.includeImplicitSession ?? false,
+        ethAuth: options.ethAuth,
         preferredLoginMethod: options.preferredLoginMethod,
         email: options.preferredLoginMethod === 'email' ? options.email : undefined,
       }
@@ -375,6 +379,10 @@ export class ChainSessionManager {
         this.loginMethod = loginMethod ?? null
         this.userEmail = userEmail ?? null
         this.guard = guard
+      }
+
+      if (payload.ethAuth) {
+        await this._saveEthAuthProofIfProvided(connectResponse.ethAuthProof)
       }
 
       if (this.transport.mode === TransportMode.POPUP) {
@@ -595,6 +603,10 @@ export class ChainSessionManager {
           this.loginMethod = loginMethod ?? null
           this.userEmail = userEmail ?? null
           this.guard = guard
+        }
+
+        if (savedPayload?.ethAuth) {
+          await this._saveEthAuthProofIfProvided(connectResponse.ethAuthProof)
         }
       } else if (response.action === RequestActionType.ADD_EXPLICIT_SESSION) {
         if (!this.walletAddress || !Address.isEqual(receivedAddress, this.walletAddress)) {
@@ -851,7 +863,9 @@ export class ChainSessionManager {
           createdAtMs: Date.now(),
         }
       }
-      const feeOptions = await this.relayer.feeOptions(signedCall.to, this.chainId, callsToSend)
+      const walletAddress = this.walletAddress
+      if (!walletAddress) throw new InitializationError('Wallet is not initialized.')
+      const feeOptions = await this.relayer.feeOptions(walletAddress, this.chainId, signedCall.to, callsToSend)
       return feeOptions.options
     } catch (err) {
       throw new FeeOptionError(`Failed to get fee options: ${err instanceof Error ? err.message : String(err)}`)
@@ -1100,6 +1114,13 @@ export class ChainSessionManager {
     await this.sequenceStorage.clearImplicitSession()
     await this.sequenceStorage.clearExplicitSessions()
     await this.sequenceStorage.clearSessionlessConnection()
+  }
+
+  private async _saveEthAuthProofIfProvided(ethAuthProof?: ETHAuthProof): Promise<void> {
+    if (!ethAuthProof) {
+      return
+    }
+    await this.sequenceStorage.saveEthAuthProof(ethAuthProof)
   }
 
   private _getCachedSignedCall(calls: Payload.Call[]): { to: Address.Address; data: Hex.Hex } | null {

@@ -9,13 +9,17 @@ import {
   TransactionRequest,
 } from 'ox'
 import { normalizeAddressKeys, Provider as ProviderInterface } from '../index.js'
-import { Sessions, SignatureType } from './sessions.gen.js'
+import { Sessions, SignatureType, type Fetch } from './sessions.gen.js'
 
 export class Provider implements ProviderInterface {
   private readonly service: Sessions
 
-  constructor(host = 'https://keymachine.sequence.app') {
-    this.service = new Sessions(host, fetch)
+  constructor(host = 'https://keymachine.sequence.app', fetcher?: Fetch) {
+    const resolvedFetch = fetcher ?? (globalThis as any).fetch
+    if (!resolvedFetch) {
+      throw new Error('fetch is not available')
+    }
+    this.service = new Sessions(host, resolvedFetch)
   }
 
   async getConfiguration(imageHash: Hex.Hex): Promise<Config.Config | undefined> {
@@ -186,7 +190,9 @@ export class Provider implements ProviderInterface {
         case SignatureType.SapientCompact:
           throw new Error(`unexpected compact sapient signature by ${signer}`)
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
 
   async getWitnessForSapient(
@@ -221,7 +227,9 @@ export class Provider implements ProviderInterface {
             signature: { type: 'sapient_compact', address: signer, data: witness.signature },
           }
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }
 
   async getConfigurationUpdates(
@@ -380,7 +388,7 @@ const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSi
 class PasskeySignatureValidator implements oxProvider.Provider {
   request: oxProvider.Provider['request'] = (async (request) => {
     switch (request.method) {
-      case 'eth_call':
+      case 'eth_call': {
         if (!request.params || !Array.isArray(request.params) || request.params.length === 0) {
           throw new Error('eth_call requires transaction parameters')
         }
@@ -406,6 +414,7 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         } else {
           throw new Error(`invalid passkey signature ${signature} for digest ${digest}`)
         }
+      }
 
       default:
         throw new Error(`method ${request.method} not implemented`)
