@@ -421,7 +421,7 @@ class CheatcodesPrinter:
         abicoder_pragma: bool = False,
         block_doc_style: bool = False,
         indent_level: int = 0,
-        indent_with: Union[int, str] = 4,
+        indent_with: int | str = 4,
         nl_str: str = "\n",
         items_order: ItemOrder = ItemOrder.default(),
     ):
