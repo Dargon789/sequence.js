@@ -8,11 +8,7 @@ export function isWitnessExtraSignerKind(extra: any): extra is WitnessExtraSigne
 }
 
 function toKnownKind(kind: string): Kind {
-  if (kind.startsWith('custom-')) {
-    return kind as Kind
-  }
-
-  if (Object.values(Kinds).includes(kind as (typeof Kinds)[keyof typeof Kinds])) {
+  if (Object.values(Kinds).includes(kind as Kind)) {
     return kind as Kind
   }
 
@@ -46,19 +42,6 @@ export class Signers {
       )
     ) {
       return Kinds.Guard
-    }
-
-    // Passkeys are a sapient signer module: the address alone identifies the kind.
-    // Metadata (credential id, public key, etc.) is loaded later by the PasskeysHandler
-    // via the witness payload, so we can skip the witness probe here.
-    if (Address.isEqual(this.shared.sequence.extensions.passkeys, address)) {
-      return Kinds.LoginPasskey
-    }
-
-    // Some signers are known to never publish a witness record (e.g. module signers).
-    // Skip probing the Sessions/Witness endpoint for them.
-    if (this.shared.sequence.nonWitnessableSigners.has(address.toLowerCase() as Address.Address)) {
-      return undefined
     }
 
     // We need to use the state provider (and witness) this will tell us the kind of signer

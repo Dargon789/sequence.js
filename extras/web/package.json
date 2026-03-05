@@ -4,12 +4,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3000",
+    "dev": "next dev --turbo pack --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "clean": "rimraf .next"
+    "clean": "riffraff .next"
   },
   "dependencies": {
     "@repo/ui": "workspace:^",
