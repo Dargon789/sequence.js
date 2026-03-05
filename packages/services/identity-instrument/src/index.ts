@@ -65,7 +65,7 @@ export class IdentityInstrument {
         keyType: KeyType.Ethereum_Secp256k1,
       },
       digest: Hex.fromBytes(digest),
-      nonce: Hex.fromNumber(Date.now()),
+      nonce: Hex.random(16),
     }
     const res = await this.rpc.sign({
       params,

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { Manager, SignerActionable, SignerReady } from '../src/sequence/index.js'
+import { Manager, SignerActionable, SignerReady } from '../src/sequence'
 import { Mnemonic, Address } from 'ox'
-import { newManager } from './constants.js'
-import { Config, Constants, Network } from '@0xsequence/wallet-primitives'
+import { newManager } from './constants'
+import { Network } from '@0xsequence/wallet-primitives'
 
 describe('Wallets', () => {
   let manager: Manager | undefined
@@ -65,7 +65,7 @@ describe('Wallets', () => {
 
     const walletsAfterFirst = await manager.wallets.list()
     expect(walletsAfterFirst.length).toBe(1)
-    expect(walletsAfterFirst[0]!.address).toBe(wallet1)
+    expect(walletsAfterFirst[0].address).toBe(wallet1)
   })
 
   // === WALLET SELECTOR REGISTRATION ===
@@ -283,112 +283,19 @@ describe('Wallets', () => {
 
     expect(config.devices).toBeDefined()
     expect(config.devices.length).toBe(1)
-    expect(config.devices[0]!.kind).toBe('local-device')
-    expect(config.devices[0]!.address).toBeDefined()
+    expect(config.devices[0].kind).toBe('local-device')
+    expect(config.devices[0].address).toBeDefined()
 
     expect(config.login).toBeDefined()
     expect(config.login.length).toBe(1)
-    expect(config.login[0]!.kind).toBe('login-mnemonic')
+    expect(config.login[0].kind).toBe('login-mnemonic')
 
-    expect(config.walletGuard).not.toBeDefined() // No guard for noGuard: true
+    expect(config.guard).not.toBeDefined() // No guard for noGuard: true
 
     expect(config.raw).toBeDefined()
     expect(config.raw.loginTopology).toBeDefined()
     expect(config.raw.devicesTopology).toBeDefined()
     expect(config.raw.modules).toBeDefined()
-  })
-
-  it('Should include guard configuration when enabled', async () => {
-    manager = newManager(undefined, undefined, `guard_enabled_${Date.now()}`)
-    const guardAddress = (manager as any).shared.sequence.guardAddresses.wallet
-    const sessionsGuardAddress = (manager as any).shared.sequence.guardAddresses.sessions
-    const sessionsModuleAddress = (manager as any).shared.sequence.extensions.sessions
-
-    const wallet = await manager.wallets.signUp({
-      mnemonic: Mnemonic.random(Mnemonic.english),
-      kind: 'mnemonic',
-      noGuard: false,
-    })
-
-    const config = await manager.wallets.getConfiguration(wallet!)
-
-    expect(config.walletGuard?.address).toBe(guardAddress)
-    expect(config.raw.guardTopology).toBeDefined()
-    expect(Config.findSignerLeaf(config.raw.guardTopology!, guardAddress)).toBeDefined()
-    expect(
-      Config.findSignerLeaf(config.raw.guardTopology!, Constants.PlaceholderAddress as Address.Address),
-    ).toBeUndefined()
-
-    const sessionsModule = config.raw.modules.find((m: any) =>
-      Address.isEqual(m.sapientLeaf.address, sessionsModuleAddress),
-    )
-    expect(sessionsModule?.guardLeaf).toBeDefined()
-    expect(Config.findSignerLeaf(sessionsModule!.guardLeaf!, sessionsGuardAddress)).toBeDefined()
-    expect(
-      Config.findSignerLeaf(sessionsModule!.guardLeaf!, Constants.PlaceholderAddress as Address.Address),
-    ).toBeUndefined()
-
-    expect(config.moduleGuards.get(sessionsModuleAddress as Address.Address)?.address).toBe(sessionsGuardAddress)
-  })
-
-  it('Should support non-nested guard topologies', async () => {
-    manager = newManager(
-      {
-        defaultGuardTopology: {
-          type: 'signer',
-          address: Constants.PlaceholderAddress,
-          weight: 1n,
-        },
-      },
-      undefined,
-      `flat_guard_${Date.now()}`,
-    )
-
-    const guardAddress = (manager as any).shared.sequence.guardAddresses.wallet
-    const sessionsGuardAddress = (manager as any).shared.sequence.guardAddresses.sessions
-    const wallet = await manager.wallets.signUp({
-      mnemonic: Mnemonic.random(Mnemonic.english),
-      kind: 'mnemonic',
-      noGuard: false,
-    })
-
-    const config = await manager.wallets.getConfiguration(wallet!)
-
-    expect(config.walletGuard?.address).toBe(guardAddress)
-    expect(config.raw.guardTopology).toBeDefined()
-    expect(Config.findSignerLeaf(config.raw.guardTopology!, guardAddress)).toBeDefined()
-    expect(
-      Config.findSignerLeaf(config.raw.guardTopology!, Constants.PlaceholderAddress as Address.Address),
-    ).toBeUndefined()
-
-    const sessionsModuleAddress = (manager as any).shared.sequence.extensions.sessions
-    const sessionsModule = config.raw.modules.find((m: any) =>
-      Address.isEqual(m.sapientLeaf.address, sessionsModuleAddress),
-    )
-    expect(sessionsModule?.guardLeaf).toBeDefined()
-    expect(Config.findSignerLeaf(sessionsModule!.guardLeaf!, sessionsGuardAddress)).toBeDefined()
-  })
-
-  it('Should fail signup when default guard topology lacks placeholder address', async () => {
-    manager = newManager(
-      {
-        defaultGuardTopology: {
-          type: 'signer',
-          address: '0x0000000000000000000000000000000000000001',
-          weight: 1n,
-        },
-      },
-      undefined,
-      `guard_missing_placeholder_${Date.now()}`,
-    )
-
-    await expect(
-      manager.wallets.signUp({
-        mnemonic: Mnemonic.random(Mnemonic.english),
-        kind: 'mnemonic',
-        noGuard: false,
-      }),
-    ).rejects.toThrow('Guard address replacement failed for role wallet')
   })
 
   // === ERROR HANDLING ===
@@ -410,7 +317,7 @@ describe('Wallets', () => {
 
     const mnemonic = Mnemonic.random(Mnemonic.english)
     await manager.wallets.signUp({ mnemonic, kind: 'mnemonic', noGuard: true })
-    await manager.wallets.logout(await manager.wallets.list().then((w) => w[0]!.address), { skipRemoveDevice: true })
+    await manager.wallets.logout(await manager.wallets.list().then((w) => w[0].address), { skipRemoveDevice: true })
 
     const invalidSelector = async () => 'invalid-result' as any
     manager.wallets.registerWalletSelector(invalidSelector)
@@ -430,7 +337,7 @@ describe('Wallets', () => {
 
     const wallets = await manager.wallets.list()
     expect(wallets.length).toBe(1)
-    expect(wallets[0]!.address).toBe(wallet!)
+    expect(wallets[0].address).toBe(wallet!)
 
     const requestId = await manager.wallets.logout(wallet!)
     expect(requestId).toBeDefined()
@@ -470,16 +377,16 @@ describe('Wallets', () => {
 
     const wallets = await manager.wallets.list()
     expect(wallets.length).toBe(1)
-    expect(wallets[0]!.address).toBe(wallet!)
-    expect(wallets[0]!.status).toBe('ready')
+    expect(wallets[0].address).toBe(wallet!)
+    expect(wallets[0].status).toBe('ready')
 
     const requestId = await manager.wallets.logout(wallet!)
     expect(requestId).toBeDefined()
 
     const wallets2 = await manager.wallets.list()
     expect(wallets2.length).toBe(1)
-    expect(wallets2[0]!.address).toBe(wallet!)
-    expect(wallets2[0]!.status).toBe('logging-out')
+    expect(wallets2[0].address).toBe(wallet!)
+    expect(wallets2[0].status).toBe('logging-out')
 
     const request = await manager.signatures.get(requestId)
     expect(request).toBeDefined()
@@ -515,8 +422,8 @@ describe('Wallets', () => {
 
     const wallets = await manager.wallets.list()
     expect(wallets.length).toBe(1)
-    expect(wallets[0]!.address).toBe(wallet!)
-    expect(wallets[0]!.status).toBe('logging-in')
+    expect(wallets[0].address).toBe(wallet!)
+    expect(wallets[0].status).toBe('logging-in')
 
     let signRequests = 0
     const unregistedUI = manager.registerMnemonicUI(async (respond) => {
@@ -543,8 +450,8 @@ describe('Wallets', () => {
     expect((await manager.signatures.get(requestId1!))?.status).toBe('completed')
     const wallets2 = await manager.wallets.list()
     expect(wallets2.length).toBe(1)
-    expect(wallets2[0]!.address).toBe(wallet!)
-    expect(wallets2[0]!.status).toBe('ready')
+    expect(wallets2[0].address).toBe(wallet!)
+    expect(wallets2[0].status).toBe('ready')
 
     // The wallet should have 2 device keys and 2 recovery keys
     const config = await manager.wallets.getConfiguration(wallet!)
@@ -564,7 +471,7 @@ describe('Wallets', () => {
 
     const wallets = await manager.wallets.list()
     expect(wallets.length).toBe(1)
-    expect(wallets[0]!.address).toBe(wallet!)
+    expect(wallets[0].address).toBe(wallet!)
 
     const requestId = await manager.wallets.logout(wallet!)
     expect(requestId).toBeDefined()
@@ -613,7 +520,7 @@ describe('Wallets', () => {
     expect((await manager.signatures.get(requestId2!))?.status).toBe('completed')
     const wallets3 = await manager.wallets.list()
     expect(wallets3.length).toBe(1)
-    expect(wallets3[0]!.address).toBe(wallet!)
+    expect(wallets3[0].address).toBe(wallet!)
 
     // The wallet should have a single device key and a single recovery key
     const config = await manager.wallets.getConfiguration(wallet!)
@@ -622,10 +529,10 @@ describe('Wallets', () => {
     expect(recovery?.length).toBe(1)
 
     // The kind of the device key should be 'local-device'
-    expect(config.devices[0]!.kind).toBe('local-device')
+    expect(config.devices[0].kind).toBe('local-device')
 
     // The kind of the recovery key should be 'local-recovery'
-    expect(recovery?.[0]!.kind).toBe('local-device')
+    expect(recovery?.[0].kind).toBe('local-device')
   })
 
   it('Should fail to logout from a non-existent wallet', async () => {
@@ -676,8 +583,8 @@ describe('Wallets', () => {
 
     const wallets = await manager.wallets.list()
     expect(wallets.length).toBe(1)
-    expect(wallets[0]!.address).toBe(wallet!)
-    expect(wallets[0]!.status).toBe('logging-in')
+    expect(wallets[0].address).toBe(wallet!)
+    expect(wallets[0].status).toBe('logging-in')
 
     const request = await manager.signatures.get(requestId!)
     expect(request).toBeDefined()
@@ -699,8 +606,8 @@ describe('Wallets', () => {
     expect((await manager.signatures.get(requestId!))?.status).toBe('completed')
     const wallets2 = await manager.wallets.list()
     expect(wallets2.length).toBe(1)
-    expect(wallets2[0]!.address).toBe(wallet!)
-    expect(wallets2[0]!.status).toBe('ready')
+    expect(wallets2[0].address).toBe(wallet!)
+    expect(wallets2[0].status).toBe('ready')
   })
 
   it('Should trigger an update when a wallet is logged in', async () => {
@@ -715,8 +622,8 @@ describe('Wallets', () => {
       unregisterCallback = manager.wallets.onWalletsUpdate((wallets) => {
         callbackCalls++
         expect(wallets.length).toBe(1)
-        expect(wallets[0]!.address).toBe(wallet!)
-        expect(wallets[0]!.status).toBe('ready')
+        expect(wallets[0].address).toBe(wallet!)
+        expect(wallets[0].status).toBe('ready')
         resolve()
       })
     })
@@ -777,8 +684,8 @@ describe('Wallets', () => {
       unregisterCallback = manager.wallets.onWalletsUpdate((wallets) => {
         callbackCalls++
         expect(wallets.length).toBe(1)
-        expect(wallets[0]!.address).toBe(wallet!)
-        expect(wallets[0]!.status).toBe('logging-out')
+        expect(wallets[0].address).toBe(wallet!)
+        expect(wallets[0].status).toBe('logging-out')
         resolve()
       })
     })
@@ -800,9 +707,9 @@ describe('Wallets', () => {
 
     const devices = await manager.wallets.listDevices(wallet!)
     expect(devices.length).toBe(1)
+    expect(devices[0].address).not.toBe(wallet)
+    expect(devices[0].isLocal).toBe(true)
     expect(devices[0]).toBeDefined()
-    expect(devices[0]!.address).not.toBe(wallet)
-    expect(devices[0]!.isLocal).toBe(true)
   })
 
   it('Should list all active devices for a wallet, including a new remote device', async () => {
@@ -820,8 +727,8 @@ describe('Wallets', () => {
     // Verify initial state from Device 1's perspective
     const devices1 = await managerDevice1.wallets.listDevices(wallet!)
     expect(devices1.length).toBe(1)
-    expect(devices1[0]!.isLocal).toBe(true)
-    const device1Address = devices1[0]!.address
+    expect(devices1[0].isLocal).toBe(true)
+    const device1Address = devices1[0].address
 
     // Wallet logs in on device 2
     const managerDevice2 = newManager(undefined, undefined, 'device-2')
@@ -938,8 +845,8 @@ describe('Wallets', () => {
     const finalDevices = await managerDevice1.wallets.listDevices(wallet!)
     console.log('Final devices', finalDevices)
     expect(finalDevices.length).toBe(1)
-    expect(finalDevices[0]!.isLocal).toBe(true)
-    expect(finalDevices[0]!.address).not.toBe(device2Address)
+    expect(finalDevices[0].isLocal).toBe(true)
+    expect(finalDevices[0].address).not.toBe(device2Address)
 
     await managerDevice1.stop()
     await managerDevice2.stop()
@@ -956,7 +863,7 @@ describe('Wallets', () => {
 
     const devices = await manager.wallets.listDevices(wallet!)
     expect(devices.length).toBe(1)
-    const localDeviceAddress = devices[0]!.address
+    const localDeviceAddress = devices[0].address
 
     const remoteLogoutPromise = manager.wallets.remoteLogout(wallet!, localDeviceAddress)
 
