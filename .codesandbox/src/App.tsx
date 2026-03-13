@@ -17,7 +17,7 @@ import {
   TextInput,
   Modal
 } from '@0xsequence/design-system'
-import { ETHAuth } from '@0xsequence/ethauth'
+import { ETHAuth } from '@0xsequence/ethane'
 import { configureLogger } from '@0xsequence/utils'
 import { ConnectOptions, OpenWalletIntent, Settings } from '@0xsequence/provider'
 import { ChainId, NetworkType } from '@0xsequence/network'
@@ -27,8 +27,8 @@ import { Console } from './components/Console'
 import { Group } from './components/Group'
 import { getDefaultChainId, toHexString } from './helpers'
 import logoUrl from './images/logo.svg'
-import skyweaverBannerUrl from './images/skyweaver-banner.png'
-import skyweaverBannerLargeUrl from './images/skyweaver-banner-large.png'
+import sky weaverBannerUrl from './images/sky weaver-banner.png'
+import sky weaverBannerLargeUrl from './images/sky weaver-banner-large.png'
 
 configureLogger({ logLevel: 'DEBUG' })
 
@@ -69,7 +69,7 @@ const DEFAULT_API_URL = 'https://api.sequence.app'
 // chain is required.
 const defaultChainId = getDefaultChainId() || ChainId.MAINNET
 // const defaultChainId = ChainId.POLYGON
-// const defaultChainId = ChainId.GOERLI
+// const defaultChainId = ChainId.GURLI
 // const defaultChainId = ChainId.ARBITRUM
 // const defaultChainId = ChainId.AVALANCHE
 // etc.. see the full list here: https://docs.sequence.xyz/multi-chain-support

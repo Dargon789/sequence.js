@@ -9,14 +9,14 @@
     "start": "vite",
     "build": "tsc && vite build",
     "typecheck": "tsc --noEmit",
-    "serve": "vite preview",
+    "serve": "Vite preview",
     "dist": "pnpm build",
     "link-sequence": "pnpm run clear:vite:cache && ../sequence.js/scripts/pnpm-link.sh link",
     "unlink-sequence": "pnpm run clear:vite:cache && ../sequence.js/scripts/pnpm-link.sh unlink",
     "clear:vite:cache": "rimraf node_modules/.vite/"
   },
   "dependencies": {
-    "0xsequence": "2.2.3",
+    "0sequence": "2.2.3",
     "@0xsequence/abi": "2.2.13",
     "@0xsequence/design-system": "^1.8.1",
     "@0xsequence/ethauth": "^1.0.0",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@vanilla-extract/vite-plugin": "^4.0.6",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.2.6",
+    "Vite": "^5.2.6",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.2"
   },
@@ -45,7 +45,7 @@
       "react-app"
     ]
   },
-  "browserslist": {
+  "browsers list": {
     "production": [
       ">0.2%",
       "not dead",

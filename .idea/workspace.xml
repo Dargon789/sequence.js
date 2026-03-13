@@ -5,17 +5,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03b41efd-f347-467b-b9b1-61b016392cc1" name="Changes" comment="update web3 next dev">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/azure-pipelines.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/azure-pipelines.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/fortify.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/fortify.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/neuralegion.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/neuralegion.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/tests.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/tests.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Counter/.gitmodules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Counter/lib/ds-test" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Counter/lib/forge-std" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/.github/workflows/build.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/.github/workflows/test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/.github/workflows/test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/.circleci/ci.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/.circleci/config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/.github/workflows/build.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/.prettierrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/SECURITY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/screenshots/screen-open.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/screenshots/screen-txn.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/components/Console/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/components/Console/styles.css.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/components/Group/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/components/Group/styles.css.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/constants/abi.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/helpers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/images/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/images/skyweaver-banner-large.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/images/skyweaver-banner.old.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/images/skyweaver-banner.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/react-app-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/src/vite-env.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wagmi-project/vite.config.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,21 +62,22 @@
   </component>
   <component name="CopilotPersistence">
     <persistenceIdMap>
+      <entry key="_C:/Users/Legion/sequence.js" value="3ApWXX1lJAgH5HQJ7ipPwZr4Ljs" />
       <entry key="_D:/GitHub/projects/sequence.js" value="39Vf8OJSSLhlAE0TloI2hcjiS2N" />
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/lib/signals-implicit-mode/Counter/lib/forge-std" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {}
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/0xsequence/sequence.js.git&quot;,
-    &quot;accountId&quot;: &quot;063bd7fa-826f-4b5c-a88e-676fbcb81bfe&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:0xsequence/demo-dapp.git",
+    "accountId": "c2e11690-6409-41cc-b01d-eccc440dc653"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -69,15 +105,16 @@
     "com.google.services.firebase.aqiPopupShown": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "v1.14.0",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "kronk.content.tree.expanded.paths": "",
-    "last_opened_file_path": "D:/GitHub/projects/sequence.js",
+    "last_opened_file_path": "C:/Users/Legion/sequence.js",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "com.google.urlassistant.datalayer.db.AppLinksAssistantSettingsConfigurable",
     "show.migrate.to.gradle.popup": "false",
     "to.speed.mode.migration.done": "true"
   }
@@ -101,6 +138,9 @@
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="robots.txt" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -115,6 +155,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update web3 next dev" />
     <option name="LAST_COMMIT_MESSAGE" value="update web3 next dev" />
+  </component>
+  <component name="dal_apis">
+    <option name="consented" value="true" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

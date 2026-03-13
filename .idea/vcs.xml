@@ -2,6 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Counter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Counter/lib/ds-test" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Counter/lib/forge-std" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/Counter" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/Counter/lib/forge-std" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/lib/signals-implicit-mode" vcs="Git" />
@@ -17,5 +20,7 @@
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/lib/signals-implicit-mode/lib/sequence-v3/lib/openzeppelin-contracts/lib/erc4626-tests" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/lib/signals-implicit-mode/lib/sequence-v3/lib/openzeppelin-contracts/lib/forge-std" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/signals-implicit-mode/lib/signals-implicit-mode/lib/sequence-v3/lib/openzeppelin-contracts/lib/halmos-cheatcodes" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/solady" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wagmi-project" vcs="Git" />
   </component>
 </project>
