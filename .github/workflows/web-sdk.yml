@@ -1,14 +1,11 @@
-name: Web-SDK
+name: web-sdk
 on:
   pull_request:
     branches:
       - master
-      - main 
   push:
     branches:
       - master
-      - main
-
 jobs:
   master:
     if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
@@ -22,34 +19,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18''20''22'
-          cache: 'yarn''npm''pnpm'     
-      - name:  Web SDK 
-        id:  Install the Web SDK dependencies 
+          cache: pnpm     
+      - name:  web-sdk
         run: |
-          npm install @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
-          # or
-          pnpm install @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
-          # or
-          yarn add @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
-
-      # === Deploy static pages ===
-      - name: Deploy to Cloudflare Pages
-        id: cloudflare_deployment
-        uses: cloudflare/pages-action@v1
-        with:
-            apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-            accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-            projectName: 'w3o'
-            gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
-            branch: 'main'
-            directory: './packages/demo/build'
-            wranglerVersion: '3'
-
+            pnpm install @0xsequence/connect @0xsequence/hooks wagmi ethers viem 0xsequence @tanstack/react-query
+# === Deploy static pages ===
 # Sample workflow for building and deploying a Next.js site to GitHub Pages
 #
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
-# Runs on pushes targeting the default branch
+       name: Deploy Next.js site to Pages
+
+on:
+  # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
 
