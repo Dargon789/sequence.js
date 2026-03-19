@@ -1,5 +1,29 @@
 # @0xsequence/relayer
 
+## 3.0.4
+
+### Patch Changes
+
+- id-token login support
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.4
+
+## 3.0.3
+
+### Patch Changes
+
+- 3.0.3
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- allow native self transfer
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.2
+
 ## 3.0.1
 
 ### Patch Changes
