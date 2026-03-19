@@ -1,5 +1,4 @@
-Demo Dapp
-=========
+# Demo Dapp
 
 Dapp example on how to use Sequence Wallet. Covers how to connect, sign messages and send transctions.
 
@@ -28,7 +27,6 @@ Also note, sequence.js is built on top of ethers.js, and is API-compatible.
 
 ![Open Sequence Wallet From Dapp](./screenshots/screen-open.png)
 
-
 **Send transaction from dapp:**
 
 Sequence Wallet is an Ethereum wallet supporting Ethereum mainnet, Polygon and more. Sequence will work
@@ -41,8 +39,6 @@ how you can transfer an ERC-20 token like DAI on any Ethereum network.
 Notice how you can pay gas fees for a transaction in either MATIC token or USDC for price of $0.01.
 
 ![Transfer ERC-20 token on Polygon](./screenshots/screen-txn.png)
-
-
 
 ## LICENSE
 

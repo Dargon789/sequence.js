@@ -41,3 +41,4 @@ yarn-error.log*
 .husky/
 /lib/signals-implicit-mode/Counter
 /lib/signals-implicit-mode/lib/signals-implicit-mode
+.env*.local

@@ -8,14 +8,85 @@
       <change afterPath="$PROJECT_DIR$/Counter/.gitmodules" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Counter/lib/ds-test" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Counter/lib/forge-std" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.codesandbox/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/.github/workflows/build.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.codesandbox/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.codesandbox/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.changeset/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/.changeset/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.codesandbox/src/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/components/Console/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/components/Console/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/components/Console/styles.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/components/Console/styles.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/components/Group/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/components/Group/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/components/Group/styles.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/components/Group/styles.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/constants/abi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/constants/abi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/helpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/helpers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/react-app-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/react-app-env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/src/vite-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/src/vite-env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.codesandbox/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.codesandbox/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug_report.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/custom.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/custom.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Counter/lib/forge-std/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/Counter/lib/forge-std/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Counter/lib/forge-std/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Counter/lib/forge-std/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/extras/docs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/docs/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extras/docs/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/docs/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extras/docs/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/docs/next-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/extras/docs/next-env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/web/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/extras/web/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/web/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extras/web/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/extras/web/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extras/web/next-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/extras/web/next-env.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/RELEASE_CHECKLIST.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/dependencies/forge-std-1.14.0/RELEASE_CHECKLIST.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/RELEASE_CHECKLIST.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/forge-std/RELEASE_CHECKLIST.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/CHAINED.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/CHAINED.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/CONFIGURATIONS.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/CONFIGURATIONS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/PAYLOAD.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/PAYLOAD.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/SESSIONS.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/SESSIONS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/SIGNATURE.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/docs/SIGNATURE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/deploy/1_deploy_entrypoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/deploy/1_deploy_entrypoint.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/deploy/2_deploy_SimpleAccountFactory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/deploy/2_deploy_SimpleAccountFactory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/erc/ERCS/erc-4337.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/erc/ERCS/erc-4337.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/erc/ERCS/erc-7562.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/erc/ERCS/erc-7562.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/0-init-gas-checker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/0-init-gas-checker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/1-simple-wallet.gas.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/1-simple-wallet.gas.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/2-paymaster.gas.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/2-paymaster.gas.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/3-huge-tx-gas.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/3-huge-tx-gas.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/4-paymaster-postop.gas.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/4-paymaster-postop.gas.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/5-token-paymaster.gas.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/5-token-paymaster.gas.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/GasChecker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/gascalc/GasChecker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/hardhat.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/hardhat.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/AASigner.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/AASigner.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/Create2Factory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/Create2Factory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/Utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/Utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/runop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/src/runop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/0-create2factory.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/0-create2factory.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/UserOp.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/UserOp.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/UserOperation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/UserOperation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/aa.init.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/aa.init.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/chaiHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/chaiHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/debugTx.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/debugTx.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/entrypoint.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/entrypoint.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/entrypointsimulations.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/entrypointsimulations.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/helpers.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/helpers.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/paymaster.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/paymaster.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/samples/OracleHelper.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/samples/OracleHelper.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/samples/TokenPaymaster.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/samples/TokenPaymaster.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/simple-wallet.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/simple-wallet.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/solidityTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/solidityTypes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/testExecAccount.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/testExecAccount.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/testutils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/testutils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/verifying_paymaster.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/verifying_paymaster.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/y.bls.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/account-abstraction/test/y.bls.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/erc2470-libs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/erc2470-libs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/erc2470-libs/lib/forge-std/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/erc2470-libs/lib/forge-std/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/forge-std/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/forge-std/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/forge-std/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/lib/sequence-v3/lib/forge-std/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wagmi-project/.circleci/ci.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/wagmi-project/.circleci/config.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/wagmi-project/.github/workflows/build.yml" beforeDir="false" />
@@ -72,10 +143,21 @@
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {}
 }</component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOFtcLA86MvQBm",
+        "number": 26
+      },
+      "lastSeen": 1773929218845
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "git@github.com:0xsequence/demo-dapp.git",
-    "accountId": "c2e11690-6409-41cc-b01d-eccc440dc653"
+    "accountId": "901c3c88-76ca-48f1-af81-8988657f5914"
   }
 }]]></component>
   <component name="ProblemsViewState">
@@ -92,33 +174,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "kronk.content.tree.expanded.paths": "",
-    "last_opened_file_path": "C:/Users/Legion/sequence.js",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "com.google.urlassistant.datalayer.db.AppLinksAssistantSettingsConfigurable",
-    "show.migrate.to.gradle.popup": "false",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;kronk.content.tree.expanded.paths&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Legion/sequence.js&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.google.urlassistant.datalayer.db.AppLinksAssistantSettingsConfigurable&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="03b41efd-f347-467b-b9b1-61b016392cc1" name="Changes" comment="" />
