@@ -20,7 +20,7 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "ethers": "^5.7.2",
-    "web3": "^1.8.1"
+    "web3": "^4.16.0"
   },
   "files": [
     "src",
