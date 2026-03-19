@@ -51,6 +51,16 @@
 
 ---
 
+  </a>
+  <p align="center">
+  <a href="https://sequence.xyz">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/sequence-dark.svg">
+      <img alt="sequence logo" src="https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/sequence-light.svg" width="auto" height="50">
+    </picture>
+  </a>
+</p>
+
 ## Documentation
 
 For documentation and guides, visit [wagmi.sh](https://wagmi.sh).
@@ -72,57 +82,4 @@ Contributions to Wagmi are greatly appreciated! If you're interested in contribu
 ## Sponsors
 
 If you find Wagmi useful or use it for work, please consider [sponsoring Wagmi](https://github.com/sponsors/wevm?metadata_campaign=gh_readme_support). Thank you 🙏  [Sponsor Wagmi](https://github.com/sponsors/wevm?metadata_campaign=gh_readme_support_bottom)
-
-
-  </a>
-  <p align="center">
-  <a href="https://sequence.xyz">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/sequence-dark.svg">
-      <img alt="sequence logo" src="https://raw.githubusercontent.com/wevm/.github/main/content/sponsors/sequence-light.svg" width="auto" height="50">
-    </picture>
-  </a>
-</p>
-
-
-Demo app showing how to use Sequence Wallet. It covers how to connect, sign messages, and send transactions.
-
-Try this dapp at: [https://0xsequence.github.io/demo-dapp](https://0xsequence.github.io/demo-dapp)
-
-For complete documentation on Sequence, please see: [https://docs.sequence.build](https://docs.sequence.build)
-
-## Usage
-
-1. pnpm install
-2. pnpm start
-3. Open browser to http://localhost:4000 to access the demo dapp
-4. Open browser inspector to see responses from the remote Sequence Wallet
-
-## Development
-
-See https://github.com/0xsequence/demo-dapp/blob/master/src/App.tsx for the source
-usage for a variety of functions. Be sure to open your browser's dev inspector to see output.
-Think of these functions as a "cookbook" for how you can perform these functions in your dapps.
-
-Also note, sequence.js is built on top of ethers.js, and is API-compatible.
-
-## Screenshots
-
-**Opening wallet from dapp:**
-
-![Open Sequence Wallet From Dapp](./screenshots/screen-open.png)
-
-
-**Send transaction from dapp:**
-
-Sequence Wallet is an Ethereum wallet supporting Ethereum mainnet, Polygon and more. Sequence will work
-with any blockchain which is EVM compatible and supports Ethereum's node JSON-RPC interface.
-
-Here you can see in this screenshot the call to "Send DAI" from demo-dapp
-(https://github.com/0xsequence/demo-dapp/blob/master/src/routes/HomeRoute.tsx#L420). This function demonstrates
-how you can transfer an ERC-20 token like DAI on any Ethereum network.
-
-Notice how you can pay gas fees for a transaction in either MATIC token or USDC for price of $0.01.
-
-![Transfer ERC-20 token on Polygon](./screenshots/screen-txn.png)
 
