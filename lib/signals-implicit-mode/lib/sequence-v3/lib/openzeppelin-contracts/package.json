@@ -80,13 +80,13 @@
     "prettier": "^3.0.0",
     "prettier-plugin-solidity": "^1.1.0",
     "rimraf": "^6.0.0",
-    "semver": "^7.3.5",
+    "semver": "^7.7.4",
     "solhint": "^5.0.0",
     "solhint-plugin-openzeppelin": "file:scripts/solhint-custom",
     "solidity-ast": "^0.4.50",
     "solidity-coverage": "^0.8.17",
     "solidity-docgen": "^0.6.0-beta.29",
-    "undici": "^6.24.0",
+    "undici": "^6.24.1",
     "yargs": "^17.0.0"
   }
 }
