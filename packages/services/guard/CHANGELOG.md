@@ -1,5 +1,11 @@
 # @0xsequence/guard
 
+## 3.0.5
+
+### Patch Changes
+
+- Account federation support
+
 ## 3.0.4
 
 ### Patch Changes

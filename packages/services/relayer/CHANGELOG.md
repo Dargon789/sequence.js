@@ -1,5 +1,13 @@
 # @0xsequence/relayer
 
+## 3.0.5
+
+### Patch Changes
+
+- Account federation support
+- Updated dependencies
+  - @0xsequence/wallet-primitives@3.0.5
+
 ## 3.0.4
 
 ### Patch Changes

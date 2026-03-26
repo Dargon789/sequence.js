@@ -1,5 +1,16 @@
 # @0xsequence/dapp-client
 
+## 3.0.5
+
+### Patch Changes
+
+- Account federation support
+- Updated dependencies
+  - @0xsequence/guard@3.0.5
+  - @0xsequence/relayer@3.0.5
+  - @0xsequence/wallet-core@3.0.5
+  - @0xsequence/wallet-primitives@3.0.5
+
 ## 3.0.4
 
 ### Patch Changes
