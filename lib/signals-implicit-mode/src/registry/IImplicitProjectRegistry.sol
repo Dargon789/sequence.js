@@ -18,17 +18,14 @@ interface IImplicitProjectRegistry is IImplicitProjectValidation {
   /// @notice Transfer a project
   /// @param projectId The project id
   /// @param newOwner The new owner
-  function transferProject(bytes32 projectId, address newOwner) external;
 
   /// @notice Add a project URL
   /// @param projectId The project id
   /// @param projectUrl The project URL
-  function addProjectUrl(bytes32 projectId, string memory projectUrl) external;
 
   /// @notice Remove a project URL
   /// @param projectId The project id
   /// @param projectUrl The project URL
-  function removeProjectUrl(bytes32 projectId, string memory projectUrl) external;
 
   /// @notice List project URLs
   /// @param projectId The project id

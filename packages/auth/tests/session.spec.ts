@@ -92,7 +92,6 @@ describe('Wallet integration', function () {
         provider: ethnode.provider,
         isDefaultChain: true,
         relayer,
-        rpcUrl: ''
       }
     ] as NetworkConfig[]
 

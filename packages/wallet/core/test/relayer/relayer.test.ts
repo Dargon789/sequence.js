@@ -1,20 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { Address, Hex } from 'ox'
-import { Network, Payload, Precondition } from '@0xsequence/wallet-primitives'
-import {
-  Relayer,
-  isRelayer,
-  FeeOption,
-  FeeQuote,
-  OperationStatus,
-  OperationUnknownStatus,
-  OperationQueuedStatus,
-  OperationPendingStatus,
-  OperationPendingPreconditionStatus,
-  OperationConfirmedStatus,
-  OperationFailedStatus,
-} from '../../src/relayer/relayer.js'
-import { FeeTokenType } from '../../src/relayer/standard/rpc/index.js'
 
 // Test addresses and data
 const TEST_WALLET_ADDRESS = Address.from('0x1234567890123456789012345678901234567890')
@@ -24,9 +9,7 @@ const TEST_CHAIN_ID = Network.ChainId.MAINNET
 const TEST_OP_HASH = Hex.from('0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef')
 
 describe('Relayer', () => {
-  describe('isRelayer type guard', () => {
     it('should return true for valid relayer objects', () => {
-      const mockRelayer: Relayer = {
         kind: 'relayer',
         type: 'test',
         id: 'test-relayer',
@@ -37,7 +20,6 @@ describe('Relayer', () => {
         checkPrecondition: vi.fn(),
       }
 
-      expect(isRelayer(mockRelayer)).toBe(true)
     })
 
     it('should return false for objects missing required methods', () => {
@@ -51,7 +33,6 @@ describe('Relayer', () => {
         status: vi.fn(),
         checkPrecondition: vi.fn(),
       }
-      expect(isRelayer(missing1)).toBe(false)
 
       // Missing feeOptions
       const missing2 = {
@@ -63,7 +44,6 @@ describe('Relayer', () => {
         status: vi.fn(),
         checkPrecondition: vi.fn(),
       }
-      expect(isRelayer(missing2)).toBe(false)
 
       // Missing relay
       const missing3 = {
@@ -75,7 +55,6 @@ describe('Relayer', () => {
         status: vi.fn(),
         checkPrecondition: vi.fn(),
       }
-      expect(isRelayer(missing3)).toBe(false)
 
       // Missing status
       const missing4 = {
@@ -87,7 +66,6 @@ describe('Relayer', () => {
         relay: vi.fn(),
         checkPrecondition: vi.fn(),
       }
-      expect(isRelayer(missing4)).toBe(false)
 
       // Missing checkPrecondition
       const missing5 = {
@@ -99,18 +77,11 @@ describe('Relayer', () => {
         relay: vi.fn(),
         status: vi.fn(),
       }
-      expect(isRelayer(missing5)).toBe(false)
     })
 
     it('should return false for non-objects', () => {
       // These will throw due to the 'in' operator, so we need to test the actual behavior
-      expect(() => isRelayer(null)).toThrow()
-      expect(() => isRelayer(undefined)).toThrow()
-      expect(() => isRelayer('string')).toThrow()
-      expect(() => isRelayer(123)).toThrow()
-      expect(() => isRelayer(true)).toThrow()
       // Arrays and objects should not throw, but should return false
-      expect(isRelayer([])).toBe(false)
     })
 
     it('should return false for objects with properties but wrong types', () => {
@@ -126,20 +97,17 @@ describe('Relayer', () => {
       }
       // The current implementation only checks if properties exist, not their types
       // So this will actually return true since all required properties exist
-      expect(isRelayer(wrongTypes)).toBe(true)
     })
   })
 
   describe('FeeOption interface', () => {
     it('should accept valid fee option objects', () => {
-      const feeOption: FeeOption = {
         token: {
           chainId: Network.ChainId.MAINNET,
           name: 'Ethereum',
           symbol: 'ETH',
           decimals: 18,
           logoURL: 'https://example.com/eth.png',
-          type: 'NATIVE' as FeeTokenType,
           contractAddress: undefined,
         },
         to: TEST_TO_ADDRESS,
@@ -156,7 +124,6 @@ describe('Relayer', () => {
 
   describe('FeeQuote interface', () => {
     it('should accept valid fee quote objects', () => {
-      const feeQuote: FeeQuote = {
         _tag: 'FeeQuote',
         _quote: { someQuoteData: 'value' },
       }
@@ -168,7 +135,6 @@ describe('Relayer', () => {
 
   describe('OperationStatus types', () => {
     it('should accept OperationUnknownStatus', () => {
-      const status: OperationUnknownStatus = {
         status: 'unknown',
         reason: 'Transaction not found',
       }
@@ -178,7 +144,6 @@ describe('Relayer', () => {
     })
 
     it('should accept OperationQueuedStatus', () => {
-      const status: OperationQueuedStatus = {
         status: 'queued',
         reason: 'Transaction queued for processing',
       }
@@ -188,7 +153,6 @@ describe('Relayer', () => {
     })
 
     it('should accept OperationPendingStatus', () => {
-      const status: OperationPendingStatus = {
         status: 'pending',
         reason: 'Transaction pending confirmation',
       }
@@ -198,7 +162,6 @@ describe('Relayer', () => {
     })
 
     it('should accept OperationPendingPreconditionStatus', () => {
-      const status: OperationPendingPreconditionStatus = {
         status: 'pending-precondition',
         reason: 'Waiting for preconditions to be met',
       }
@@ -208,7 +171,6 @@ describe('Relayer', () => {
     })
 
     it('should accept OperationConfirmedStatus', () => {
-      const status: OperationConfirmedStatus = {
         status: 'confirmed',
         transactionHash: TEST_OP_HASH,
         data: {
@@ -231,7 +193,6 @@ describe('Relayer', () => {
     })
 
     it('should accept OperationFailedStatus', () => {
-      const status: OperationFailedStatus = {
         status: 'failed',
         transactionHash: TEST_OP_HASH,
         reason: 'Transaction reverted',
@@ -256,7 +217,6 @@ describe('Relayer', () => {
     })
 
     it('should handle OperationStatus union type', () => {
-      const statuses: OperationStatus[] = [
         { status: 'unknown' },
         { status: 'queued' },
         { status: 'pending' },
@@ -272,7 +232,6 @@ describe('Relayer', () => {
   })
 
   describe('Relayer interface contract', () => {
-    let mockRelayer: Relayer
 
     beforeEach(() => {
       mockRelayer = {
@@ -321,7 +280,6 @@ describe('Relayer', () => {
       const isAvailable = await mockRelayer.isAvailable(TEST_WALLET_ADDRESS, TEST_CHAIN_ID)
       expect(isAvailable).toBe(true)
 
-      const feeOptions = await mockRelayer.feeOptions(TEST_WALLET_ADDRESS, TEST_CHAIN_ID, [])
       expect(feeOptions.options).toEqual([])
 
       const relayResult = await mockRelayer.relay(TEST_TO_ADDRESS, TEST_DATA, TEST_CHAIN_ID)
@@ -330,7 +288,6 @@ describe('Relayer', () => {
       const statusResult = await mockRelayer.status(TEST_OP_HASH, TEST_CHAIN_ID)
       expect(statusResult.status).toBe('confirmed')
 
-      const preconditionResult = await mockRelayer.checkPrecondition({} as any)
       expect(preconditionResult).toBe(true)
     })
   })

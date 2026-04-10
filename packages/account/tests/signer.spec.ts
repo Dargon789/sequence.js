@@ -48,14 +48,12 @@ describe('Account signer', () => {
         name: 'hardhat',
         provider: provider1,
         rpcUrl: '',
-        relayer: new LocalRelayer(provider1.getSigner())
       },
       {
         chainId: 31338,
         name: 'hardhat2',
         provider: provider2,
         rpcUrl: 'http://127.0.0.1:7048',
-        relayer: new LocalRelayer(provider2.getSigner())
       }
     ]
 

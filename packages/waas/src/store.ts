@@ -26,7 +26,6 @@ export class StoreObj<T extends string | undefined> {
 
 export class LocalStore implements Store {
   constructor() {
-    if (!window.localStorage) {
       throw new Error('No localStorage')
     }
   }

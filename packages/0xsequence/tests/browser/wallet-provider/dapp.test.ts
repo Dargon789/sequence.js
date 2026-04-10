@@ -183,7 +183,6 @@ export const tests = async () => {
 
         // Non-deployed wallet (with EIP6492) should return a signature
         // that ends with the EIP-6492 magic bytes
-        const suffix = commons.EIP6492.EIP_6492_SUFFIX.slice(2)
         assert.true(sig.endsWith(suffix), 'signature ends with EIP-6492 magic bytes')
 
         return sig

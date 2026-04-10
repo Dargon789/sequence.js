@@ -1,4 +1,3 @@
-import { Intent as RawIntent } from '../clients/intent.gen'
 import { useLifespan } from './utils'
 import { ethers } from 'ethers'
 import { canonicalize } from 'json-canonicalize'
@@ -7,9 +6,7 @@ import { Session } from '../session'
 export type Intent<T> = Omit<RawIntent, 'data' | 'signatures'> & { data: T }
 export type SignedIntent<T> = Omit<RawIntent, 'data'> & { data: T }
 
-const VERSION = '0.0.0'
 
-export function makeIntent<T>(name: string, lifespan: number, data: T): Intent<T> {
   const issuedAt = Math.floor(Date.now() / 1000)
   const expiresAt = issuedAt + lifespan
   return {

@@ -7,19 +7,11 @@ export type Session = {
   clear(): void
 }
 
-export async function newSessionFromSessionId(sessionId: string): Promise<Session> {
-  if (window.crypto !== undefined) {
-    return newSECP256R1SessionFromSessionId(sessionId)
   } else {
-    return newSECP256K1SessionFromSessionId(sessionId)
   }
 }
 
-export async function newSession(): Promise<Session> {
-  if (window.crypto !== undefined) {
-    return newSECP256R1Session()
   } else {
-    return newSECP256K1Session()
   }
 }
 

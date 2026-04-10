@@ -3,13 +3,7 @@ import {
   SendMetaTxnReturn as RpcSendMetaTxnReturn,
   MetaTxn as RpcMetaTxn,
   FeeTokenType,
-  IntentPrecondition,
 } from './relayer.gen.js'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../../relayer.js'
-import { Address, Hex, Bytes, AbiFunction } from 'ox'
-import { Constants, Payload } from '@0xsequence/wallet-primitives'
-import { ETHTxnStatus, FeeToken as RpcFeeToken } from './relayer.gen.js'
-import { decodePrecondition } from '../../../preconditions/index.js'
 import {
   erc20BalanceOf,
   erc20Allowance,
@@ -17,24 +11,16 @@ import {
   erc721GetApproved,
   erc1155BalanceOf,
   erc1155IsApprovedForAll,
-} from '../abi.js'
 import { PublicClient, createPublicClient, http, Chain } from 'viem'
 import * as chains from 'viem/chains'
-
-export * from './relayer.gen.js'
 
 export type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>
 
 export const getChain = (chainId: number): Chain => {
-  const chain = Object.values(chains).find((c: any) => typeof c === 'object' && 'id' in c && c.id === chainId)
-  if (!chain) {
-    throw new Error(`Chain with id ${chainId} not found`)
   }
-  return chain as Chain
 }
 
 export class RpcRelayer implements Relayer {
-  public readonly kind: 'relayer' = 'relayer'
   public readonly type = 'rpc'
   public readonly id: string
   public readonly chainId: number
@@ -42,7 +28,6 @@ export class RpcRelayer implements Relayer {
   private fetch: Fetch
   private provider: PublicClient
 
-  constructor(hostname: string, chainId: number, rpcUrl: string, fetchImpl?: Fetch) {
     this.id = `rpc:${hostname}`
     this.chainId = chainId
     const effectiveFetch = fetchImpl || (typeof window !== 'undefined' ? window.fetch.bind(window) : undefined)
@@ -72,14 +57,8 @@ export class RpcRelayer implements Relayer {
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     const callsStruct: Payload.Calls = { type: 'call', space: 0n, nonce: 0n, calls: calls }
-    const data = Payload.encode(callsStruct)
 
     try {
-      const result = await this.client.feeOptions({
-        wallet: wallet,
-        to: wallet,
-        data: Bytes.toHex(data),
-      })
 
       const quote = result.quote ? ({ _tag: 'FeeQuote', _quote: result.quote } as FeeQuote) : undefined
       const options = result.options.map((option) => ({
@@ -105,7 +84,6 @@ export class RpcRelayer implements Relayer {
     data: Hex.Hex,
     chainId: number,
     quote?: FeeQuote,
-    preconditions?: IntentPrecondition[],
   ): Promise<{ opHash: Hex.Hex }> {
     console.log('sendMetaTxn', walletAddress, to, data, chainId, quote, preconditions)
     const rpcCall: RpcMetaTxn = {
@@ -114,11 +92,9 @@ export class RpcRelayer implements Relayer {
       input: data,
     }
 
-    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn({
       call: rpcCall,
       quote: quote ? JSON.stringify(quote._quote) : undefined,
       preconditions: preconditions,
-    })
 
     if (!result.status) {
       console.error('RpcRelayer.relay failed', result)
@@ -133,7 +109,6 @@ export class RpcRelayer implements Relayer {
     data: Hex.Hex,
     chainId: number,
     quote?: FeeQuote,
-    preconditions?: IntentPrecondition[],
   ): Promise<{ opHash: Hex.Hex }> {
     console.log('relay', to, data, chainId, quote, preconditions)
     const rpcCall: RpcMetaTxn = {
@@ -142,11 +117,9 @@ export class RpcRelayer implements Relayer {
       input: data,
     }
 
-    const result: RpcSendMetaTxnReturn = await this.client.sendMetaTxn({
       call: rpcCall,
       quote: quote ? JSON.stringify(quote._quote) : undefined,
       preconditions: preconditions,
-    })
 
     if (!result.status) {
       console.error('RpcRelayer.relay failed', result)
@@ -156,7 +129,6 @@ export class RpcRelayer implements Relayer {
     return { opHash: `0x${result.txnHash}` }
   }
 
-  async status(opHash: Hex.Hex, chainId: number): Promise<OperationStatus> {
     try {
       const cleanedOpHash = opHash.startsWith('0x') ? opHash.substring(2) : opHash
       const result = await this.client.getMetaTxnReceipt({ metaTxID: cleanedOpHash })
@@ -199,7 +171,6 @@ export class RpcRelayer implements Relayer {
     }
   }
 
-  async checkPrecondition(precondition: IntentPrecondition): Promise<boolean> {
     const decoded = decodePrecondition(precondition)
 
     if (!decoded) {
@@ -208,9 +179,7 @@ export class RpcRelayer implements Relayer {
 
     switch (decoded.type()) {
       case 'native-balance': {
-        const native = decoded as any
         try {
-          const balance = await this.provider.getBalance({ address: native.address.toString() as `0x${string}` })
           const minWei = native.min !== undefined ? BigInt(native.min) : undefined
           const maxWei = native.max !== undefined ? BigInt(native.max) : undefined
 
@@ -233,9 +202,7 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc20-balance': {
-        const erc20 = decoded as any
         try {
-          const data = AbiFunction.encodeData(erc20BalanceOf, [erc20.address.toString()])
           const result = await this.provider.call({
             to: erc20.token.toString() as `0x${string}`,
             data: data as `0x${string}`,
@@ -262,9 +229,7 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc20-approval': {
-        const erc20 = decoded as any
         try {
-          const data = AbiFunction.encodeData(erc20Allowance, [erc20.address.toString(), erc20.operator.toString()])
           const result = await this.provider.call({
             to: erc20.token.toString() as `0x${string}`,
             data: data as `0x${string}`,
@@ -279,12 +244,9 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc721-ownership': {
-        const erc721 = decoded as any
         try {
           const data = AbiFunction.encodeData(erc721OwnerOf, [erc721.tokenId])
           const result = await this.provider.call({
-            to: erc721.token.toString() as `0x${string}`,
-            data: data as `0x${string}`,
           })
           const resultHex = result.toString() as `0x${string}`
           const owner = resultHex.slice(-40)
@@ -298,7 +260,6 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc721-approval': {
-        const erc721 = decoded as any
         try {
           const data = AbiFunction.encodeData(erc721GetApproved, [erc721.tokenId])
           const result = await this.provider.call({
@@ -315,9 +276,7 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc1155-balance': {
-        const erc1155 = decoded as any
         try {
-          const data = AbiFunction.encodeData(erc1155BalanceOf, [erc1155.address.toString(), erc1155.tokenId])
           const result = await this.provider.call({
             to: erc1155.token.toString() as `0x${string}`,
             data: data as `0x${string}`,
@@ -344,15 +303,8 @@ export class RpcRelayer implements Relayer {
       }
 
       case 'erc1155-approval': {
-        const erc1155 = decoded as any
         try {
-          const data = AbiFunction.encodeData(erc1155IsApprovedForAll, [
-            erc1155.address.toString(),
-            erc1155.operator.toString(),
-          ])
           const result = await this.provider.call({
-            to: erc1155.token.toString() as `0x${string}`,
-            data: data as `0x${string}`,
           })
           return BigInt(result.toString()) === 1n
         } catch (error) {

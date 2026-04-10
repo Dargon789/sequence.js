@@ -7,10 +7,8 @@ import {
   TransactionERC1155,
   TransactionERC20,
   TransactionERC721,
-  TransactionRaw, TransactionERC1155Value
 } from '../clients/intent.gen'
 import { ethers } from 'ethers'
-import { FeeOption, FeeTokenType } from './responses'
 
 interface BaseArgs {
   lifespan: number
@@ -25,7 +23,6 @@ export type TransactionFeeArgs = {
 }
 
 export type SendTransactionsArgs = TransactionFeeArgs & {
-  transactions: Transaction[],
 }
 
 export type SendERC20Args = TransactionFeeArgs & {
@@ -71,7 +68,6 @@ export function feeOptions({
                              chainId,
                              transactions
                            }: SendTransactionsArgs & BaseArgs): Intent<IntentDataFeeOptions> {
-  return makeIntent('feeOptions', lifespan, {
     identifier,
     wallet,
     network: chainId.toString(),
@@ -103,7 +99,6 @@ export function sendTransactions({
   transactionsFeeQuote,
   transactionsFeeOption
 }: SendTransactionsArgs & BaseArgs): Intent<IntentDataSendTransaction> {
-  return makeIntent('sendTransaction', lifespan, {
     identifier,
     wallet,
     network: chainId.toString(),
@@ -132,23 +127,17 @@ function withTransactionFee(transactions: Transaction[], feeOption?: FeeOption):
   if (feeOption) {
     switch (feeOption.token.type) {
       case FeeTokenType.unknown:
-        extendedTransactions.push(
-          {
             to: feeOption.to,
             value: feeOption.value
-          }
-        )
         break
       case FeeTokenType.erc20Token:
         if (!feeOption.token.contractAddress) {
           throw new Error('contract address is required')
         }
 
-        extendedTransactions.push(erc20({
           tokenAddress: feeOption.token.contractAddress,
           to: feeOption.to,
           value: feeOption.value
-        }))
         break
       case FeeTokenType.erc1155Token:
         if (!feeOption.token.contractAddress) {
@@ -159,11 +148,9 @@ function withTransactionFee(transactions: Transaction[], feeOption?: FeeOption):
           throw new Error('token ID is required')
         }
 
-        extendedTransactions.push(erc1155({
           tokenAddress: feeOption.token.contractAddress,
           to: feeOption.to,
           vals: [{id: feeOption.token.tokenID, amount: feeOption.value}]
-        }))
         break
       }
     }
@@ -181,7 +168,6 @@ export function getTransactionReceipt({
   wallet,
   metaTxHash
 }: GetTransactionReceiptArgs & BaseArgs): Intent<IntentDataGetTransactionReceipt> {
-  return makeIntent('getTransactionReceipt', lifespan, {
     wallet,
     network: chainId.toString(),
     metaTxHash
@@ -315,7 +301,6 @@ export function erc1155(data: Omit<TransactionERC1155, 'type'> | Omit<SendERC115
   }
 }
 
-export function delayedEncode(data: Omit<TransactionDelayedEncode, 'type'> | Omit<SendDelayedEncodeArgs, 'chainId'>): Transaction {
   const sendDelayedEncodeArgs = data as Omit<SendDelayedEncodeArgs, 'chainId'>
   const transactionDelayedEncode = data as Omit<TransactionDelayedEncode, 'type'>
 
@@ -362,7 +347,6 @@ export function combineTransactionIntents(intents: Intent<IntentDataSendTransact
     throw new Error('All packets must have the same wallet')
   }
 
-  return makeIntent('sendTransaction', lifespan, {
     network,
     wallet,
     identifier,

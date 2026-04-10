@@ -39,7 +39,6 @@ contract TestContract is Test {
 
 contract ErrorsTest {
     function arithmeticError(uint256 a) public {
-        a = a - 100;
     }
 }
 ```

@@ -1,36 +1,17 @@
 import {
-  Intent,
-  SignedIntent,
   closeSession,
   getSession,
-  openSession,
   listSessions,
-  validateSession,
-  finishValidateSession,
-  sessionAuthProof,
-  signIntent,
-  signMessage,
-  feeOptions,
   sendDelayedEncode,
   sendERC1155,
   sendERC20,
   sendERC721,
   sendTransactions,
-  combineTransactionIntents,
   SignMessageArgs,
-  SendTransactionsArgs,
-  SendERC20Args,
-  SendERC721Args,
-  SendERC1155Args,
-  SendDelayedEncodeArgs,
-  GetTransactionReceiptArgs,
-  getTransactionReceipt,
-  changeIntentTime,
 } from './intents'
 import { LocalStore, Store, StoreObj } from './store'
 import { newSession, newSessionFromSessionId } from './session'
 import { OpenSessionResponse } from './intents/responses'
-import { SimpleNetwork, WithSimpleNetwork, toNetworkID } from './networks'
 import {
   IntentDataFeeOptions,
   IntentDataFinishValidateSession,
@@ -70,8 +51,6 @@ export type SequenceBaseConfig = {
 export type Observer<T> = (value: T | null) => any
 
 export class SequenceWaaSBase {
-  readonly VERSION = '0.0.0-dev1'
-
   private readonly status: StoreObj<Status>
   private readonly sessionId: StoreObj<string | undefined>
   private readonly wallet: StoreObj<string | undefined>
@@ -80,7 +59,6 @@ export class SequenceWaaSBase {
 
   constructor(
     public readonly config = { network: 1 } as SequenceBaseConfig,
-    private readonly store: Store = new LocalStore()
   ) {
     this.status = new StoreObj(this.store, SEQUENCE_WAAS_STATUS_KEY, 'signed-out')
     this.sessionId = new StoreObj(this.store, SEQUENCE_WAAS_SESSION_ID_KEY, undefined)
@@ -135,22 +113,18 @@ export class SequenceWaaSBase {
    * @returns A payload that can be sent to the WaaS API
    */
   private async signIntent<T>(intent: Intent<T>): Promise<SignedIntent<T>> {
-    const sessionId = await this.sessionId.get()
     if (sessionId === undefined) {
       throw new Error('session not open')
     }
 
-    const session = await newSessionFromSessionId(sessionId)
     return signIntent(session, intent)
   }
 
   public async signUsingSessionKey(message: string | Uint8Array) {
-    const sessionId = await this.sessionId.get()
     if (!sessionId) {
       throw new Error('session not open')
     }
 
-    const signer = await newSessionFromSessionId(sessionId)
     return signer.sign(message)
   }
 
@@ -169,7 +143,6 @@ export class SequenceWaaSBase {
     const promiseGenerator = async () => {
       let sessionId = await this.sessionId.get()
       if (!sessionId) {
-        const session = await newSession()
         sessionId = await session.sessionId()
         await this.sessionId.set(sessionId)
         this.signalObservers(this.sessionObservers, sessionId)
@@ -191,11 +164,9 @@ export class SequenceWaaSBase {
    * must be sent to the waas API to complete the sign-in. The waas API will return a receipt
    * that must be sent to the `completeSignIn` method to complete the sign-in.
    *
-   * @param proof Information about the user that can be used to prove their identity
    * @returns a session payload that **must** be sent to the waas API to complete the sign-in
    * @throws {Error} If the session is already signed in or there is a pending sign-in
    */
-  async signIn({ idToken }: { idToken: string }): Promise<SignedIntent<IntentDataOpenSession>> {
     const status = await this.status.get()
     if (status !== 'signed-out') {
       await this.completeSignOut()
@@ -203,7 +174,6 @@ export class SequenceWaaSBase {
     }
 
     const sessionId = await this.getSessionId()
-    const intent = await openSession({ idToken, sessionId, lifespan: DEFAULT_LIFESPAN })
 
     await this.status.set('pending')
 
@@ -393,7 +363,6 @@ export class SequenceWaaSBase {
     return this.signIntent(intent)
   }
 
-  async feeOptions(args: WithSimpleNetwork<SendTransactionsArgs> & ExtraTransactionArgs): Promise<SignedIntent<IntentDataFeeOptions>> {
     const intent = feeOptions(await this.commonArgs(args))
     return this.signIntent(intent)
   }

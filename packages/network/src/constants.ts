@@ -200,7 +200,6 @@ export const networks: Record<ChainId, NetworkMetadata> = {
     testnet: true,
     blockExplorer: {
       name: 'OKLink (Amoy)',
-      rootUrl: 'https://www.oklink.com/amoy'
     }
   },
   [ChainId.POLYGON_ZKEVM]: {
@@ -252,7 +251,6 @@ export const networks: Record<ChainId, NetworkMetadata> = {
     chainId: ChainId.OPTIMISM_KOVAN,
     type: NetworkType.TESTNET,
     name: 'optimism-kovan',
-    title: 'Optimistic Kovan',
     logoURI: `https://assets.sequence.info/images/networks/medium/${ChainId.OPTIMISM_KOVAN}.webp`,
     testnet: true,
     blockExplorer: {
@@ -265,7 +263,6 @@ export const networks: Record<ChainId, NetworkMetadata> = {
     chainId: ChainId.OPTIMISM_GOERLI,
     type: NetworkType.TESTNET,
     name: 'optimism-goerli',
-    title: 'Optimistic Goerli',
     logoURI: `https://assets.sequence.info/images/networks/medium/${ChainId.OPTIMISM_GOERLI}.webp`,
     testnet: true,
     blockExplorer: {
@@ -278,7 +275,6 @@ export const networks: Record<ChainId, NetworkMetadata> = {
     chainId: ChainId.OPTIMISM_SEPOLIA,
     type: NetworkType.TESTNET,
     name: 'optimism-sepolia',
-    title: 'Optimistic Sepolia',
     logoURI: `https://assets.sequence.info/images/networks/medium/${ChainId.OPTIMISM_SEPOLIA}.webp`,
     testnet: true,
     blockExplorer: {
@@ -487,11 +483,9 @@ export const networks: Record<ChainId, NetworkMetadata> = {
   [ChainId.HARDHAT]: {
     chainId: ChainId.HARDHAT,
     name: 'hardhat',
-    title: 'Hardhat (local testnet)'
   },
   [ChainId.HARDHAT_2]: {
     chainId: ChainId.HARDHAT_2,
     name: 'hardhat2',
-    title: 'Hardhat (local testnet)'
   }
 }

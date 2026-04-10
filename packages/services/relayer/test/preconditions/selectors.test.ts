@@ -15,71 +15,104 @@ import {
 } from '../../src/preconditions/types.js'
 import { Network } from '@0xsequence/wallet-primitives'
 
-// Test addresses (strings for TransactionPrecondition)
-const TEST_ADDRESS = '0x1234567890123456789012345678901234567890'
-const TOKEN_ADDRESS = '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd'
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
-function nativePrecondition(overrides: Partial<TransactionPrecondition> = {}): TransactionPrecondition {
-  return {
-    type: 'native-balance',
-    chainId: Network.ChainId.MAINNET,
-    ownerAddress: TEST_ADDRESS,
-    tokenAddress: ZERO_ADDRESS,
-    minAmount: 1000000000000000000n,
-    ...overrides,
-  }
-}
-
-function erc20Precondition(overrides: Partial<TransactionPrecondition> = {}): TransactionPrecondition {
-  return {
-    type: 'erc20-balance',
-    chainId: Network.ChainId.MAINNET,
-    ownerAddress: TEST_ADDRESS,
-    tokenAddress: TOKEN_ADDRESS,
-    minAmount: 1000000n,
-    ...overrides,
-  }
-}
-
-function erc721OwnershipPrecondition(overrides: Partial<TransactionPrecondition> = {}): TransactionPrecondition {
-  return {
-    type: 'erc721-ownership',
-    chainId: Network.ChainId.MAINNET,
-    ownerAddress: TEST_ADDRESS,
-    tokenAddress: TOKEN_ADDRESS,
-    minAmount: 0n,
-    ...overrides,
-  }
-}
+// Test addresses
+const TEST_ADDRESS = Address.from('0x1234567890123456789012345678901234567890')
+const TOKEN_ADDRESS = Address.from('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd')
 
 describe('Preconditions Selectors', () => {
   describe('extractChainID', () => {
     it('should extract chainID from valid precondition data', () => {
-      const precondition = nativePrecondition({ chainId: Network.ChainId.MAINNET })
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          chainID: '1',
+          min: '1000000000000000000',
+        }),
+      }
+
       const chainId = extractChainID(precondition)
       expect(chainId).toBe(Network.ChainId.MAINNET)
     })
 
     it('should extract large chainID values', () => {
-      const precondition = nativePrecondition({ chainId: Network.ChainId.ARBITRUM })
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          chainID: '42161', // Arbitrum chainID
+        }),
+      }
+
       const chainId = extractChainID(precondition)
       expect(chainId).toBe(Network.ChainId.ARBITRUM)
     })
 
     it('should return undefined when chainID is not present', () => {
-      const precondition = { type: 'native-balance', ownerAddress: TEST_ADDRESS, tokenAddress: ZERO_ADDRESS, minAmount: 1n } as TransactionPrecondition
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          min: '1000000000000000000',
+        }),
+      }
+
+      const chainId = extractChainID(precondition)
+      expect(chainId).toBeUndefined()
+    })
+
+    it('should return undefined when chainID is falsy', () => {
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          chainID: '',
+          min: '1000000000000000000',
+        }),
+      }
+
+      const chainId = extractChainID(precondition)
+      expect(chainId).toBeUndefined()
+    })
+
+    it('should return undefined when chainID is null', () => {
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          chainID: null,
+          min: '1000000000000000000',
+        }),
+      }
+
       const chainId = extractChainID(precondition)
       expect(chainId).toBeUndefined()
     })
 
     it('should return undefined for null/undefined precondition', () => {
-      expect(extractChainID(null as unknown as TransactionPrecondition)).toBeUndefined()
-      expect(extractChainID(undefined as unknown as TransactionPrecondition)).toBeUndefined()
+      expect(extractChainID(null as any)).toBeUndefined()
+      expect(extractChainID(undefined as any)).toBeUndefined()
+    })
+
+    it('should return undefined for invalid JSON', () => {
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: 'invalid json',
+      }
+
+      const chainId = extractChainID(precondition)
+      expect(chainId).toBeUndefined()
     })
 
     it('should handle chainID with value 0', () => {
-      const precondition = nativePrecondition({ chainId: 0 })
+      const precondition: TransactionPrecondition = {
+        type: 'native-balance',
+        data: JSON.stringify({
+          address: TEST_ADDRESS,
+          chainID: '0',
+        }),
+      }
+
       const chainId = extractChainID(precondition)
       expect(chainId).toBe(0)
     })
@@ -88,8 +121,21 @@ describe('Preconditions Selectors', () => {
   describe('extractSupportedPreconditions', () => {
     it('should extract valid preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition(),
-        erc20Precondition(),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            min: '1000000',
+          }),
+        },
       ]
 
       const results = extractSupportedPreconditions(intents)
@@ -100,9 +146,21 @@ describe('Preconditions Selectors', () => {
 
     it('should filter out invalid preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition(),
-        { type: 'unknown-type', chainId: 1, ownerAddress: TEST_ADDRESS, tokenAddress: ZERO_ADDRESS, minAmount: 0n } as TransactionPrecondition,
-        nativePrecondition({ ownerAddress: '' }),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'unknown-type',
+          data: JSON.stringify({ address: TEST_ADDRESS }),
+        },
+        {
+          type: 'native-balance',
+          data: 'invalid json',
+        },
       ]
 
       const results = extractSupportedPreconditions(intents)
@@ -111,8 +169,8 @@ describe('Preconditions Selectors', () => {
     })
 
     it('should return empty array for null/undefined input', () => {
-      expect(extractSupportedPreconditions(null as unknown as TransactionPrecondition[])).toEqual([])
-      expect(extractSupportedPreconditions(undefined as unknown as TransactionPrecondition[])).toEqual([])
+      expect(extractSupportedPreconditions(null as any)).toEqual([])
+      expect(extractSupportedPreconditions(undefined as any)).toEqual([])
     })
 
     it('should return empty array for empty input', () => {
@@ -122,9 +180,25 @@ describe('Preconditions Selectors', () => {
 
     it('should handle mixed valid and invalid preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition(),
-        erc721OwnershipPrecondition(),
-        { type: 'invalid-type', chainId: 1, ownerAddress: TEST_ADDRESS, tokenAddress: ZERO_ADDRESS, minAmount: 0n } as TransactionPrecondition,
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'erc721-ownership',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            tokenId: '123',
+          }),
+        },
+        {
+          type: 'invalid-type',
+          data: JSON.stringify({ address: TEST_ADDRESS }),
+        },
       ]
 
       const results = extractSupportedPreconditions(intents)
@@ -137,23 +211,58 @@ describe('Preconditions Selectors', () => {
   describe('extractNativeBalancePreconditions', () => {
     it('should extract only native balance preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition({ minAmount: 1000000000000000000n }),
-        erc20Precondition(),
-        nativePrecondition({ minAmount: 2000000000000000000n }),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            min: '1000000',
+          }),
+        },
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            max: '2000000000000000000',
+          }),
+        },
       ]
 
       const results = extractNativeBalancePreconditions(intents)
       expect(results).toHaveLength(2)
       expect(results[0]).toBeInstanceOf(NativeBalancePrecondition)
       expect(results[1]).toBeInstanceOf(NativeBalancePrecondition)
+
+      // Verify the specific properties
       expect(results[0].min).toBe(1000000000000000000n)
-      expect(results[1].min).toBe(2000000000000000000n)
+      expect(results[1].max).toBe(2000000000000000000n)
     })
 
     it('should return empty array when no native balance preconditions exist', () => {
       const intents: TransactionPrecondition[] = [
-        erc20Precondition(),
-        erc721OwnershipPrecondition(),
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            min: '1000000',
+          }),
+        },
+        {
+          type: 'erc721-ownership',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            tokenId: '123',
+          }),
+        },
       ]
 
       const results = extractNativeBalancePreconditions(intents)
@@ -161,8 +270,8 @@ describe('Preconditions Selectors', () => {
     })
 
     it('should return empty array for null/undefined input', () => {
-      expect(extractNativeBalancePreconditions(null as unknown as TransactionPrecondition[])).toEqual([])
-      expect(extractNativeBalancePreconditions(undefined as unknown as TransactionPrecondition[])).toEqual([])
+      expect(extractNativeBalancePreconditions(null as any)).toEqual([])
+      expect(extractNativeBalancePreconditions(undefined as any)).toEqual([])
     })
 
     it('should return empty array for empty input', () => {
@@ -172,8 +281,24 @@ describe('Preconditions Selectors', () => {
 
     it('should filter out invalid native balance preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition({ minAmount: 1000000000000000000n }),
-        nativePrecondition({ ownerAddress: '' }),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'native-balance',
+          data: 'invalid json', // This will be filtered out
+        },
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            // Missing address - this will be filtered out
+            min: '1000000000000000000',
+          }),
+        },
       ]
 
       const results = extractNativeBalancePreconditions(intents)
@@ -186,25 +311,60 @@ describe('Preconditions Selectors', () => {
   describe('extractERC20BalancePreconditions', () => {
     it('should extract only ERC20 balance preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition(),
-        erc20Precondition({ minAmount: 1000000n }),
-        erc20Precondition({ minAmount: 2000000n }),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            min: '1000000',
+          }),
+        },
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            max: '2000000',
+          }),
+        },
       ]
 
       const results = extractERC20BalancePreconditions(intents)
       expect(results).toHaveLength(2)
       expect(results[0]).toBeInstanceOf(Erc20BalancePrecondition)
       expect(results[1]).toBeInstanceOf(Erc20BalancePrecondition)
+
+      // Verify the specific properties
       expect(results[0].min).toBe(1000000n)
-      expect(results[1].min).toBe(2000000n)
-      expect(results[0].token).toEqual(Address.from(TOKEN_ADDRESS))
-      expect(results[1].token).toEqual(Address.from(TOKEN_ADDRESS))
+      expect(results[1].max).toBe(2000000n)
+      expect(results[0].token).toBe(TOKEN_ADDRESS)
+      expect(results[1].token).toBe(TOKEN_ADDRESS)
     })
 
     it('should return empty array when no ERC20 balance preconditions exist', () => {
       const intents: TransactionPrecondition[] = [
-        nativePrecondition(),
-        erc721OwnershipPrecondition(),
+        {
+          type: 'native-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            min: '1000000000000000000',
+          }),
+        },
+        {
+          type: 'erc721-ownership',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            tokenId: '123',
+          }),
+        },
       ]
 
       const results = extractERC20BalancePreconditions(intents)
@@ -212,8 +372,8 @@ describe('Preconditions Selectors', () => {
     })
 
     it('should return empty array for null/undefined input', () => {
-      expect(extractERC20BalancePreconditions(null as unknown as TransactionPrecondition[])).toEqual([])
-      expect(extractERC20BalancePreconditions(undefined as unknown as TransactionPrecondition[])).toEqual([])
+      expect(extractERC20BalancePreconditions(null as any)).toEqual([])
+      expect(extractERC20BalancePreconditions(undefined as any)).toEqual([])
     })
 
     it('should return empty array for empty input', () => {
@@ -223,15 +383,33 @@ describe('Preconditions Selectors', () => {
 
     it('should filter out invalid ERC20 balance preconditions', () => {
       const intents: TransactionPrecondition[] = [
-        erc20Precondition({ minAmount: 1000000n }),
-        erc20Precondition({ tokenAddress: '' }),
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            token: TOKEN_ADDRESS,
+            min: '1000000',
+          }),
+        },
+        {
+          type: 'erc20-balance',
+          data: 'invalid json', // This will be filtered out
+        },
+        {
+          type: 'erc20-balance',
+          data: JSON.stringify({
+            address: TEST_ADDRESS,
+            // Missing token address - this will be filtered out
+            min: '1000000',
+          }),
+        },
       ]
 
       const results = extractERC20BalancePreconditions(intents)
       expect(results).toHaveLength(1)
       expect(results[0]).toBeInstanceOf(Erc20BalancePrecondition)
       expect(results[0].min).toBe(1000000n)
-      expect(results[0].token).toEqual(Address.from(TOKEN_ADDRESS))
+      expect(results[0].token).toBe(TOKEN_ADDRESS)
     })
   })
 })

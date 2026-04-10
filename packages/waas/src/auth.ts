@@ -1,5 +1,4 @@
 import { Observer, SequenceWaaSBase } from './base'
-import {IntentDataOpenSession, IntentDataSendTransaction} from './clients/intent.gen'
 import { newSessionFromSessionId } from './session'
 import { LocalStore, Store, StoreObj } from './store'
 import {
@@ -7,30 +6,17 @@ import {
   SendERC1155Args,
   SendERC20Args,
   SendERC721Args,
-  SignMessageArgs,
   SendTransactionsArgs,
   SignedIntent,
-  GetTransactionReceiptArgs
 } from './intents'
 import {
-  MaySentTransactionResponse,
-  SignedMessageResponse,
   FeeOptionsResponse,
   isGetSessionResponse,
   isMaySentTransactionResponse,
   isSignedMessageResponse,
-  isValidationRequiredResponse,
-  isFinishValidateSessionResponse,
-  isCloseSessionResponse,
   isTimedOutTransactionResponse,
-  isFeeOptionsResponse,
-  isSessionAuthProofResponse,
-  isIntentTimeError,
 } from './intents/responses'
-import { WaasAuthenticator, Session, Chain } from './clients/authenticator.gen'
-import { jwtDecode } from 'jwt-decode'
 import { SimpleNetwork, WithSimpleNetwork } from './networks'
-import { LOCAL } from './defaults'
 import { EmailAuth } from './email'
 import { ethers } from 'ethers'
 
@@ -52,8 +38,6 @@ export type WaaSConfigKey = {
   emailClientId?: string
 }
 
-export type Identity = {
-  idToken: string
 }
 
 function encodeHex(data: string | Uint8Array) {
@@ -92,12 +76,9 @@ export function parseSequenceWaaSConfigKey<T>(key: string): Partial<T> {
 }
 
 export function defaultArgsOrFail(
-  config: SequenceConfig & Partial<ExtendedSequenceConfig>,
-  preset: ExtendedSequenceConfig
 ): Required<SequenceConfig> & Required<WaaSConfigKey> & ExtendedSequenceConfig {
   const key = (config as any).waasConfigKey
   const keyOverrides = key ? parseSequenceWaaSConfigKey<SequenceConfig & WaaSConfigKey & ExtendedSequenceConfig>(key) : {}
-  const preconfig = { ...preset, ...config, ...keyOverrides }
 
   if (preconfig.network === undefined) {
     preconfig.network = 1
@@ -132,11 +113,7 @@ export class SequenceWaaS {
 
   constructor(
     config: SequenceConfig & Partial<ExtendedSequenceConfig>,
-    preset: ExtendedSequenceConfig = LOCAL,
-    private readonly store: Store = new LocalStore()
   ) {
-    this.config = defaultArgsOrFail(config, preset)
-    this.waas = new SequenceWaaSBase({ network: 1, ...config }, this.store)
     this.client = new WaasAuthenticator(this.config.rpcServer, this.fetch.bind(this))
     this.deviceName = new StoreObj(this.store, '@0xsequence.waas.auth.deviceName', undefined)
   }
@@ -214,24 +191,10 @@ export class SequenceWaaS {
     return this.waas.isSignedIn()
   }
 
-  async signIn(creds: Identity, name: string): Promise<{ sessionId: string; wallet: string }> {
-    // TODO: Be smarter about this, for cognito (or some other cases) we may
-    // want to send the email instead of the idToken
-    const signInIntent = await this.waas.signIn({
-      idToken: creds.idToken
-    })
-
-    // Login on WaaS
-    const decoded = jwtDecode(creds.idToken)
-
-    if (!decoded.iss) {
-      throw new Error('Invalid idToken')
     }
 
-    await this.deviceName.set(name)
 
     try {
-      const res = await this.registerSession(signInIntent, name)
 
       await this.waas.completeSignIn({
         code: 'sessionOpened',
@@ -243,7 +206,6 @@ export class SequenceWaaS {
 
       return {
         sessionId: res.session.id,
-        wallet: res.response.data.wallet
       }
     } catch (e) {
       await this.waas.completeSignOut()
@@ -301,7 +263,6 @@ export class SequenceWaaS {
     }
 
     if (closeSessionId === thisSessionId) {
-      const session = await newSessionFromSessionId(thisSessionId)
       session.clear()
       await this.waas.completeSignOut()
       await this.deviceName.set(undefined)

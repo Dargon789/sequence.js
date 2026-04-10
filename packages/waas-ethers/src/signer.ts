@@ -11,11 +11,9 @@ export class SequenceSigner extends ethers.Signer {
 
   public static fromConfig(
     config: SequenceConfig & Partial<ExtendedSequenceConfig>,
-    preset?: ExtendedSequenceConfig,
     store?: store.Store,
     provider?: ethers.providers.BaseProvider
   ): SequenceSigner {
-    return new SequenceSigner(new SequenceWaaS(config, preset, store), provider)
   }
 
   async getAddress(): Promise<string> {

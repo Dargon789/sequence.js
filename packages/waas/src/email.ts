@@ -6,15 +6,7 @@ import {
   SignUpCommand,
   UserLambdaValidationException
 } from '@aws-sdk/client-cognito-identity-provider'
-import { Identity } from './auth'
 
-function getRandomString(len: number) {
-  const randomValues = new Uint8Array(len)
-  window.crypto.getRandomValues(randomValues)
-  return Array.from(randomValues)
-    .map(nr => nr.toString(16).padStart(2, '0'))
-    .join('')
-}
 
 export class EmailAuth {
   private cognitoMemo: CognitoIdentityProviderClient
@@ -95,7 +87,6 @@ export class EmailAuth {
     email: string
     answer: string
     sessionHash: string
-  }): Promise<Identity> {
     const res = await this.cognito().send(
       new RespondToAuthChallengeCommand({
         ClientId: this.clientId,
