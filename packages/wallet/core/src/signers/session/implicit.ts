@@ -1,6 +1,5 @@
 import {
   Attestation,
-  Extensions,
   Payload,
   Signature as SequenceSignature,
   SessionConfig,
@@ -98,7 +97,7 @@ export class Implicit implements SessionSigner {
       )
       const expectedResult = Bytes.toHex(Attestation.generateImplicitRequestMagic(this._attestation, wallet))
       return acceptImplicitRequest === expectedResult
-    } catch (error) {
+    } catch {
       // console.log('implicit signer unsupported call', call, error)
       return false
     }
