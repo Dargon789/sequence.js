@@ -3,20 +3,64 @@ import { Config, Constants, Payload } from '@0xsequence/wallet-primitives'
 import { Address, Hex, Provider, RpcTransport } from 'ox'
 import { AuthCommitment } from '../dbs/auth-commitments.js'
 import { AuthCodeHandler } from './handlers/authcode.js'
+import { IdTokenHandler } from './handlers/idtoken.js'
 import { MnemonicHandler } from './handlers/mnemonic.js'
 import { OtpHandler } from './handlers/otp.js'
 import { Shared } from './manager.js'
 import { Device } from './types/device.js'
-import { Action, Module } from './types/index.js'
+import { Action, Actions, Module } from './types/index.js'
 import { Kinds, SignerWithKind, WitnessExtraSignerKind } from './types/signer.js'
 import { Wallet, WalletSelectionUiHandler } from './types/wallet.js'
 import { PasskeysHandler } from './handlers/passkeys.js'
 import type { PasskeySigner } from './passkeys-provider.js'
 
+function getSignupHandlerKey(kind: SignupArgs['kind'] | StartSignUpWithRedirectArgs['kind'] | AuthCommitment['kind']) {
+  if (kind === 'google-pkce') {
+    return Kinds.LoginGoogle
+  }
+  if (kind.startsWith('custom-')) {
+    return kind
+  }
+  return 'login-' + kind
+}
+
+function getSignerKindForSignup(kind: SignupArgs['kind'] | AuthCommitment['kind']) {
+  if (kind === 'google-id-token' || kind === 'google-pkce') {
+    return Kinds.LoginGoogle
+  }
+  if (kind === 'apple-id-token' || kind === 'apple') {
+    return Kinds.LoginApple
+  }
+  if (kind.startsWith('custom-')) {
+    return kind
+  }
+  return ('login-' + kind) as string
+}
+
+function getIdTokenSignupHandler(
+  shared: Shared,
+  kind: typeof Kinds.LoginGoogle | typeof Kinds.LoginApple | `custom-${string}`,
+): IdTokenHandler {
+  const handler = shared.handlers.get(kind)
+  if (!handler) {
+    throw new Error('handler-not-registered')
+  }
+  if (!(handler instanceof IdTokenHandler)) {
+    throw new Error('handler-does-not-support-id-token')
+  }
+  return handler
+}
+
 export type StartSignUpWithRedirectArgs = {
   kind: 'google-pkce' | 'apple' | `custom-${string}`
   target: string
   metadata: { [key: string]: string }
+}
+
+export type StartAddLoginSignerWithRedirectArgs = {
+  wallet: Address.Address
+  kind: 'google-pkce' | 'apple' | `custom-${string}`
+  target: string
 }
 
 export type SignupStatus =
@@ -49,6 +93,11 @@ export type EmailOtpSignupArgs = CommonSignupArgs & {
   email: string
 }
 
+export type IdTokenSignupArgs = CommonSignupArgs & {
+  kind: 'google-id-token' | 'apple-id-token' | `custom-${string}`
+  idToken: string
+}
+
 export type CompleteRedirectArgs = CommonSignupArgs & {
   state: string
   code: string
@@ -62,7 +111,25 @@ export type AuthCodeSignupArgs = CommonSignupArgs & {
   isRedirect: boolean
 }
 
-export type SignupArgs = PasskeySignupArgs | MnemonicSignupArgs | EmailOtpSignupArgs | AuthCodeSignupArgs
+export type SignupArgs =
+  | PasskeySignupArgs
+  | MnemonicSignupArgs
+  | EmailOtpSignupArgs
+  | IdTokenSignupArgs
+  | AuthCodeSignupArgs
+
+export type AddLoginSignerArgs = {
+  wallet: Address.Address
+} & (
+  | { kind: 'mnemonic'; mnemonic: string }
+  | { kind: 'email-otp'; email: string }
+  | { kind: 'google-id-token' | 'apple-id-token' | `custom-${string}`; idToken: string }
+)
+
+export type RemoveLoginSignerArgs = {
+  wallet: Address.Address
+  signerAddress: Address.Address
+}
 
 export type LoginToWalletArgs = {
   wallet: Address.Address
@@ -180,6 +247,7 @@ export interface WalletsInterface {
    *   - `kind: 'mnemonic'`: Uses a mnemonic phrase as the login credential.
    *   - `kind: 'passkey'`: Prompts the user to create a WebAuthn passkey.
    *   - `kind: 'email-otp'`: Initiates an OTP flow to the user's email.
+   *   - `kind: 'google-id-token' | 'apple-id-token'`: Completes an OIDC ID token flow when the provider is configured with `authMethod: 'id-token'`.
    *   - `kind: 'google-pkce' | 'apple'`: Completes an OAuth redirect flow.
    *   Common options like `noGuard` or `noRecovery` can customize the wallet's security features.
    * @returns A promise that resolves to the address of the newly created wallet, or `undefined` if the sign-up was aborted.
@@ -242,6 +310,66 @@ export interface WalletsInterface {
    * @returns A promise that resolves when the login process is fully complete and the wallet is ready for use.
    */
   completeLogin(requestId: string): Promise<void>
+
+  /**
+   * Adds a new login signer to an existing wallet, enabling account federation.
+   *
+   * This allows a user to link a new login method (e.g., Google, email OTP, mnemonic) to a wallet
+   * that was originally created with a different credential. After federation, the wallet can be
+   * discovered and accessed via any of its linked login methods.
+   *
+   * @param args The arguments specifying the wallet and the new login credential to add.
+   * @returns A promise that resolves to a `requestId` for the configuration update signature request.
+   * @see {completeAddLoginSigner}
+   */
+  addLoginSigner(args: AddLoginSignerArgs): Promise<string>
+
+  /**
+   * Completes the add-login-signer process after the configuration update has been signed.
+   *
+   * @param requestId The ID of the completed signature request returned by `addLoginSigner`.
+   * @returns A promise that resolves when the configuration update has been submitted.
+   */
+  completeAddLoginSigner(requestId: string): Promise<void>
+
+  /**
+   * Initiates an add-login-signer process that involves an OAuth redirect.
+   *
+   * This is the first step for adding a social login signer (e.g., Google, Apple) to an existing wallet
+   * via a redirect-based OAuth flow. It validates the wallet, generates the necessary challenges and state,
+   * stores them locally, and returns a URL. Your application should redirect the user to this URL.
+   *
+   * After the redirect callback, call `completeRedirect` with the returned state and code. This will
+   * create a pending `AddLoginSigner` signature request internally. The caller can then discover
+   * the pending request through the signatures module and call `completeAddLoginSigner` with the requestId
+   * once it has been signed.
+   *
+   * @param args Arguments specifying the wallet, provider (`kind`), and the `target` URL for the redirect callback.
+   * @returns A promise that resolves to the full OAuth URL to which the user should be redirected.
+   * @see {completeRedirect} for the second step of this flow.
+   * @see {completeAddLoginSigner} to finalize after signing.
+   */
+  startAddLoginSignerWithRedirect(args: StartAddLoginSignerWithRedirectArgs): Promise<string>
+
+  /**
+   * Removes a login signer from an existing wallet, enabling account defederation.
+   *
+   * This allows a user to unlink a login method from a wallet. A safety guard ensures
+   * at least one login signer always remains.
+   *
+   * @param args The arguments specifying the wallet and the signer address to remove.
+   * @returns A promise that resolves to a `requestId` for the configuration update signature request.
+   * @see {completeRemoveLoginSigner}
+   */
+  removeLoginSigner(args: RemoveLoginSignerArgs): Promise<string>
+
+  /**
+   * Completes the remove-login-signer process after the configuration update has been signed.
+   *
+   * @param requestId The ID of the completed signature request returned by `removeLoginSigner`.
+   * @returns A promise that resolves when the configuration update has been submitted.
+   */
+  completeRemoveLoginSigner(requestId: string): Promise<void>
 
   /**
    * Logs out from a given wallet, ending the current session.
@@ -361,7 +489,25 @@ export function isLoginToPasskeyArgs(args: LoginArgs): args is LoginToPasskeyArg
 }
 
 export function isAuthCodeArgs(args: SignupArgs): args is AuthCodeSignupArgs {
-  return 'kind' in args && (args.kind === 'google-pkce' || args.kind === 'apple')
+  return 'code' in args && 'commitment' in args
+}
+
+export function isIdTokenArgs(args: SignupArgs): args is IdTokenSignupArgs {
+  return 'idToken' in args
+}
+
+function addLoginSignerToSignupArgs(args: AddLoginSignerArgs): SignupArgs {
+  switch (args.kind) {
+    case 'mnemonic':
+      return { kind: 'mnemonic', mnemonic: args.mnemonic }
+    case 'email-otp':
+      return { kind: 'email-otp', email: args.email }
+    default: {
+      // google-id-token, apple-id-token, custom-*
+      const _args = args as { kind: string; idToken: string }
+      return { kind: _args.kind as IdTokenSignupArgs['kind'], idToken: _args.idToken }
+    }
+  }
 }
 
 function buildCappedTree(members: { address: Address.Address; imageHash?: Hex.Hex }[]): Config.Topology {
@@ -674,9 +820,28 @@ export class Wallets implements WalletsInterface {
         }
       }
 
+      case 'google-id-token':
+      case 'apple-id-token': {
+        const handler = getIdTokenSignupHandler(
+          this.shared,
+          args.kind === 'google-id-token' ? Kinds.LoginGoogle : Kinds.LoginApple,
+        )
+        const [signer, metadata] = await handler.completeAuth(args.idToken)
+        const loginEmail = metadata.email
+        this.shared.modules.logger.log('Created new id token signer:', signer.address)
+
+        return {
+          signer,
+          extra: {
+            signerKind: getSignerKindForSignup(args.kind),
+          },
+          loginEmail,
+        }
+      }
+
       case 'google-pkce':
       case 'apple': {
-        const handler = this.shared.handlers.get('login-' + args.kind) as AuthCodeHandler
+        const handler = this.shared.handlers.get(getSignupHandlerKey(args.kind)) as AuthCodeHandler
         if (!handler) {
           throw new Error('handler-not-registered')
         }
@@ -688,7 +853,7 @@ export class Wallets implements WalletsInterface {
         return {
           signer,
           extra: {
-            signerKind: 'login-' + args.kind,
+            signerKind: getSignerKindForSignup(args.kind),
           },
           loginEmail,
         }
@@ -696,7 +861,18 @@ export class Wallets implements WalletsInterface {
     }
 
     if (args.kind.startsWith('custom-')) {
-      // TODO: support other custom auth methods (e.g. id-token)
+      if (isIdTokenArgs(args)) {
+        const handler = getIdTokenSignupHandler(this.shared, args.kind)
+        const [signer, metadata] = await handler.completeAuth(args.idToken)
+        return {
+          signer,
+          extra: {
+            signerKind: args.kind,
+          },
+          loginEmail: metadata.email,
+        }
+      }
+
       const handler = this.shared.handlers.get(args.kind) as AuthCodeHandler
       if (!handler) {
         throw new Error('handler-not-registered')
@@ -716,12 +892,35 @@ export class Wallets implements WalletsInterface {
   }
 
   async startSignUpWithRedirect(args: StartSignUpWithRedirectArgs) {
-    const kind = args.kind.startsWith('custom-') ? args.kind : 'login-' + args.kind
-    const handler = this.shared.handlers.get(kind) as AuthCodeHandler
+    const kind = getSignupHandlerKey(args.kind)
+    const handler = this.shared.handlers.get(kind)
     if (!handler) {
       throw new Error('handler-not-registered')
     }
-    return handler.commitAuth(args.target, true)
+    if (!(handler instanceof AuthCodeHandler)) {
+      throw new Error('handler-does-not-support-redirect')
+    }
+    return handler.commitAuth(args.target, { type: 'auth' })
+  }
+
+  async startAddLoginSignerWithRedirect(args: StartAddLoginSignerWithRedirectArgs) {
+    const walletEntry = await this.get(args.wallet)
+    if (!walletEntry) {
+      throw new Error('wallet-not-found')
+    }
+    if (walletEntry.status !== 'ready') {
+      throw new Error('wallet-not-ready')
+    }
+
+    const kind = getSignupHandlerKey(args.kind)
+    const handler = this.shared.handlers.get(kind)
+    if (!handler) {
+      throw new Error('handler-not-registered')
+    }
+    if (!(handler instanceof AuthCodeHandler)) {
+      throw new Error('handler-does-not-support-redirect')
+    }
+    return handler.commitAuth(args.target, { type: 'add-signer', wallet: args.wallet })
   }
 
   async completeRedirect(args: CompleteRedirectArgs): Promise<string> {
@@ -730,25 +929,62 @@ export class Wallets implements WalletsInterface {
       throw new Error('invalid-state')
     }
 
-    // commitment.isSignUp and signUp also mean 'signIn' from wallet's perspective
-    if (commitment.isSignUp) {
-      await this.signUp({
-        kind: commitment.kind,
-        commitment,
-        code: args.code,
-        noGuard: args.noGuard,
-        target: commitment.target,
-        isRedirect: true,
-        use4337: args.use4337,
-      })
-    } else {
-      const kind = commitment.kind.startsWith('custom-') ? commitment.kind : 'login-' + commitment.kind
-      const handler = this.shared.handlers.get(kind) as AuthCodeHandler
-      if (!handler) {
-        throw new Error('handler-not-registered')
+    switch (commitment.type) {
+      case 'add-signer': {
+        const handlerKind = getSignupHandlerKey(commitment.kind)
+        const handler = this.shared.handlers.get(handlerKind)
+        if (!handler) {
+          throw new Error('handler-not-registered')
+        }
+        if (!(handler instanceof AuthCodeHandler)) {
+          throw new Error('handler-does-not-support-redirect')
+        }
+
+        const walletAddress = commitment.wallet as Address.Address
+        const walletEntry = await this.get(walletAddress)
+        if (!walletEntry) {
+          throw new Error('wallet-not-found')
+        }
+        if (walletEntry.status !== 'ready') {
+          throw new Error('wallet-not-ready')
+        }
+
+        const [signer] = await handler.completeAuth(commitment, args.code)
+        const signerKind = getSignerKindForSignup(commitment.kind)
+
+        await this.addLoginSignerFromPrepared(walletAddress, {
+          signer,
+          extra: { signerKind },
+        })
+        break
       }
 
-      await handler.completeAuth(commitment, args.code)
+      case 'auth': {
+        await this.signUp({
+          kind: commitment.kind,
+          commitment,
+          code: args.code,
+          noGuard: args.noGuard,
+          target: commitment.target,
+          isRedirect: true,
+          use4337: args.use4337,
+        })
+        break
+      }
+
+      case 'reauth': {
+        const handlerKind = getSignupHandlerKey(commitment.kind)
+        const handler = this.shared.handlers.get(handlerKind)
+        if (!handler) {
+          throw new Error('handler-not-registered')
+        }
+        if (!(handler instanceof AuthCodeHandler)) {
+          throw new Error('handler-does-not-support-redirect')
+        }
+
+        await handler.completeAuth(commitment, args.code)
+        break
+      }
     }
 
     if (!commitment.target) {
@@ -1184,6 +1420,87 @@ export class Wallets implements WalletsInterface {
     })
   }
 
+  async addLoginSigner(args: AddLoginSignerArgs): Promise<string> {
+    const walletEntry = await this.get(args.wallet)
+    if (!walletEntry) {
+      throw new Error('wallet-not-found')
+    }
+    if (walletEntry.status !== 'ready') {
+      throw new Error('wallet-not-ready')
+    }
+
+    const signupArgs = addLoginSignerToSignupArgs(args)
+    const loginSigner = await this.prepareSignUp(signupArgs)
+    return this.addLoginSignerFromPrepared(args.wallet, loginSigner)
+  }
+
+  async completeAddLoginSigner(requestId: string): Promise<void> {
+    const request = await this.shared.modules.signatures.get(requestId)
+    if (request.action !== Actions.AddLoginSigner) {
+      throw new Error('invalid-request-action')
+    }
+    await this.completeConfigurationUpdate(requestId)
+  }
+
+  async removeLoginSigner(args: RemoveLoginSignerArgs): Promise<string> {
+    const walletEntry = await this.get(args.wallet)
+    if (!walletEntry) {
+      throw new Error('wallet-not-found')
+    }
+    if (walletEntry.status !== 'ready') {
+      throw new Error('wallet-not-ready')
+    }
+
+    const { loginTopology, modules } = await this.getConfigurationParts(args.wallet)
+
+    const existingSigners = Config.getSigners(loginTopology)
+    const allExistingAddresses = [...existingSigners.signers, ...existingSigners.sapientSigners.map((s) => s.address)]
+
+    if (!allExistingAddresses.some((addr) => Address.isEqual(addr, args.signerAddress))) {
+      throw new Error('signer-not-found')
+    }
+
+    const remainingMembers = [
+      ...existingSigners.signers
+        .filter((x) => x !== Constants.ZeroAddress && !Address.isEqual(x, args.signerAddress))
+        .map((x) => ({ address: x })),
+      ...existingSigners.sapientSigners
+        .filter((x) => !Address.isEqual(x.address, args.signerAddress))
+        .map((x) => ({ address: x.address, imageHash: x.imageHash })),
+    ]
+
+    if (remainingMembers.length < 1) {
+      throw new Error('cannot-remove-last-login-signer')
+    }
+
+    const nextLoginTopology = buildCappedTree(remainingMembers)
+
+    if (this.shared.modules.sessions.hasSessionModule(modules)) {
+      await this.shared.modules.sessions.removeIdentitySignerFromModules(modules, args.signerAddress)
+    }
+
+    if (this.shared.modules.recovery.hasRecoveryModule(modules)) {
+      await this.shared.modules.recovery.removeRecoverySignerFromModules(modules, args.signerAddress)
+    }
+
+    const requestId = await this.requestConfigurationUpdate(
+      args.wallet,
+      { loginTopology: nextLoginTopology, modules },
+      Actions.RemoveLoginSigner,
+      'wallet-webapp',
+    )
+
+    return requestId
+  }
+
+  async completeRemoveLoginSigner(requestId: string): Promise<void> {
+    const request = await this.shared.modules.signatures.get(requestId)
+    if (request.action !== Actions.RemoveLoginSigner) {
+      throw new Error('invalid-request-action')
+    }
+    await this.completeConfigurationUpdate(requestId)
+  }
+
   async logout<T extends { skipRemoveDevice?: boolean } | undefined = undefined>(
     wallet: Address.Address,
     options?: T,
@@ -1413,5 +1730,55 @@ export class Wallets implements WalletsInterface {
     )
 
     return requestId
+  }
+
+  private async addLoginSignerFromPrepared(
+    wallet: Address.Address,
+    loginSigner: {
+      signer: (Signers.Signer | Signers.SapientSigner) & Signers.Witnessable
+      extra: WitnessExtraSignerKind
+    },
+  ): Promise<string> {
+    const newSignerAddress = await loginSigner.signer.address
+
+    const { loginTopology, modules } = await this.getConfigurationParts(wallet)
+
+    // Check for duplicate signer
+    const existingSigners = Config.getSigners(loginTopology)
+    const allExistingAddresses = [...existingSigners.signers, ...existingSigners.sapientSigners.map((s) => s.address)]
+    if (allExistingAddresses.some((addr) => Address.isEqual(addr, newSignerAddress))) {
+      throw new Error('signer-already-exists')
+    }
+
+    // Build new login topology with the additional signer
+    const existingMembers = [
+      ...existingSigners.signers.filter((x) => x !== Constants.ZeroAddress).map((x) => ({ address: x })),
+      ...existingSigners.sapientSigners.map((x) => ({ address: x.address, imageHash: x.imageHash })),
+    ]
+    const newMember = {
+      address: newSignerAddress,
+      imageHash: Signers.isSapientSigner(loginSigner.signer) ? await loginSigner.signer.imageHash : undefined,
+    }
+    const nextLoginTopology = buildCappedTree([...existingMembers, newMember])
+
+    // Add non-sapient login signer to sessions module identity signers
+    if (!Signers.isSapientSigner(loginSigner.signer) && this.shared.modules.sessions.hasSessionModule(modules)) {
+      await this.shared.modules.sessions.addIdentitySignerToModules(modules, newSignerAddress)
+    }
+
+    // Add to recovery module if present
+    if (this.shared.modules.recovery.hasRecoveryModule(modules)) {
+      await this.shared.modules.recovery.addRecoverySignerToModules(modules, newSignerAddress)
+    }
+
+    // Witness so the wallet becomes discoverable via the new credential
+    await loginSigner.signer.witness(this.shared.sequence.stateProvider, wallet, loginSigner.extra)
+
+    return this.requestConfigurationUpdate(
+      wallet,
+      { loginTopology: nextLoginTopology, modules },
+      Actions.AddLoginSigner,
+      'wallet-webapp',
+    )
   }
 }
