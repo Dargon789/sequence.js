@@ -1,0 +1,2 @@
+2026-03-18T18:27:54.982132Z  WARN hyper_util::client::legacy::connect::http: tcp set_tcp_user_timeout error: Protocol not available (os error 92)
+2026-03-18T18:28:40.723881Z  INFO turborepo_daemon::server: triggering shutdown
