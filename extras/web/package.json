@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "clean": "riffraff .next"
+    "clean": "rimraf .next"
   },
   "dependencies": {
     "@repo/ui": "workspace:^",
