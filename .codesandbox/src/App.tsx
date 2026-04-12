@@ -1232,7 +1232,7 @@ And that has made all the difference.
           width="full"
           shape="square"
           // TODO: Implement send ERC-1155 example
-          disabled={!isWalletConnected || true}
+          disabled={!isWalletConnected}
           onClick={() => send1155Tokens()}
           label="Send ERC-1155 Tokens"
         />
