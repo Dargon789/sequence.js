@@ -1,6 +1,6 @@
-export * from './userdata.gen.js'
+export * from './userdata.gen'
 
-import { UserData as UserdataRpc } from './userdata.gen.js'
+import { UserData as UserdataRpc } from './userdata.gen'
 
 export class SequenceUserdataClient extends UserdataRpc {
   constructor(
@@ -15,7 +15,7 @@ export class SequenceUserdataClient extends UserdataRpc {
   _fetch = (input: RequestInfo, init?: RequestInit): Promise<Response> => {
     // automatically include jwt and access key auth header to requests
     // if its been set on the api client
-    const headers: Record<string, string> = {}
+    const headers: { [key: string]: any } = {}
 
     const jwtAuth = this.jwtAuth
     const projectAccessKey = this.projectAccessKey
