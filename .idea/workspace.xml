@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03b41efd-f347-467b-b9b1-61b016392cc1" name="Changes" comment="update web3 next dev">
+      <change afterPath="$PROJECT_DIR$/Counter/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -17,19 +18,32 @@
   </component>
   <component name="CopilotPersistence">
     <persistenceIdMap>
+      <entry key="_C:/Users/Legion/sequence.js" value="3ApWXX1lJAgH5HQJ7ipPwZr4Ljs" />
       <entry key="_D:/GitHub/projects/sequence.js" value="39Vf8OJSSLhlAE0TloI2hcjiS2N" />
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {}
 }</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOFtcLA86MvQBm&quot;,
+        &quot;number&quot;: 26
+      },
+      &quot;lastSeen&quot;: 1773929218845
+    }
+  ]
+}</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/0xsequence/sequence.js.git&quot;,
-    &quot;accountId&quot;: &quot;063bd7fa-826f-4b5c-a88e-676fbcb81bfe&quot;
+    &quot;url&quot;: &quot;git@github.com:0xsequence/demo-dapp.git&quot;,
+    &quot;accountId&quot;: &quot;901c3c88-76ca-48f1-af81-8988657f5914&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -59,12 +73,16 @@
     "com.google.services.firebase.aqiPopupShown": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "kronk.content.tree.expanded.paths": "",
-    "last_opened_file_path": "D:/GitHub/projects/sequence.js",
+    "last_opened_file_path": "C:/Users/Legion/sequence.js",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "memory.settings",
     "show.migrate.to.gradle.popup": "false",
     "to.speed.mode.migration.done": "true"
   }
@@ -88,6 +106,9 @@
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="robots.txt" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -102,6 +123,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update web3 next dev" />
     <option name="LAST_COMMIT_MESSAGE" value="update web3 next dev" />
+  </component>
+  <component name="dal_apis">
+    <option name="consented" value="true" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

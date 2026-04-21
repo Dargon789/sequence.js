@@ -1,20 +1,12 @@
-<<<<<<< HEAD:packages/api/src/index.ts
-export * from './api.gen'
-
-import { API as ApiRpc } from './api.gen'
-=======
 export * from './userdata.gen.js'
 
 import { UserData as UserdataRpc } from './userdata.gen.js'
->>>>>>> upstream/master:packages/services/userdata/src/index.ts
 
-const fetch = typeof global === 'object' ? global.fetch : window.fetch
-
-export class SequenceAPIClient extends ApiRpc {
+export class SequenceUserdataClient extends UserdataRpc {
   constructor(
     hostname: string,
     public projectAccessKey?: string,
-    public jwtAuth?: string
+    public jwtAuth?: string,
   ) {
     super(hostname.endsWith('/') ? hostname.slice(0, -1) : hostname, fetch)
     this.fetch = this._fetch

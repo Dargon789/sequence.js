@@ -16,7 +16,6 @@ export interface Relayer {
   feeOptions(
     wallet: Address.Address,
     chainId: number,
-    to: Address.Address,
     calls: Payload.Call[],
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }>
 

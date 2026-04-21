@@ -1,5 +1,56 @@
 # @0xsequence/userdata
 
+## 3.0.5
+
+### Patch Changes
+
+- Account federation support
+
+## 3.0.4
+
+### Patch Changes
+
+- id-token login support
+
+## 3.0.3
+
+### Patch Changes
+
+- 3.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- allow native self transfer
+
+## 3.0.1
+
+### Patch Changes
+
+- Network and session fixes
+
+## 3.0.0
+
+### Patch Changes
+
+- f68be62: ethauth support
+- 49d8a2f: New chains, minor fixes
+- 3411232: Beta release with dapp connector fixes
+- 23cb9e9: New chains, relayer rpc fix
+- f5f6a7a: dapp-client updates
+- e7de3b1: Fix signer 404 error, minor fixes
+- 493836f: multicall3 optimization
+- 30e1f1a: 3.0.0 beta
+- d5017e8: Beta release for v3
+- 24a5fab: Final RC before 3.0.0
+- e5e1a03: Apple auth fixes
+- 0b63113: Apple auth fix
+- a89134a: Userdata service updates
+- 3.0.0 release
+- 747e6b5: Relayer fee options fix
+- 40c19ff: dapp client updates for EOA login
+
 ## 3.0.0-beta.19
 
 ### Patch Changes

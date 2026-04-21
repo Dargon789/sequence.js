@@ -57,11 +57,13 @@ export interface ExplicitSessionSigner extends SessionSigner {
   ) => Promise<UsageLimit[]>
 }
 
+export interface ImplicitSessionSigner extends SessionSigner {
+  identitySigner: Address.Address
+}
+
 export function isExplicitSessionSigner(signer: SessionSigner): signer is ExplicitSessionSigner {
   return 'prepareIncrements' in signer
 }
-<<<<<<< HEAD
-=======
 
 export function isImplicitSessionSigner(signer: SessionSigner): signer is ImplicitSessionSigner {
   return 'identitySigner' in signer
@@ -74,4 +76,3 @@ export function isIncrementCall(call: Payload.Call, sessionManagerAddress: Addre
     Hex.isEqual(Hex.slice(call.data, 0, 4), AbiFunction.getSelector(Constants.INCREMENT_USAGE_LIMIT))
   )
 }
->>>>>>> upstream/master

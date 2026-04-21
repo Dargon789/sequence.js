@@ -1,11 +1,5 @@
 import { Payload } from '@0xsequence/wallet-primitives'
 import { EIP1193Provider } from 'mipd'
-<<<<<<< HEAD:packages/wallet/core/src/relayer/standard/local.ts
-import { AbiFunction, Address, Bytes, Hex, TransactionReceipt } from 'ox'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
-import { IntentPrecondition } from './rpc/relayer.gen.js'
-import { decodePrecondition } from '../../preconditions/index.js'
-=======
 import { AbiFunction, Address, Hex, TransactionReceipt } from 'ox'
 import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../index.js'
 import { FeeToken, TransactionPrecondition } from '../rpc-relayer/relayer.gen.js'
@@ -19,7 +13,6 @@ import {
   Erc721OwnershipPrecondition,
   NativeBalancePrecondition,
 } from '../../preconditions/index.js'
->>>>>>> upstream/master:packages/services/relayer/src/relayer/standard/local.ts
 import {
   erc20BalanceOf,
   erc20Allowance,
@@ -63,6 +56,12 @@ export class LocalRelayer implements Relayer {
     return new LocalRelayer(new EIP1193ProviderAdapter(provider))
   }
 
+  feeTokens(): Promise<{ isFeeRequired: boolean; tokens?: FeeToken[]; paymentAddress?: Address.Address }> {
+    return Promise.resolve({
+      isFeeRequired: false,
+    })
+  }
+
   feeOptions(
     _wallet: Address.Address,
     _chainId: number,
@@ -77,7 +76,7 @@ export class LocalRelayer implements Relayer {
     data: Hex.Hex,
     chainId: number,
     quote?: FeeQuote,
-    preconditions?: IntentPrecondition[],
+    preconditions?: TransactionPrecondition[],
     checkInterval: number = 5000,
   ): Promise<{ opHash: Hex.Hex }> {
     // Helper function to check all preconditions
@@ -165,7 +164,7 @@ export class LocalRelayer implements Relayer {
       : { status: 'failed', reason: 'failed' }
   }
 
-  async checkPrecondition(precondition: IntentPrecondition): Promise<boolean> {
+  async checkPrecondition(precondition: TransactionPrecondition): Promise<boolean> {
     const decoded = decodePrecondition(precondition)
 
     if (!decoded) {
