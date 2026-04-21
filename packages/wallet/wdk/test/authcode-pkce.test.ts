@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as Identity from '@0xsequence/identity-instrument'
-import { AuthCodePkceHandler } from '../src/sequence/handlers/authcode-pkce'
-import { Signatures } from '../src/sequence/signatures'
-import * as Db from '../src/dbs'
-import { IdentitySigner } from '../src/identity/signer'
+import { AuthCodePkceHandler } from '../src/sequence/handlers/authcode-pkce.js'
+import { Signatures } from '../src/sequence/signatures.js'
+import * as Db from '../src/dbs/index.js'
+import { IdentitySigner } from '../src/identity/signer.js'
 
 describe('AuthCodePkceHandler', () => {
   let handler: AuthCodePkceHandler
@@ -55,6 +55,7 @@ describe('AuthCodePkceHandler', () => {
     handler = new AuthCodePkceHandler(
       'google-pkce',
       'https://accounts.google.com',
+      'https://accounts.google.com/o/oauth2/v2/auth',
       'test-google-client-id',
       mockNitroInstrument,
       mockSignatures,
@@ -80,8 +81,6 @@ describe('AuthCodePkceHandler', () => {
         email: 'user@example.com',
       }
     })
-
-    vi.spyOn(handler as any, 'oauthUrl').mockReturnValue('https://accounts.google.com/oauth/authorize')
   })
 
   afterEach(() => {
@@ -91,9 +90,8 @@ describe('AuthCodePkceHandler', () => {
   describe('commitAuth', () => {
     it('Should create Google PKCE auth commitment and return OAuth URL', async () => {
       const target = 'https://example.com/success'
-      const isSignUp = true
 
-      const result = await handler.commitAuth(target, isSignUp)
+      const result = await handler.commitAuth(target, { type: 'auth' })
 
       // Verify nitroCommitVerifier was called with correct challenge
       expect(handler['nitroCommitVerifier']).toHaveBeenCalledWith(
@@ -111,11 +109,11 @@ describe('AuthCodePkceHandler', () => {
         challenge: 'mock-challenge-hash',
         target,
         metadata: {},
-        isSignUp,
+        type: 'auth',
       })
 
       // Verify OAuth URL is constructed correctly
-      expect(result).toMatch(/^https:\/\/accounts\.google\.com\/oauth\/authorize\?/)
+      expect(result).toMatch(/^https:\/\/accounts\.google\.com\/o\/oauth2\/v2\/auth\?/)
       expect(result).toContain('code_challenge=mock-challenge-hash')
       expect(result).toContain('code_challenge_method=S256')
       expect(result).toContain('client_id=test-google-client-id')
@@ -128,10 +126,13 @@ describe('AuthCodePkceHandler', () => {
 
     it('Should use provided state instead of generating random one', async () => {
       const target = 'https://example.com/success'
-      const isSignUp = false
       const customState = 'custom-state-123'
 
-      const result = await handler.commitAuth(target, isSignUp, customState)
+      const result = await handler.commitAuth(target, {
+        type: 'reauth',
+        state: customState,
+        signer: '0x1234567890123456789012345678901234567890',
+      })
 
       // Verify commitment was saved with custom state
       expect(mockCommitments.set).toHaveBeenCalledWith({
@@ -141,7 +142,8 @@ describe('AuthCodePkceHandler', () => {
         challenge: 'mock-challenge-hash',
         target,
         metadata: {},
-        isSignUp,
+        type: 'reauth',
+        signer: '0x1234567890123456789012345678901234567890',
       })
 
       // Verify URL contains custom state
@@ -150,10 +152,9 @@ describe('AuthCodePkceHandler', () => {
 
     it('Should include signer in challenge when provided', async () => {
       const target = 'https://example.com/success'
-      const isSignUp = true
       const signer = '0x9876543210987654321098765432109876543210'
 
-      await handler.commitAuth(target, isSignUp, undefined, signer)
+      await handler.commitAuth(target, { type: 'reauth', state: 'test-state', signer })
 
       // Verify nitroCommitVerifier was called with signer in challenge
       expect(handler['nitroCommitVerifier']).toHaveBeenCalledWith(
@@ -165,9 +166,8 @@ describe('AuthCodePkceHandler', () => {
 
     it('Should generate random state when not provided', async () => {
       const target = 'https://example.com/success'
-      const isSignUp = true
 
-      const result = await handler.commitAuth(target, isSignUp)
+      const result = await handler.commitAuth(target, { type: 'auth' })
 
       // Verify that a state parameter is present and looks like a hex string
       expect(result).toMatch(/state=0x[a-f0-9]+/)
@@ -182,18 +182,22 @@ describe('AuthCodePkceHandler', () => {
       const target = 'https://example.com/success'
 
       // Test signup
-      await handler.commitAuth(target, true)
+      await handler.commitAuth(target, { type: 'auth' })
       expect(mockCommitments.set).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          isSignUp: true,
+          type: 'auth',
         }),
       )
 
       // Test login
-      await handler.commitAuth(target, false)
+      await handler.commitAuth(target, {
+        type: 'reauth',
+        state: 'test-state',
+        signer: '0x1234567890123456789012345678901234567890',
+      })
       expect(mockCommitments.set).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          isSignUp: false,
+          type: 'reauth',
         }),
       )
     })
@@ -201,13 +205,17 @@ describe('AuthCodePkceHandler', () => {
     it('Should handle errors from nitroCommitVerifier', async () => {
       vi.spyOn(handler as any, 'nitroCommitVerifier').mockRejectedValue(new Error('Nitro service unavailable'))
 
-      await expect(handler.commitAuth('https://example.com/success', true)).rejects.toThrow('Nitro service unavailable')
+      await expect(handler.commitAuth('https://example.com/success', { type: 'auth' })).rejects.toThrow(
+        'Nitro service unavailable',
+      )
     })
 
     it('Should handle database errors during commitment storage', async () => {
       vi.mocked(mockCommitments.set).mockRejectedValue(new Error('Database write failed'))
 
-      await expect(handler.commitAuth('https://example.com/success', true)).rejects.toThrow('Database write failed')
+      await expect(handler.commitAuth('https://example.com/success', { type: 'auth' })).rejects.toThrow(
+        'Database write failed',
+      )
     })
   })
 
@@ -222,7 +230,7 @@ describe('AuthCodePkceHandler', () => {
         challenge: 'test-challenge-hash',
         target: 'https://example.com/success',
         metadata: { scope: 'openid profile email' },
-        isSignUp: true,
+        type: 'auth',
       }
     })
 
@@ -327,26 +335,23 @@ describe('AuthCodePkceHandler', () => {
 
   describe('Integration and Edge Cases', () => {
     it('Should have correct kind property', () => {
-      expect(handler.kind).toBe('login-google-pkce')
+      expect(handler.kind).toBe('login-google')
     })
 
     it('Should handle redirect URI configuration', () => {
       const newRedirectUri = 'https://newdomain.com/callback'
       handler.setRedirectUri(newRedirectUri)
 
-      // Verify redirect URI is used in OAuth URL construction
-      const mockUrl = 'https://accounts.google.com/oauth/authorize'
-      vi.spyOn(handler as any, 'oauthUrl').mockReturnValue(mockUrl)
-
-      return handler.commitAuth('https://example.com/success', true).then((result) => {
+      return handler.commitAuth('https://example.com/success', { type: 'auth' }).then((result) => {
         expect(result).toContain(`redirect_uri=${encodeURIComponent(newRedirectUri)}`)
       })
     })
 
     it('Should work with different issuer and audience configurations', () => {
       const customHandler = new AuthCodePkceHandler(
-        'google-pkce',
+        'custom-provider',
         'https://custom-issuer.com',
+        'https://custom-issuer.com/o/oauth2/v2/auth',
         'custom-client-id',
         mockNitroInstrument,
         mockSignatures,
@@ -356,7 +361,7 @@ describe('AuthCodePkceHandler', () => {
 
       expect(customHandler['issuer']).toBe('https://custom-issuer.com')
       expect(customHandler['audience']).toBe('custom-client-id')
-      expect(customHandler.signupKind).toBe('google-pkce')
+      expect(customHandler.signupKind).toBe('custom-provider')
     })
   })
 })
