@@ -342,7 +342,7 @@ export class Wallet {
         if (call.delegateCall) {
           throw new Error('delegate calls are not allowed in safe mode')
         }
-        if (Address.isEqual(call.to, this.address)) {
+        if (Address.isEqual(call.to, this.address) && call.data !== '0x') {
           throw new Error('calls to the wallet contract itself are not allowed in safe mode')
         }
       }
@@ -355,7 +355,7 @@ export class Wallet {
       throw new Error('4337 is not enabled in this wallet')
     }
 
-    const noncePromise = this.get4337Nonce(provider, status.context.capabilities?.erc4337?.entrypoint!, space)
+    const noncePromise = this.get4337Nonce(provider, status.context.capabilities.erc4337.entrypoint, space)
 
     // If the wallet is not deployed, then we need to include the initCode on
     // the 4337 transaction
@@ -455,7 +455,7 @@ export class Wallet {
         if (call.delegateCall) {
           throw new Error('delegate calls are not allowed in safe mode')
         }
-        if (Address.isEqual(call.to, this.address)) {
+        if (Address.isEqual(call.to, this.address) && call.data !== '0x') {
           throw new Error('calls to the wallet contract itself are not allowed in safe mode')
         }
       }
@@ -570,7 +570,7 @@ export class Wallet {
     if (typeof message !== 'string') {
       encodedMessage = TypedData.encode(message)
     } else {
-      let hexMessage = Hex.validate(message) ? message : Hex.fromString(message)
+      const hexMessage = Hex.validate(message) ? message : Hex.fromString(message)
       const messageSize = Hex.size(hexMessage)
       encodedMessage = Hex.concat(Hex.fromString(`${`\x19Ethereum Signed Message:\n${messageSize}`}`), hexMessage)
     }

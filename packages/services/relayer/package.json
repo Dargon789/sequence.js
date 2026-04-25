@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/relayer",
-  "version": "3.0.0-beta.18",
+  "version": "3.0.5",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -17,7 +17,8 @@
     "old-test:file": "NODE_OPTIONS='--import tsx' mocha --timeout 60000",
     "old-test:concurrently": "concurrently -k --success first 'pnpm start:hardhat > /dev/null' ",
     "start:hardhat": "pnpm hardhat node --port 9547",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0"
   },
   "exports": {
     ".": {
@@ -26,10 +27,11 @@
     }
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:^",
-    "@types/node": "^25.0.2",
+    "@types/node": "^25.3.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@0xsequence/wallet-primitives": "workspace:^",

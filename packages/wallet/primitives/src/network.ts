@@ -128,6 +128,7 @@ export const ChainId = {
   SOMNIA: 5031,
 
   // INCENTIV
+  INCENTIV: 24101,
   INCENTIV_TESTNET_V2: 28802,
 
   // KATANA
@@ -457,7 +458,7 @@ export const ALL: Network[] = [
     chainId: ChainId.BASE,
     type: NetworkType.MAINNET,
     name: 'base',
-    title: 'Base (Coinbase)',
+    title: 'Base',
     rpcUrl: getRpcUrl('base'),
     logoUrl: getLogoUrl(ChainId.BASE),
     blockExplorer: {
@@ -1037,6 +1038,27 @@ export const ALL: Network[] = [
   },
 
   {
+    chainId: ChainId.INCENTIV,
+    type: NetworkType.MAINNET,
+    name: 'incentiv',
+    title: 'Incentiv',
+    rpcUrl: getRpcUrl('incentiv'),
+    logoUrl: getLogoUrl(ChainId.INCENTIV),
+    blockExplorer: {
+      name: 'Incentiv Explorer',
+      url: 'https://explorer.incentiv.io/',
+    },
+    nativeCurrency: {
+      symbol: 'CENT',
+      name: 'CENT',
+      decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
+  },
+
+  {
     chainId: ChainId.INCENTIV_TESTNET_V2,
     type: NetworkType.TESTNET,
     name: 'incentiv-testnet-v2',
@@ -1173,7 +1195,6 @@ export const ALL: Network[] = [
       decimals: 18,
     },
   },
-
 ]
 
 function getRpcUrl(networkName: string): string {
