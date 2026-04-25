@@ -1,11 +1,19 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
+  "access": "public",
+  "baseBranch": "main",
+  "changelog": ["@changesets/changelog-github", { "repo": "wevm/wagmi" }],
   "commit": false,
-  "fixed": [],
-  "linked": [],
-  "access": "restricted",
-  "baseBranch": "master",
+  "ignore": [
+    "*-register",
+    "@wagmi/test",
+    "site",
+    "next-app",
+    "nuxt-app",
+    "vite-*"
+  ],
   "updateInternalDependencies": "patch",
-  "ignore": ["@0xsequence/wallet-primitives-cli", "docs", "web"]
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  }
 }
