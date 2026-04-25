@@ -1,4 +1,4 @@
-import { Address, Hex, Signature, Bytes, Hash } from 'ox'
+import { Address, Hex, Signature, Bytes } from 'ox'
 import * as Client from './client/guard.gen.js'
 import * as Types from './types.js'
 
@@ -50,7 +50,7 @@ export class Guard implements Types.Guard {
         throw new Types.AuthRequiredError('PIN')
       }
       console.error(error)
-      throw new Error('Error signing with guard')
+      throw new Error('Error signing with guard', { cause: error })
     }
   }
 }

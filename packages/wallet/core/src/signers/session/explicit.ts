@@ -1,7 +1,7 @@
-import { Payload, Permission, SessionSignature, Constants, Network, Extensions } from '@0xsequence/wallet-primitives'
+import { Constants, Payload, Permission, SessionConfig, SessionSignature } from '@0xsequence/wallet-primitives'
 import { AbiFunction, AbiParameters, Address, Bytes, Hash, Hex, Provider } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
-import { ExplicitSessionSigner, UsageLimit } from './session.js'
+import { ExplicitSessionSigner, isIncrementCall, SessionSignerValidity, UsageLimit } from './session.js'
 
 export type ExplicitParams = Omit<Permission.SessionPermissions, 'signer'>
 
@@ -20,6 +20,53 @@ export class Explicit implements ExplicitSessionSigner {
       ...sessionPermissions,
       signer: this.address,
     }
+  }
+
+  isValid(sessionTopology: SessionConfig.SessionsTopology, chainId: number): SessionSignerValidity {
+    // Equality is considered expired
+    if (this.sessionPermissions.deadline <= BigInt(Math.floor(Date.now() / 1000))) {
+      return { isValid: false, invalidReason: 'Expired' }
+    }
+    if (this.sessionPermissions.chainId !== 0 && this.sessionPermissions.chainId !== chainId) {
+      return { isValid: false, invalidReason: 'Chain ID mismatch' }
+    }
+    const explicitPermission = SessionConfig.getSessionPermissions(sessionTopology, this.address)
+    if (!explicitPermission) {
+      return { isValid: false, invalidReason: 'Permission not found' }
+    }
+
+    // Validate permission in configuration matches permission in signer
+    if (
+      explicitPermission.deadline !== this.sessionPermissions.deadline ||
+      explicitPermission.chainId !== this.sessionPermissions.chainId ||
+      explicitPermission.valueLimit !== this.sessionPermissions.valueLimit ||
+      explicitPermission.permissions.length !== this.sessionPermissions.permissions.length
+    ) {
+      return { isValid: false, invalidReason: 'Permission mismatch' }
+    }
+    // Validate permission rules
+    for (const [index, permission] of explicitPermission.permissions.entries()) {
+      const signerPermission = this.sessionPermissions.permissions[index]!
+      if (
+        !Address.isEqual(permission.target, signerPermission.target) ||
+        permission.rules.length !== signerPermission.rules.length
+      ) {
+        return { isValid: false, invalidReason: 'Permission rule mismatch' }
+      }
+      for (const [ruleIndex, rule] of permission.rules.entries()) {
+        const signerRule = signerPermission.rules[ruleIndex]!
+        if (
+          rule.cumulative !== signerRule.cumulative ||
+          rule.operation !== signerRule.operation ||
+          !Bytes.isEqual(rule.value, signerRule.value) ||
+          rule.offset !== signerRule.offset ||
+          !Bytes.isEqual(rule.mask, signerRule.mask)
+        ) {
+          return { isValid: false, invalidReason: 'Permission rule mismatch' }
+        }
+      }
+    }
+    return { isValid: true }
   }
 
   async findSupportedPermission(
@@ -161,11 +208,7 @@ export class Explicit implements ExplicitSessionSigner {
     sessionManagerAddress: Address.Address,
     provider?: Provider.Provider,
   ): Promise<boolean> {
-    if (
-      Address.isEqual(call.to, sessionManagerAddress) &&
-      Hex.size(call.data) > 4 &&
-      Hex.isEqual(Hex.slice(call.data, 0, 4), AbiFunction.getSelector(Constants.INCREMENT_USAGE_LIMIT))
-    ) {
+    if (isIncrementCall(call, sessionManagerAddress)) {
       // Can sign increment usage calls
       return true
     }
@@ -187,11 +230,7 @@ export class Explicit implements ExplicitSessionSigner {
   ): Promise<SessionSignature.SessionCallSignature> {
     const call = payload.calls[callIdx]!
     let permissionIndex: number
-    if (
-      Address.isEqual(call.to, sessionManagerAddress) &&
-      Hex.size(call.data) > 4 &&
-      Hex.isEqual(Hex.slice(call.data, 0, 4), AbiFunction.getSelector(Constants.INCREMENT_USAGE_LIMIT))
-    ) {
+    if (isIncrementCall(call, sessionManagerAddress)) {
       // Permission check not required. Use the first permission
       permissionIndex = 0
     } else {
@@ -209,10 +248,7 @@ export class Explicit implements ExplicitSessionSigner {
     }
 
     // Sign it
-    const useDeprecatedHash =
-      Address.isEqual(sessionManagerAddress, Extensions.Dev1.sessions) ||
-      Address.isEqual(sessionManagerAddress, Extensions.Dev2.sessions)
-    const callHash = SessionSignature.hashCallWithReplayProtection(payload, callIdx, chainId, useDeprecatedHash)
+    const callHash = SessionSignature.hashPayloadWithCallIdx(wallet, payload, callIdx, chainId, sessionManagerAddress)
     const sessionSignature = await this._privateKey.signDigest(Bytes.fromHex(callHash))
     return {
       permissionIndex: BigInt(permissionIndex),
@@ -272,7 +308,7 @@ export class Explicit implements ExplicitSessionSigner {
           Bytes.fromHex(call.data).slice(Number(rule.offset), Number(rule.offset) + 32),
           32,
         )
-        let value: Bytes.Bytes = callDataValue.map((b, i) => b & rule.mask[i]!)
+        const value: Bytes.Bytes = callDataValue.map((b, i) => b & rule.mask[i]!)
         if (Bytes.toBigInt(value) === 0n) continue
 
         // Add to list

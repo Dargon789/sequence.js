@@ -1,7 +1,7 @@
 import { AbiFunction, AbiParameters, Address, Bytes, Hash, Hex } from 'ox'
 import { getSignPayload } from 'ox/TypedData'
 import { EXECUTE_USER_OP, RECOVER_SAPIENT_SIGNATURE } from './constants.js'
-import { Attestation, Network } from './index.js'
+import { Attestation } from './index.js'
 import { minBytesFor } from './utils.js'
 import { UserOperation } from 'ox/erc4337'
 
@@ -182,6 +182,10 @@ export function isRecovery<T extends MayRecoveryPayload>(payload: Payload): payl
 
 export function isCalls4337_07(payload: Payload): payload is Calls4337_07 {
   return payload.type === 'call_4337_07'
+}
+
+export function isParented(payload: Payload): payload is Parented {
+  return 'parentWallets' in payload
 }
 
 export function toRecovery<T extends MayRecoveryPayload>(payload: T): Recovery<T> {
