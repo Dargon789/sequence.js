@@ -1,8 +1,11 @@
 import { config as dotenvConfig } from 'dotenv'
 import { Abi, AbiEvent, Address } from 'ox'
 
+// eslint-disable-next-line turbo/no-undeclared-env-vars
 const envFile = process.env.CI ? '.env.test' : '.env.test.local'
 dotenvConfig({ path: envFile })
+
+// Contracts are deployed on Arbitrum
 
 // Requires https://example.com redirectUrl
 export const EMITTER_ADDRESS1: Address.Address = '0xad90eB52BC180Bd9f66f50981E196f3E996278D3'
@@ -16,4 +19,5 @@ export const EMITTER_EVENT_TOPICS = [
 export const USDC_ADDRESS: Address.Address = '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
 
 // Environment variables
+// eslint-disable-next-line turbo/no-undeclared-env-vars
 export const LOCAL_RPC_URL = process.env.LOCAL_RPC_URL || 'http://localhost:8545'
