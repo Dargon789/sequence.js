@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import {
   Manager,
   SignerActionable,
@@ -481,10 +481,29 @@ describe('Transactions', () => {
     const txId1 = manager.transactions.request(wallet!, Network.ChainId.ARBITRUM, [
       {
         to: wallet!,
+        data: '0x1234',
       },
     ])
 
     await expect(txId1).rejects.toThrow()
+  })
+
+  it('Should allow native token transfer to self in safe mode', async () => {
+    const manager = newManager()
+    const wallet = await manager.wallets.signUp({
+      mnemonic: Mnemonic.random(Mnemonic.english),
+      kind: 'mnemonic',
+      noGuard: true,
+    })
+
+    const txId1 = await manager.transactions.request(wallet!, Network.ChainId.ARBITRUM, [
+      {
+        to: wallet!,
+        value: 1n,
+      },
+    ])
+
+    expect(txId1).toBeDefined()
   })
 
   it('Should allow transactions to self in unsafe mode', async () => {
@@ -522,12 +541,12 @@ describe('Transactions', () => {
     })
 
     let transactionsList: Transaction[] = []
-    let updateCount = 0
+    let _updateCount = 0
 
     // Use onTransactionsUpdate to verify list functionality
     const unsubscribe = manager.transactions.onTransactionsUpdate((txs) => {
       transactionsList = txs
-      updateCount++
+      _updateCount++
     })
 
     // Initially should be empty

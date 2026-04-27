@@ -34,7 +34,7 @@ describe('Identity Authentication Databases', () => {
         verifier: 'test-verifier-code',
         challenge: 'test-challenge-hash',
         target: 'test-target-url',
-        isSignUp: true,
+        type: 'reauth',
         signer: '0x1234567890123456789012345678901234567890',
       }
 
@@ -66,7 +66,7 @@ describe('Identity Authentication Databases', () => {
           response_mode: 'form_post',
         },
         target: 'apple-redirect-url',
-        isSignUp: false,
+        type: 'auth',
       }
 
       await authCommitmentsDb.set(appleCommitment)
@@ -74,7 +74,7 @@ describe('Identity Authentication Databases', () => {
 
       expect(retrieved).toBeDefined()
       expect(retrieved!.kind).toBe('apple')
-      expect(retrieved!.isSignUp).toBe(false)
+      expect(retrieved!.type).toBe('auth')
       expect(retrieved!.metadata.response_type).toBe('code id_token')
     })
 
@@ -85,21 +85,22 @@ describe('Identity Authentication Databases', () => {
           kind: 'google-pkce',
           metadata: {},
           target: 'target-1',
-          isSignUp: true,
+          type: 'auth',
         },
         {
           id: 'commit-2',
           kind: 'apple',
           metadata: {},
           target: 'target-2',
-          isSignUp: false,
+          type: 'reauth',
+          signer: '0x1234567890123456789012345678901234567890',
         },
         {
           id: 'commit-3',
           kind: 'google-pkce',
           metadata: {},
           target: 'target-3',
-          isSignUp: true,
+          type: 'auth',
         },
       ]
 
@@ -129,7 +130,7 @@ describe('Identity Authentication Databases', () => {
         kind: 'google-pkce',
         metadata: {},
         target: 'init-target',
-        isSignUp: true,
+        type: 'auth',
       }
 
       await freshDb.set(testCommitment)
@@ -351,9 +352,84 @@ describe('Identity Authentication Databases', () => {
         },
       })
 
-      // Verify that Google handler is registered and uses our databases
+      // Verify that Google is registered under the canonical signer kind while
+      // still using the PKCE flow by default.
       const handlers = (manager as any).shared.handlers
-      expect(handlers.has('login-google-pkce')).toBe(true)
+      expect(handlers.has('login-google')).toBe(true)
+      expect(handlers.has('login-google-pkce')).toBe(false)
+    })
+
+    it('Should register the Google ID token handler when configured explicitly', async () => {
+      manager = new Manager({
+        stateProvider: new State.Local.Provider(new State.Local.IndexedDbStore(`manager-google-idtoken-${Date.now()}`)),
+        networks: [
+          {
+            name: 'Test Network',
+            type: Network.NetworkType.MAINNET,
+            rpcUrl: LOCAL_RPC_URL,
+            chainId: Network.ChainId.ARBITRUM,
+            blockExplorer: { url: 'https://arbiscan.io' },
+            nativeCurrency: {
+              name: 'Ether',
+              symbol: 'ETH',
+              decimals: 18,
+            },
+          },
+        ],
+        relayers: [],
+        authCommitmentsDb,
+        authKeysDb,
+        identity: {
+          url: 'https://dev-identity.sequence-dev.app',
+          fetch: window.fetch,
+          google: {
+            enabled: true,
+            clientId: 'test-google-client-id',
+            authMethod: 'id-token',
+          },
+        },
+      })
+
+      const handlers = (manager as any).shared.handlers
+      expect(handlers.has('login-google-id-token')).toBe(false)
+      expect(handlers.has('login-google')).toBe(true)
+      expect(handlers.has('login-google-pkce')).toBe(false)
+    })
+
+    it('Should register the Apple ID token handler when configured explicitly', async () => {
+      manager = new Manager({
+        stateProvider: new State.Local.Provider(new State.Local.IndexedDbStore(`manager-apple-idtoken-${Date.now()}`)),
+        networks: [
+          {
+            name: 'Test Network',
+            type: Network.NetworkType.MAINNET,
+            rpcUrl: LOCAL_RPC_URL,
+            chainId: Network.ChainId.ARBITRUM,
+            blockExplorer: { url: 'https://arbiscan.io' },
+            nativeCurrency: {
+              name: 'Ether',
+              symbol: 'ETH',
+              decimals: 18,
+            },
+          },
+        ],
+        relayers: [],
+        authCommitmentsDb,
+        authKeysDb,
+        identity: {
+          url: 'https://dev-identity.sequence-dev.app',
+          fetch: window.fetch,
+          apple: {
+            enabled: true,
+            clientId: 'test-apple-client-id',
+            authMethod: 'id-token',
+          },
+        },
+      })
+
+      const handlers = (manager as any).shared.handlers
+      expect(handlers.has('login-apple-id-token')).toBe(false)
+      expect(handlers.has('login-apple')).toBe(true)
     })
 
     it('Should use auth databases when email authentication is enabled', async () => {
@@ -423,6 +499,51 @@ describe('Identity Authentication Databases', () => {
       // Verify that Apple handler is registered and uses our databases
       const handlers = (manager as any).shared.handlers
       expect(handlers.has('login-apple')).toBe(true)
+    })
+
+    it('Should register custom ID token providers without enabling redirect flow for them', async () => {
+      manager = new Manager({
+        stateProvider: new State.Local.Provider(new State.Local.IndexedDbStore(`manager-custom-idtoken-${Date.now()}`)),
+        networks: [
+          {
+            name: 'Test Network',
+            type: Network.NetworkType.MAINNET,
+            rpcUrl: LOCAL_RPC_URL,
+            chainId: Network.ChainId.ARBITRUM,
+            blockExplorer: { url: 'https://arbiscan.io' },
+            nativeCurrency: {
+              name: 'Ether',
+              symbol: 'ETH',
+              decimals: 18,
+            },
+          },
+        ],
+        relayers: [],
+        authCommitmentsDb,
+        authKeysDb,
+        identity: {
+          url: 'https://dev-identity.sequence-dev.app',
+          fetch: window.fetch,
+          customProviders: [
+            {
+              kind: 'custom-google-native',
+              authMethod: 'id-token',
+              issuer: 'https://accounts.google.com',
+              clientId: 'test-google-client-id',
+            },
+          ],
+        },
+      })
+
+      const handlers = (manager as any).shared.handlers
+      expect(handlers.has('custom-google-native')).toBe(true)
+      await expect(
+        manager.wallets.startSignUpWithRedirect({
+          kind: 'custom-google-native',
+          target: '/home',
+          metadata: {},
+        }),
+      ).rejects.toThrow('handler-does-not-support-redirect')
     })
   })
 })
