@@ -29,7 +29,7 @@ export async function findItems(
     values === undefined
       ? []
       : [
-          `{ name: "${namespace ? `${namespace}-${name}` : name}", values: [${typeof values === 'string' ? `"${values}"` : values.map((value) => `"${value}"`).join(', ')}] }`,
+          `{ name: ${JSON.stringify(namespace ? `${namespace}-${name}` : name)}, values: ${JSON.stringify(Array.isArray(values) ? values : [values])} }`,
         ],
   )
 
