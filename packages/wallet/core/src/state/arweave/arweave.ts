@@ -75,6 +75,10 @@ export async function findItems(
       await new Promise((resolve) => setTimeout(resolve, rateLimitRetryDelayMs))
     }
 
+    if (!response.ok) {
+      throw new Error(`GraphQL query failed with status ${response.status}: ${await response.text()}`)
+    }
+
     const {
       data: { transactions },
     } = await response.json()
