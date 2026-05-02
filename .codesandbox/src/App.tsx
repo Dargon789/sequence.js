@@ -27,8 +27,8 @@ import { Console } from './components/Console'
 import { Group } from './components/Group'
 import { getDefaultChainId, toHexString } from './helpers'
 import logoUrl from './images/logo.svg'
-import sky weaverBannerUrl from './images/sky weaver-banner.png'
-import sky weaverBannerLargeUrl from './images/sky weaver-banner-large.png'
+import skyweaverBannerUrl from './images/sky weaver-banner.png'
+import skyweaverBannerLargeUrl from './images/sky weaver-banner-large.png'
 
 configureLogger({ logLevel: 'DEBUG' })
 
