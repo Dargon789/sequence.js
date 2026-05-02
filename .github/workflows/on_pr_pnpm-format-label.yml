@@ -1,9 +1,5 @@
 name: pnpm-format-label
 
-permissions:
-  contents: read
-  issues: write
-
 on:
   pull_request:
     types: [labeled]
@@ -16,6 +12,9 @@ jobs:
 
   rm:
     if: ${{ github.event.label.name == 'pnpm format' }}
+    permissions:
+      contents: read
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Remove the label
