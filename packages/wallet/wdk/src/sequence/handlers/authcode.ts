@@ -6,23 +6,33 @@ import * as Identity from '@0xsequence/identity-instrument'
 import { SignerUnavailable, SignerReady, SignerActionable, BaseSignatureRequest } from '../types/signature-request.js'
 import { IdentitySigner } from '../../identity/signer.js'
 import { IdentityHandler } from './identity.js'
+import { Kinds } from '../types/signer.js'
+import type { NavigationLike, WdkEnv } from '../../env.js'
+import type { CommitAuthArgs } from '../../dbs/auth-commitments.js'
 
 export class AuthCodeHandler extends IdentityHandler implements Handler {
   protected redirectUri: string = ''
 
   constructor(
-    public readonly signupKind: 'apple' | 'google-pkce',
+    public readonly signupKind: 'apple' | 'google-pkce' | `custom-${string}`,
     public readonly issuer: string,
+    protected readonly oauthUrl: string,
     public readonly audience: string,
     nitro: Identity.IdentityInstrument,
     signatures: Signatures,
     protected readonly commitments: Db.AuthCommitments,
     authKeys: Db.AuthKeys,
+    env?: WdkEnv,
   ) {
-    super(nitro, authKeys, signatures, Identity.IdentityType.OIDC)
+    super(nitro, authKeys, signatures, Identity.IdentityType.OIDC, env)
   }
 
   public get kind() {
+    if (this.signupKind === 'google-pkce') {
+      // Keep Google PKCE on the canonical kind so Google signers created before
+      // canonicalization still resolve as `login-google`.
+      return Kinds.LoginGoogle
+    }
     return 'login-' + this.signupKind
   }
 
@@ -30,30 +40,33 @@ export class AuthCodeHandler extends IdentityHandler implements Handler {
     this.redirectUri = redirectUri
   }
 
-  public async commitAuth(target: string, isSignUp: boolean, state?: string, signer?: string) {
-    if (!state) {
-      state = Hex.fromBytes(Bytes.random(32))
-    }
+  public async commitAuth(target: string, args: CommitAuthArgs) {
+    const state = args.state ?? Hex.fromBytes(Bytes.random(32))
 
-    await this.commitments.set({
+    const base = {
       id: state,
-      kind: this.signupKind,
-      signer,
+      kind: this.signupKind as Db.AuthCommitment['kind'],
       target,
       metadata: {},
-      isSignUp,
-    })
+    }
 
-    const searchParams = new URLSearchParams({
+    if (args.type === 'reauth') {
+      await this.commitments.set({ ...base, type: 'reauth', signer: args.signer })
+    } else if (args.type === 'add-signer') {
+      await this.commitments.set({ ...base, type: 'add-signer', wallet: args.wallet })
+    } else {
+      await this.commitments.set({ ...base, type: 'auth' })
+    }
+
+    const searchParams = this.serializeQuery({
       client_id: this.audience,
       redirect_uri: this.redirectUri,
       response_type: 'code',
-      scope: 'openid',
       state,
+      ...(this.signupKind === 'apple' ? {} : { scope: 'openid profile email' }),
     })
 
-    const oauthUrl = this.oauthUrl()
-    return `${oauthUrl}?${searchParams.toString()}`
+    return `${this.oauthUrl}?${searchParams}`
   }
 
   public async completeAuth(
@@ -61,7 +74,7 @@ export class AuthCodeHandler extends IdentityHandler implements Handler {
     code: string,
   ): Promise<[IdentitySigner, { [key: string]: string }]> {
     let challenge = new Identity.AuthCodeChallenge(this.issuer, this.audience, this.redirectUri, code)
-    if (commitment.signer) {
+    if (commitment.type === 'reauth') {
       challenge = challenge.withSigner({ address: commitment.signer, keyType: Identity.KeyType.Ethereum_Secp256k1 })
     }
     await this.nitroCommitVerifier(challenge)
@@ -94,21 +107,33 @@ export class AuthCodeHandler extends IdentityHandler implements Handler {
       status: 'actionable',
       message: 'request-redirect',
       handle: async () => {
-        const url = await this.commitAuth(window.location.pathname, false, request.id, address)
-        window.location.href = url
+        const navigation = this.getNavigation()
+        const url = await this.commitAuth(navigation.getPathname(), {
+          type: 'reauth',
+          state: request.id,
+          signer: address,
+        })
+        navigation.redirect(url)
         return true
       },
     }
   }
 
-  protected oauthUrl() {
-    switch (this.issuer) {
-      case 'https://accounts.google.com':
-        return 'https://accounts.google.com/o/oauth2/v2/auth'
-      case 'https://appleid.apple.com':
-        return 'https://appleid.apple.com/auth/authorize'
-      default:
-        throw new Error('unsupported-issuer')
+  protected serializeQuery(params: Record<string, string>): string {
+    const searchParamsCtor = this.env.urlSearchParams ?? (globalThis as any).URLSearchParams
+    if (searchParamsCtor) {
+      return new searchParamsCtor(params).toString()
     }
+    return Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&')
+  }
+
+  private getNavigation(): NavigationLike {
+    const navigation = this.env.navigation
+    if (!navigation) {
+      throw new Error('navigation is not available')
+    }
+    return navigation
   }
 }
