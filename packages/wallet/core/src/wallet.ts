@@ -342,7 +342,7 @@ export class Wallet {
         if (call.delegateCall) {
           throw new Error('delegate calls are not allowed in safe mode')
         }
-        if (Address.isEqual(call.to, this.address)) {
+        if (Address.isEqual(call.to, this.address) && call.data !== '0x') {
           throw new Error('calls to the wallet contract itself are not allowed in safe mode')
         }
       }
@@ -355,7 +355,7 @@ export class Wallet {
       throw new Error('4337 is not enabled in this wallet')
     }
 
-    const noncePromise = this.get4337Nonce(provider, status.context.capabilities?.erc4337?.entrypoint!, space)
+    const noncePromise = this.get4337Nonce(provider, status.context.capabilities.erc4337.entrypoint, space)
 
     // If the wallet is not deployed, then we need to include the initCode on
     // the 4337 transaction
@@ -455,7 +455,7 @@ export class Wallet {
         if (call.delegateCall) {
           throw new Error('delegate calls are not allowed in safe mode')
         }
-        if (Address.isEqual(call.to, this.address)) {
+        if (Address.isEqual(call.to, this.address) && call.data !== '0x') {
           throw new Error('calls to the wallet contract itself are not allowed in safe mode')
         }
       }
@@ -491,6 +491,56 @@ export class Wallet {
         calls,
       },
       ...(await this.prepareBlankEnvelope(Number(chainId))),
+    }
+  }
+
+  async buildFeeOptionsTransaction(
+    provider: Provider.Provider,
+    payload: Payload.Calls,
+  ): Promise<{ to: Address.Address; data: Hex.Hex }> {
+    const status = await this.getStatus(provider)
+    const signature = '0x0001' as Hex.Hex
+
+    const executeData = AbiFunction.encodeData(Constants.EXECUTE, [Bytes.toHex(Payload.encode(payload)), signature])
+
+    if (status.isDeployed) {
+      return {
+        to: this.address,
+        data: executeData,
+      }
+    }
+
+    const deploy = await this.buildDeployTransaction()
+
+    return {
+      to: this.guest,
+      data: Bytes.toHex(
+        Payload.encode({
+          type: 'call',
+          space: 0n,
+          nonce: 0n,
+          calls: [
+            {
+              to: deploy.to,
+              value: 0n,
+              data: deploy.data,
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+            {
+              to: this.address,
+              value: 0n,
+              data: executeData,
+              gasLimit: 0n,
+              delegateCall: false,
+              onlyFallback: false,
+              behaviorOnError: 'revert',
+            },
+          ],
+        }),
+      ),
     }
   }
 
@@ -570,7 +620,7 @@ export class Wallet {
     if (typeof message !== 'string') {
       encodedMessage = TypedData.encode(message)
     } else {
-      let hexMessage = Hex.validate(message) ? message : Hex.fromString(message)
+      const hexMessage = Hex.validate(message) ? message : Hex.fromString(message)
       const messageSize = Hex.size(hexMessage)
       encodedMessage = Hex.concat(Hex.fromString(`${`\x19Ethereum Signed Message:\n${messageSize}`}`), hexMessage)
     }
