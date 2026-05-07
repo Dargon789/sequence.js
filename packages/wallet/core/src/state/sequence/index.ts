@@ -9,17 +9,13 @@ import {
   TransactionRequest,
 } from 'ox'
 import { normalizeAddressKeys, Provider as ProviderInterface } from '../index.js'
-import { Sessions, SignatureType, type Fetch } from './sessions.gen.js'
+import { Sessions, SignatureType } from './sessions.gen.js'
 
 export class Provider implements ProviderInterface {
   private readonly service: Sessions
 
-  constructor(host = 'https://keymachine.sequence.app', fetcher?: Fetch) {
-    const resolvedFetch = fetcher ?? (globalThis as any).fetch
-    if (!resolvedFetch) {
-      throw new Error('fetch is not available')
-    }
-    this.service = new Sessions(host, resolvedFetch)
+  constructor(host = 'https://v3-keymachine.sequence-dev.app') {
+    this.service = new Sessions(host, fetch)
   }
 
   async getConfiguration(imageHash: Hex.Hex): Promise<Config.Config | undefined> {
@@ -190,9 +186,7 @@ export class Provider implements ProviderInterface {
         case SignatureType.SapientCompact:
           throw new Error(`unexpected compact sapient signature by ${signer}`)
       }
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 
   async getWitnessForSapient(
@@ -227,9 +221,7 @@ export class Provider implements ProviderInterface {
             signature: { type: 'sapient_compact', address: signer, data: witness.signature },
           }
       }
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 
   async getConfigurationUpdates(
@@ -372,13 +364,9 @@ export class Provider implements ProviderInterface {
   }
 }
 
-const passkeySigners = [
-  Extensions.Dev1.passkeys,
-  Extensions.Dev2.passkeys,
-  Extensions.Rc3.passkeys,
-  Extensions.Rc4.passkeys,
-  Extensions.Rc5.passkeys,
-].map(Address.checksum)
+const passkeySigners = [Extensions.Dev1.passkeys, Extensions.Dev2.passkeys, Extensions.Rc3.passkeys].map(
+  Address.checksum,
+)
 
 const recoverSapientSignatureCompactSignature =
   'function recoverSapientSignatureCompact(bytes32 _digest, bytes _signature) view returns (bytes32)'
@@ -386,14 +374,10 @@ const recoverSapientSignatureCompactSignature =
 const recoverSapientSignatureCompactFunction = AbiFunction.from(recoverSapientSignatureCompactSignature)
 
 class PasskeySignatureValidator implements oxProvider.Provider {
-  request: oxProvider.Provider['request'] = (async (request) => {
-    switch (request.method) {
-      case 'eth_call': {
-        if (!request.params || !Array.isArray(request.params) || request.params.length === 0) {
-          throw new Error('eth_call requires transaction parameters')
-        }
-
-        const transaction: TransactionRequest.Rpc = request.params[0]
+  request: oxProvider.Provider['request'] = (({ method, params }: { method: string; params: unknown }) => {
+    switch (method) {
+      case 'eth_call':
+        const transaction: TransactionRequest.Rpc = (params as any)[0]
 
         if (!transaction.data?.startsWith(AbiFunction.getSelector(recoverSapientSignatureCompactFunction))) {
           throw new Error(
@@ -414,18 +398,17 @@ class PasskeySignatureValidator implements oxProvider.Provider {
         } else {
           throw new Error(`invalid passkey signature ${signature} for digest ${digest}`)
         }
-      }
 
       default:
-        throw new Error(`method ${request.method} not implemented`)
+        throw new Error(`method ${method} not implemented`)
     }
-  }) as oxProvider.Provider['request']
+  }) as any
 
-  on: oxProvider.Provider['on'] = (event: string) => {
+  on(event: string) {
     throw new Error(`unable to listen for ${event}: not implemented`)
   }
 
-  removeListener: oxProvider.Provider['removeListener'] = (event: string) => {
+  removeListener(event: string) {
     throw new Error(`unable to remove listener for ${event}: not implemented`)
   }
 }
