@@ -29,8 +29,8 @@ export class SequenceUserdataClient extends UserdataRpc {
     }
 
     // before the request is made
-    init!.headers = { ...init!.headers, ...headers }
+    const newInit = { ...init, headers: { ...init?.headers, ...headers } }
 
-    return fetch(input, init)
+    return fetch(input, newInit)
   }
 }
