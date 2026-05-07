@@ -61,7 +61,7 @@ const networkToChain = (network: Network.Network): Chain => {
     contracts: network.contracts
       ? Object.entries(network.contracts).reduce(
           (acc, [name, address]) => {
-            acc[name] = { address: address as Address.Address }
+            acc[name] = { address }
             return acc
           },
           {} as Record<string, { address: Address.Address }>,
