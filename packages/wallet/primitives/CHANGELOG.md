@@ -1,5 +1,17 @@
 # @0xsequence/wallet-primitives
 
+## 3.0.7
+
+### Patch Changes
+
+- Minor bug fixes
+
+## 3.0.6
+
+### Patch Changes
+
+- userdata upgrade, arweave support
+
 ## 3.0.5
 
 ### Patch Changes
