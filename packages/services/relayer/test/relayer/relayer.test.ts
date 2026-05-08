@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { Address, Hex } from 'ox'
 import { Network, Payload } from '@0xsequence/wallet-primitives'
-import { Relayer, RelayerGen } from '@0xsequence/relayer'
+import { Relayer, RpcRelayerGen } from '@0xsequence/relayer'
 
 // Test addresses and data
 const TEST_WALLET_ADDRESS = Address.from('0x1234567890123456789012345678901234567890')
@@ -91,13 +91,11 @@ describe('Relayer', () => {
     })
 
     it('should return false for non-objects', () => {
-      // These will throw due to the 'in' operator, so we need to test the actual behavior
-      expect(() => Relayer.isRelayer(null)).toThrow()
-      expect(() => Relayer.isRelayer(undefined)).toThrow()
-      expect(() => Relayer.isRelayer('string')).toThrow()
-      expect(() => Relayer.isRelayer(123)).toThrow()
-      expect(() => Relayer.isRelayer(true)).toThrow()
-      // Arrays and objects should not throw, but should return false
+      expect(Relayer.isRelayer(null)).toBe(false)
+      expect(Relayer.isRelayer(undefined)).toBe(false)
+      expect(Relayer.isRelayer('string')).toBe(false)
+      expect(Relayer.isRelayer(123)).toBe(false)
+      expect(Relayer.isRelayer(true)).toBe(false)
       expect(Relayer.isRelayer([])).toBe(false)
     })
 
@@ -127,7 +125,7 @@ describe('Relayer', () => {
           symbol: 'ETH',
           decimals: 18,
           logoURL: 'https://example.com/eth.png',
-          type: 'NATIVE' as RelayerGen.FeeTokenType,
+          type: 'NATIVE' as RpcRelayerGen.FeeTokenType,
           contractAddress: undefined,
         },
         to: TEST_TO_ADDRESS,
@@ -310,7 +308,7 @@ describe('Relayer', () => {
       const isAvailable = await mockRelayer.isAvailable(TEST_WALLET_ADDRESS, TEST_CHAIN_ID)
       expect(isAvailable).toBe(true)
 
-      const feeOptions = await mockRelayer.feeOptions(TEST_WALLET_ADDRESS, TEST_CHAIN_ID, [])
+      const feeOptions = await mockRelayer.feeOptions(TEST_WALLET_ADDRESS, TEST_CHAIN_ID, TEST_TO_ADDRESS, [])
       expect(feeOptions.options).toEqual([])
 
       const relayResult = await mockRelayer.relay(TEST_TO_ADDRESS, TEST_DATA, TEST_CHAIN_ID)
@@ -319,8 +317,63 @@ describe('Relayer', () => {
       const statusResult = await mockRelayer.status(TEST_OP_HASH, TEST_CHAIN_ID)
       expect(statusResult.status).toBe('confirmed')
 
-      const preconditionResult = await mockRelayer.checkPrecondition({} as any)
+      const preconditionResult = await mockRelayer.checkPrecondition({} as { type: string })
       expect(preconditionResult).toBe(true)
+    })
+  })
+
+  describe('RpcRelayer.feeOptions', () => {
+    const mockCall: Payload.Call = {
+      to: TEST_TO_ADDRESS,
+      value: 0n,
+      data: TEST_DATA,
+      gasLimit: 21000n,
+      delegateCall: false,
+      onlyFallback: false,
+      behaviorOnError: 'revert',
+    }
+
+    const makeRelayer = () => {
+      const requests: Array<{ input: RequestInfo; init?: RequestInit }> = []
+      const fetchImpl = vi.fn(async (input: RequestInfo, init?: RequestInit) => {
+        requests.push({ input, init })
+        return new Response(JSON.stringify({ options: [], sponsored: false }), { status: 200 })
+      })
+
+      return {
+        relayer: new Relayer.RpcRelayer('https://relayer.test', TEST_CHAIN_ID, 'https://rpc.test', fetchImpl),
+        requests,
+      }
+    }
+
+    it('should send provided transaction target and data when available', async () => {
+      const { relayer, requests } = makeRelayer()
+
+      await relayer.feeOptions(TEST_WALLET_ADDRESS, TEST_CHAIN_ID, TEST_TO_ADDRESS, [mockCall], TEST_DATA)
+
+      expect(requests).toHaveLength(1)
+      expect(requests[0]!.input).toBe('https://relayer.test/rpc/Relayer/FeeOptions')
+      expect(JSON.parse(requests[0]!.init!.body as string)).toEqual({
+        wallet: TEST_WALLET_ADDRESS,
+        to: TEST_TO_ADDRESS,
+        data: TEST_DATA,
+      })
+    })
+
+    it('should encode calls for the provided target when transaction data is not provided', async () => {
+      const { relayer, requests } = makeRelayer()
+
+      await relayer.feeOptions(TEST_WALLET_ADDRESS, TEST_CHAIN_ID, TEST_TO_ADDRESS, [mockCall])
+
+      const expectedData = Hex.fromBytes(
+        Payload.encode({ type: 'call', space: 0n, nonce: 0n, calls: [mockCall] }, TEST_TO_ADDRESS),
+      )
+
+      expect(JSON.parse(requests[0]!.init!.body as string)).toEqual({
+        wallet: TEST_WALLET_ADDRESS,
+        to: TEST_TO_ADDRESS,
+        data: expectedData,
+      })
     })
   })
 
