@@ -37,12 +37,13 @@ export class SequenceRelayer implements Relayer {
     wallet: Address.Address,
     _chainId: number,
     calls: Payload.Call[],
+    transactionData?: Hex.Hex,
   ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     const to = wallet // TODO: this might be the guest module
     const execute = AbiFunction.from('function execute(bytes calldata _payload, bytes calldata _signature)')
     const payload = Payload.encode({ type: 'call', space: 0n, nonce: 0n, calls }, to)
     const signature = '0x0001' // TODO: use a stub signature
-    const data = AbiFunction.encodeData(execute, [Bytes.toHex(payload), signature])
+    const data = transactionData ?? AbiFunction.encodeData(execute, [Bytes.toHex(payload), signature])
 
     const { options, quote } = await this.service.feeOptions({ wallet, to, data })
 
