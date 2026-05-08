@@ -1088,7 +1088,7 @@ And that has made all the difference.
           name="chainId"
           label={'Network'}
           labelLocation="top"
-          onValueChange={value => wallet.setDefaultChainId(Number(value))}
+          onValueChange={value => sequence.getWallet().setDefaultChainId(Number(value))}
           value={String(showChainId)}
           options={[
             ...Object.values(networks).map(network => ({
