@@ -281,7 +281,7 @@ const App = () => {
       const topChainId = wallet.getChainId()
       appendConsoleLine(`top chainId: ${topChainId}`)
 
-      const provider = wallet.getProvider()
+      const provider = wallet
       const providerChainId = provider!.getChainId()
       appendConsoleLine(`provider.getChainId(): ${providerChainId}`)
 
