@@ -1,34 +1,60 @@
 {
-  "name": "arcadeum",
+  "name": "sequence-core",
+  "license": "Apache-2.0",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/@types/jest",
-      "**/@types/mocha",
-      "**/@types/chai*"
-    ]
-  },
   "scripts": {
-    "lerna": "lerna",
-    "test": "lerna run test --stream",
-    "test:arcadeum": "lerna run test --scope arcadeum --stream",
-    "test:encoder": "lerna run test --scope @arcadeum/encoder --stream",
-    "test:provider": "lerna run test --scope @arcadeum/provider --stream",
-    "lint": "lerna run lint --stream",
-    "lint:arcadeum": "lerna run lint --scope arcadeum --stream",
-    "lint:encoder": "lerna run lint --scope @arcadeum/encoder --stream",
-    "lint:provider": "lerna run lint --scope @arcadeum/provider --stream",
-    "coverage:provider": "lerna run coverage --scope @arcadeum/provider --stream",
-    "bootstrap": "yarn clean && yarn install",
-    "clean": "lerna clean --yes; rm -rf ./node_modules"
+    "build:all": "turbo build",
+    "build:packages": "turbo build --filter=\"./packages/**/*\"",
+    "build": "pnpm build:packages",
+    "dev": "turbo dev",
+    "test": "turbo test --concurrency=1",
+    "lint": "turbo lint --continue",
+    "format": "prettier --list-different --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo typecheck",
+    "postinstall": "lefthook install",
+    "dev:server": "node packages/wallet/primitives-cli/dist/index.js server",
+    "reinstall": "rimraf -g ./**/node_modules && pnpm install",
+    "test:anvil": "anvil --fork-url https://nodes.sequence.app/arbitrum",
+    "clean": "turbo clean",
+    "deps:lint": "syncpack lint --dependency-types prod,dev",
+    "deps:fix": "syncpack fix"
   },
   "devDependencies": {
-    "lerna": "^3.20.2",
-    "rollup": "^2.7.6",
-    "rollup-plugin-typescript2": "^0.27.0",
-    "typescript": "^3.8.3"
+    "@changesets/cli": "^2.29.8",
+    "lefthook": "^2.1.6",
+    "prettier": "^3.8.3",
+    "rimraf": "^6.1.3",
+    "syncpack": "^14.3.1",
+    "turbo": "^2.9.8",
+    "typescript": "^6.0.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "ox": "^0.9.17"
+    }
+  },
+  "packageManager": "pnpm@10.33.4",
+  "engines": {
+    "node": ">=18"
+  },
+  "syncpack": {
+    "source": [
+      "package.json",
+      "packages/**/package.json",
+      "extras/**/package.json",
+      "repo/**/package.json"
+    ],
+    "versionGroups": [
+      {
+        "label": "Use workspace protocol when developing local packages",
+        "dependencyTypes": [
+          "!local"
+        ],
+        "dependencies": [
+          "$LOCAL"
+        ],
+        "pinVersion": "workspace:^"
+      }
+    ]
   }
 }

@@ -1,36 +1,39 @@
-<img src="https://avatars2.githubusercontent.com/u/35579638?s=200&v=4" width="80px" >
+## sequence.js v3 core libraries and SDK
+
+**NOTE: please see [v2](https://github.com/0xsequence/sequence.js/tree/v2) branch for sequence.js 2.x.x**
 
 ---
 
-Arcadeum is ...
+Sequence v3 core libraries and [wallet-contracts-v3](https://github.com/0xsequence/wallet-contracts-v3) SDK.
 
-This repository is a monorepo including various developer tools to interact with the arcadeum stack. Each public sub-package is independently published to NPM.
+## Packages
 
-[![Discord](https://img.shields.io/badge/chat-discord.chat-yellow.svg?style=flat)](https://discord.gg/ZsRkaZs)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+- `@0xsequence/wallet-primitives`: stateless low-level utilities specifically for interacting directly with sequence wallet's smart contracts
+- `@0xsequence/wallet-core`: higher level utilities for creating and using sequence wallets
+- `@0xsequence/wallet-wdk`: all-in-one wallet development kit for building a sequence wallet product
 
-#### Documentation
+## Development
 
-...
+### Getting Started
 
-#### Packages
+1. Install dependencies:
+   `pnpm install`
 
-| Package                                                  | Version                                                                                                                 | Description                                                                                       |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [`arcadeum`](/packages/arcadeum)                               | 0.1.0                                   | An aggregate package combining many utility packages for interacting with the arcadeum stack |
-| [`@arcadeum/encoder`](/packages/encoder) | 0.1.0 | transaction encoder library for the arcadeum relayer    |
-| [`@arcadeum/provider`](/packages/provider) | 0.1.0 | smart wallet provider and utilities    |
+2. Build all packages:
+   `pnpm build`
 
-## Contributing
+### Development Workflow
 
-#### Read our [contribution guidelines](./CONTRIBUTING.md).
+- Run development mode across all packages:
+  `pnpm dev`
 
-### Install dependencies
+- Run tests:
+  `pnpm test`
 
-Make sure you are using `Yarn`
+  > **Note:** Tests require [anvil](https://github.com/foundry-rs/foundry/tree/master/crates/anvil) and [forge](https://github.com/foundry-rs/foundry) to be installed. You can run a local anvil instance using `pnpm run test:anvil`.
 
-Then install dependencies
+- Linting and formatting is enforced via git hooks
 
-```bash
-yarn && yarn bootstrap
-```
+## License
+
+Apache-2.0
