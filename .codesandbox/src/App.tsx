@@ -958,18 +958,9 @@ And that has made all the difference.
     }
   }, [email, isOpen])
 
-  const sanitizeEmail = (email: string) => {
-    // Trim unnecessary spaces
-    email = email.trim()
-
-    // Check if the email matches the pattern of a typical email
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-    if (emailRegex.test(email)) {
-      return true
-    }
-
-    return false
-  }
+  const sanitizeEmail = (email: string | null) => {
+    if (!email) return false
+    const trimmedEmail = email.trim()
 
   return (
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
