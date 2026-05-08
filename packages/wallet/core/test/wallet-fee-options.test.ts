@@ -6,8 +6,6 @@ import { State, Wallet } from '../src/index.js'
 
 const SIGNER = '0x1234567890123456789012345678901234567890' as Address.Address
 const TARGET = '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd' as Address.Address
-const FEE_OPTIONS_STUB_SIGNATURE =
-  '0x040001711fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0' as Hex.Hex
 
 const configuration: Config.Config = {
   threshold: 1n,
@@ -76,10 +74,7 @@ describe('Wallet.buildFeeOptionsTransaction', () => {
     const { wallet, imageHash } = await createWallet()
     const transaction = await wallet.buildFeeOptionsTransaction(providerFor({ deployed: true, imageHash }), payload)
 
-    const expectedData = AbiFunction.encodeData(Constants.EXECUTE, [
-      Bytes.toHex(Payload.encode(payload)),
-      FEE_OPTIONS_STUB_SIGNATURE,
-    ])
+    const expectedData = AbiFunction.encodeData(Constants.EXECUTE, [Bytes.toHex(Payload.encode(payload)), '0x0001'])
 
     expect(Address.isEqual(transaction.to, wallet.address)).toBe(true)
     expect(transaction.data).toBe(expectedData)
@@ -93,7 +88,7 @@ describe('Wallet.buildFeeOptionsTransaction', () => {
 
     const expectedExecuteData = AbiFunction.encodeData(Constants.EXECUTE, [
       Bytes.toHex(Payload.encode(payload)),
-      FEE_OPTIONS_STUB_SIGNATURE,
+      '0x0001',
     ])
 
     expect(Address.isEqual(transaction.to, Constants.DefaultGuestAddress)).toBe(true)

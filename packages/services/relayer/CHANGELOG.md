@@ -1,21 +1,5 @@
 # @0xsequence/relayer
 
-## 3.0.9
-
-### Patch Changes
-
-- Fee options fixes
-- Updated dependencies
-  - @0xsequence/wallet-primitives@3.0.9
-
-## 3.0.8
-
-### Patch Changes
-
-- Bug fix for relayer fee options handling
-- Updated dependencies
-  - @0xsequence/wallet-primitives@3.0.8
-
 ## 3.0.7
 
 ### Patch Changes
