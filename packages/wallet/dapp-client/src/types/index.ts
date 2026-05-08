@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ExplicitSession, Relayer } from '@0xsequence/wallet-core'
+import { Relayer } from '@0xsequence/relayer'
+import { ExplicitSession } from '@0xsequence/wallet-core'
 import { Attestation, Payload } from '@0xsequence/wallet-primitives'
 import { Address, Hex } from 'ox'
 import type { TypedData } from 'ox/TypedData'
 
 // --- Public Interfaces and Constants ---
+
+export type FeeToken = Relayer.FeeToken
+export type FeeOption = Relayer.FeeOption
+export type OperationFailedStatus = Relayer.OperationFailedStatus
+export type OperationStatus = Relayer.OperationStatus
 
 export const RequestActionType = {
   CREATE_NEW_SESSION: 'createNewSession',
@@ -15,11 +21,30 @@ export const RequestActionType = {
   SEND_WALLET_TRANSACTION: 'sendWalletTransaction',
 } as const
 
-export type LoginMethod = 'google' | 'apple' | 'email' | 'passkey' | 'mnemonic'
+export type LoginMethod = 'google' | 'apple' | 'email' | 'passkey' | 'mnemonic' | 'eoa'
 
 export interface GuardConfig {
   url: string
   moduleAddresses: Map<Address.Address, Address.Address>
+}
+
+export interface EthAuthSettings {
+  app?: string
+  /** expiry number (in seconds) that is used for ETHAuth proof. Default is 1 week in seconds. */
+  expiry?: number
+  /** origin hint of the dapp's host opening the wallet. This value will automatically
+   * be determined and verified for integrity, and can be omitted. */
+  origin?: string
+  /** authorizeNonce is an optional number to be passed as ETHAuth's nonce claim for replay protection. **/
+  nonce?: number
+}
+
+export interface ETHAuthProof {
+  // eip712 typed-data payload for ETHAuth domain as input
+  typedData: Payload.TypedDataToSign
+
+  // signature encoded in an ETHAuth proof string
+  ewtString: string
 }
 
 // --- Payloads for Transport ---
@@ -28,6 +53,7 @@ export interface CreateNewSessionPayload {
   origin?: string
   session?: ExplicitSession
   includeImplicitSession?: boolean
+  ethAuth?: EthAuthSettings
   preferredLoginMethod?: LoginMethod
   email?: string
 }
@@ -75,6 +101,7 @@ export interface CreateNewSessionResponse {
   userEmail?: string
   loginMethod?: LoginMethod
   guard?: GuardConfig
+  ethAuthProof?: ETHAuthProof
 }
 
 export interface SignatureResponse {
@@ -183,6 +210,6 @@ export interface SendRequestOptions {
 
 export type GetFeeTokensResponse = {
   isFeeRequired: boolean
-  tokens?: Relayer.Standard.Rpc.FeeToken[]
+  tokens?: FeeToken[]
   paymentAddress?: Address.Address
 }

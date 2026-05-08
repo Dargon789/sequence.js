@@ -1,4 +1,5 @@
-import { Envelope, Relayer, Wallet } from '@0xsequence/wallet-core'
+import { Envelope, Wallet, Bundler } from '@0xsequence/wallet-core'
+import { Relayer } from '@0xsequence/relayer'
 import { Constants, Payload } from '@0xsequence/wallet-primitives'
 import { Abi, AbiFunction, Address, Hex, Provider, RpcTransport } from 'ox'
 import { v7 as uuidv7 } from 'uuid'
@@ -179,11 +180,13 @@ export class Transactions implements TransactionsInterface {
       }
 
       if (tx.status === 'relayed') {
-        let relayer: Relayer.Relayer | Relayer.Bundler | undefined = this.shared.sequence.relayers.find(
+        let relayer: Relayer.Relayer | Bundler.Bundler | undefined = this.shared.sequence.relayers.find(
           (relayer) => relayer.id === tx.relayerId,
         )
         if (!relayer) {
-          const bundler = this.shared.sequence.bundlers.find((bundler) => bundler.id === tx.relayerId)
+          const bundler: Bundler.Bundler | undefined = this.shared.sequence.bundlers.find(
+            (bundler) => bundler.id === tx.relayerId,
+          )
           if (!bundler) {
             console.warn('relayer or bundler not found', tx.id, tx.relayerId)
             continue
@@ -307,22 +310,28 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Transaction ${transactionId} is not in the requested state`)
     }
 
+    if (!Payload.isCalls(tx.envelope.payload)) {
+      throw new Error(`Transaction ${transactionId} is not a calls payload`)
+    }
+
+    const payload = tx.envelope.payload
+
     // Modify the envelope with the changes
     if (changes?.nonce) {
-      tx.envelope.payload.nonce = changes.nonce
+      payload.nonce = changes.nonce
     }
 
     if (changes?.space) {
-      tx.envelope.payload.space = changes.space
+      payload.space = changes.space
     }
 
     if (changes?.calls) {
-      if (changes.calls.length !== tx.envelope.payload.calls.length) {
+      if (changes.calls.length !== payload.calls.length) {
         throw new Error(`Invalid number of calls for transaction ${transactionId}`)
       }
 
       for (let i = 0; i < changes.calls.length; i++) {
-        tx.envelope.payload.calls[i]!.gasLimit = changes.calls[i]!.gasLimit
+        payload.calls[i]!.gasLimit = changes.calls[i]!.gasLimit
       }
     }
 
@@ -332,6 +341,7 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Network not found for ${tx.envelope.chainId}`)
     }
     const provider = Provider.from(RpcTransport.fromHttp(network.rpcUrl))
+    const feeOptionsTransaction = await wallet.buildFeeOptionsTransaction(provider, payload)
 
     // Get relayer and relayer options
     const [allRelayerOptions, allBundlerOptions] = await Promise.all([
@@ -344,10 +354,16 @@ export class Transactions implements TransactionsInterface {
               return []
             }
 
-            const feeOptions = await relayer.feeOptions(tx.wallet, tx.envelope.chainId, tx.envelope.payload.calls)
+            const feeOptions = await relayer.feeOptions(
+              tx.wallet,
+              tx.envelope.chainId,
+              feeOptionsTransaction.to,
+              payload.calls,
+              feeOptionsTransaction.data,
+            )
 
             if (feeOptions.options.length === 0) {
-              const { name, icon } = relayer instanceof Relayer.Standard.EIP6963.EIP6963Relayer ? relayer.info : {}
+              const { name, icon } = relayer instanceof Relayer.EIP6963.EIP6963Relayer ? relayer.info : {}
 
               return [
                 {
@@ -361,7 +377,7 @@ export class Transactions implements TransactionsInterface {
               ]
             }
 
-            return feeOptions.options.map((feeOption) => ({
+            return feeOptions.options.map((feeOption: Relayer.FeeOption) => ({
               kind: 'standard',
               id: uuidv7(),
               feeOption,
@@ -378,15 +394,15 @@ export class Transactions implements TransactionsInterface {
         }
 
         return Promise.all(
-          this.shared.sequence.bundlers.map(async (bundler): Promise<ERC4337RelayerOption[]> => {
+          this.shared.sequence.bundlers.map(async (bundler: Bundler.Bundler): Promise<ERC4337RelayerOption[]> => {
             const ifAvailable = await bundler.isAvailable(entrypoint, tx.envelope.chainId)
             if (!ifAvailable) {
               return []
             }
 
             try {
-              const erc4337Op = await wallet.prepare4337Transaction(provider, tx.envelope.payload.calls, {
-                space: tx.envelope.payload.space,
+              const erc4337Op = await wallet.prepare4337Transaction(provider, payload.calls, {
+                space: payload.space,
               })
 
               const erc4337OpsWithEstimatedLimits = await bundler.estimateLimits(tx.wallet, erc4337Op.payload)
@@ -489,7 +505,7 @@ export class Transactions implements TransactionsInterface {
     let tx: Transaction | undefined
     try {
       tx = await this.get(transactionOrSignatureId)
-    } catch (e) {
+    } catch {
       // If not found, it might be a signature ID
       const signature = await this.shared.modules.signatures.get(transactionOrSignatureId)
       if (!signature) {
@@ -580,7 +596,7 @@ export class Transactions implements TransactionsInterface {
 
       await this.shared.modules.signatures.complete(signature.id)
     } else if (isERC4337RelayerOption(tx.relayerOption)) {
-      if (!Relayer.isBundler(relayer)) {
+      if (!Bundler.isBundler(relayer)) {
         throw new Error(`Relayer ${tx.relayerOption.relayerId} is not a bundler`)
       }
 
