@@ -103,7 +103,7 @@ const App = () => {
   const [consoleLoading, setConsoleLoading] = useState<boolean>(false)
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false)
 
-  const wallet = sequence.getWallet().getProvider()
+  const wallet = useMemo(() => sequence.getWallet().getProvider(), [])
 
   const [showChainId, setShowChainId] = useState<number>(wallet.getChainId())
   const [isOpen, toggleModal] = useState(false)
