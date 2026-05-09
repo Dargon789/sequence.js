@@ -1,5 +1,5 @@
-[submodule "lib/solar"]
-	path = lib/solar
+[submodule "lib/solady"]
+	path = lib/solady
 	url = https://github.com/vectorized/solady
 [submodule "counter/lib/forge-std"]
 	path = counter/lib/forge-std
@@ -46,9 +46,6 @@
 [submodule "dependencies/ds-test"]
 	path = dependencies/ds-test
 	url = https://github.com/dapphub/ds-test
-[submodule "lib/signals-implicit-mode/lib/signals-implicit-mode"]
-	path = lib/signals-implicit-mode/lib/signals-implicit-mode
-	url = https://github.com/0xsequence/signals-implicit-mode
 [submodule "lib/signals-implicit-mode/lib/signals-implicit-mode"]
 	path = lib/signals-implicit-mode/lib/signals-implicit-mode
 	url = https://github.com/0xsequence/signals-implicit-mode
