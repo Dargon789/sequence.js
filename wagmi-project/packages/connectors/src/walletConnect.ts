@@ -269,7 +269,7 @@ export function walletConnect(parameters: WalletConnectParameters) {
       if (!provider_) {
         if (!providerPromise) providerPromise = initProvider()
         provider_ = await providerPromise
-        provider_?.events.setMaxListeners(Number.POSITIVE_INFINITY)
+        provider_?.events.setMaxListeners(100)
       }
       if (chainId) await this.switchChain?.({ chainId })
       return provider_!
