@@ -103,19 +103,19 @@ const App = () => {
   const [consoleLoading, setConsoleLoading] = useState<boolean>(false)
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false)
 
-  const wallet = useMemo(() => sequence.getWallet().getProvider(), [])
+  const wallet = sequence.getWallet().getProvider()
 
   const [showChainId, setShowChainId] = useState<number>(wallet.getChainId())
   const [isOpen, toggleModal] = useState(false)
   const [warning, setWarning] = useState(false)
 
   useEffect(() => {
-    const handler = (chainId: string) => {
+    const listener = (chainId: string) => {
       setShowChainId(Number(BigInt(chainId)))
     }
-    wallet.on('chainChanged', handler)
+    wallet.on('chainChanged', listener)
     return () => {
-      wallet.removeListener('chainChanged', handler)
+      wallet.removeListener('chainChanged', listener)
     }
   }, [wallet])
 
@@ -129,14 +129,20 @@ const App = () => {
   }, [isWalletConnected])
 
   useEffect(() => {
-    // Wallet events
-    wallet.client.onOpen(() => {
+    const onOpen = () => {
       console.log('wallet window opened')
-    })
-
-    wallet.client.onClose(() => {
+    }
+    const onClose = () => {
       console.log('wallet window closed')
-    })
+    }
+
+    wallet.client.onOpen(onOpen)
+    wallet.client.onClose(onClose)
+
+    return () => {
+      wallet.client.removeListener('open', onOpen)
+      wallet.client.removeListener('close', onClose)
+    }
   }, [wallet])
 
   const defaultConnectOptions: ConnectOptions = {
@@ -285,7 +291,7 @@ const App = () => {
       const topChainId = wallet.getChainId()
       appendConsoleLine(`top chainId: ${topChainId}`)
 
-      const provider = wallet.getProvider()
+      const provider = wallet
       const providerChainId = provider!.getChainId()
       appendConsoleLine(`provider.getChainId(): ${providerChainId}`)
 
@@ -962,18 +968,9 @@ And that has made all the difference.
     }
   }, [email, isOpen])
 
-  const sanitizeEmail = (email: string) => {
-    // Trim unnecessary spaces
-    email = email.trim()
-
-    // Check if the email matches the pattern of a typical email
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-    if (emailRegex.test(email)) {
-      return true
-    }
-
-    return false
-  }
+  const sanitizeEmail = (email: string | null) => {
+    if (!email) return false
+    const trimmedEmail = email.trim()
 
   return (
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
@@ -1092,7 +1089,7 @@ And that has made all the difference.
           name="chainId"
           label={'Network'}
           labelLocation="top"
-          onValueChange={value => wallet.setDefaultChainId(Number(value))}
+          onValueChange={value => sequence.getWallet().setDefaultChainId(Number(value))}
           value={String(showChainId)}
           options={[
             ...Object.values(networks).map(network => ({
@@ -1236,7 +1233,7 @@ And that has made all the difference.
           width="full"
           shape="square"
           // TODO: Implement send ERC-1155 example
-          disabled={!isWalletConnected}
+          disabled={!isWalletConnected || true}
           onClick={() => send1155Tokens()}
           label="Send ERC-1155 Tokens"
         />
