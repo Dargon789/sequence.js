@@ -1,4 +1,5 @@
-# Demo Dapp
+Demo Dapp
+=========
 
 Dapp example on how to use Sequence Wallet. Covers how to connect, sign messages and send transctions.
 
@@ -15,7 +16,7 @@ For complete documentation on Sequence, please see: [https://docs.sequence.build
 
 ## Development
 
-See [src/App.tsx](./src/App.tsx) for the source
+See https://github.com/0xsequence/demo-dapp/blob/master/src/App.tsx for the source
 usage for a variety of functions. Be sure to open your browser's dev inspector to see output.
 Think of these functions as a "cookbook" for how you can perform these functions in your dapps.
 
@@ -26,6 +27,7 @@ Also note, sequence.js is built on top of ethers.js, and is API-compatible.
 **Opening wallet from dapp:**
 
 ![Open Sequence Wallet From Dapp](./screenshots/screen-open.png)
+
 
 **Send transaction from dapp:**
 
@@ -39,6 +41,8 @@ how you can transfer an ERC-20 token like DAI on any Ethereum network.
 Notice how you can pay gas fees for a transaction in either MATIC token or USDC for price of $0.01.
 
 ![Transfer ERC-20 token on Polygon](./screenshots/screen-txn.png)
+
+
 
 ## LICENSE
 

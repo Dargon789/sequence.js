@@ -2,7 +2,7 @@ module.exports = {
   presets: [
     ['@babel/preset-env', {
       targets: {
-        modules: true
+        esmodules: true
       },
       bugfixes: true,
       loose: true,
