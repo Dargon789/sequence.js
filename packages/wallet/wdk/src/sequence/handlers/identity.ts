@@ -1,4 +1,4 @@
-import { Hex, Bytes } from 'ox'
+import { Hex } from 'ox'
 import * as Db from '../../dbs/index.js'
 import * as Identity from '@0xsequence/identity-instrument'
 import { Signatures } from '../signatures.js'
@@ -79,6 +79,10 @@ export class IdentityHandler {
       return undefined
     }
     return new IdentitySigner(this.nitro, authKey, this.env.crypto)
+  }
+
+  protected async clearAuthKeySigner(address: string): Promise<void> {
+    await this.authKeys.delBySigner(address)
   }
 
   private async getAuthKey(signer: string): Promise<Db.AuthKey | undefined> {

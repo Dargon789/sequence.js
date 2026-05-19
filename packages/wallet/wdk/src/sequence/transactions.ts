@@ -307,22 +307,28 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Transaction ${transactionId} is not in the requested state`)
     }
 
+    if (!Payload.isCalls(tx.envelope.payload)) {
+      throw new Error(`Transaction ${transactionId} is not a calls payload`)
+    }
+
+    const payload = tx.envelope.payload
+
     // Modify the envelope with the changes
     if (changes?.nonce) {
-      tx.envelope.payload.nonce = changes.nonce
+      payload.nonce = changes.nonce
     }
 
     if (changes?.space) {
-      tx.envelope.payload.space = changes.space
+      payload.space = changes.space
     }
 
     if (changes?.calls) {
-      if (changes.calls.length !== tx.envelope.payload.calls.length) {
+      if (changes.calls.length !== payload.calls.length) {
         throw new Error(`Invalid number of calls for transaction ${transactionId}`)
       }
 
       for (let i = 0; i < changes.calls.length; i++) {
-        tx.envelope.payload.calls[i]!.gasLimit = changes.calls[i]!.gasLimit
+        payload.calls[i]!.gasLimit = changes.calls[i]!.gasLimit
       }
     }
 
@@ -332,6 +338,7 @@ export class Transactions implements TransactionsInterface {
       throw new Error(`Network not found for ${tx.envelope.chainId}`)
     }
     const provider = Provider.from(RpcTransport.fromHttp(network.rpcUrl))
+    const feeOptionsTransaction = await wallet.buildFeeOptionsTransaction(provider, payload)
 
     // Get relayer and relayer options
     const [allRelayerOptions, allBundlerOptions] = await Promise.all([
@@ -344,11 +351,13 @@ export class Transactions implements TransactionsInterface {
               return []
             }
 
-            // Determine the to address for the built transaction
-            const walletStatus = await wallet.getStatus(provider)
-            const to = walletStatus.isDeployed ? wallet.address : wallet.guest
-
-            const feeOptions = await relayer.feeOptions(tx.wallet, tx.envelope.chainId, to, tx.envelope.payload.calls)
+            const feeOptions = await relayer.feeOptions(
+              tx.wallet,
+              tx.envelope.chainId,
+              feeOptionsTransaction.to,
+              payload.calls,
+              feeOptionsTransaction.data,
+            )
 
             if (feeOptions.options.length === 0) {
               const { name, icon } = relayer instanceof Relayer.Standard.EIP6963.EIP6963Relayer ? relayer.info : {}
@@ -389,8 +398,8 @@ export class Transactions implements TransactionsInterface {
             }
 
             try {
-              const erc4337Op = await wallet.prepare4337Transaction(provider, tx.envelope.payload.calls, {
-                space: tx.envelope.payload.space,
+              const erc4337Op = await wallet.prepare4337Transaction(provider, payload.calls, {
+                space: payload.space,
               })
 
               const erc4337OpsWithEstimatedLimits = await bundler.estimateLimits(tx.wallet, erc4337Op.payload)
@@ -493,7 +502,7 @@ export class Transactions implements TransactionsInterface {
     let tx: Transaction | undefined
     try {
       tx = await this.get(transactionOrSignatureId)
-    } catch (e) {
+    } catch {
       // If not found, it might be a signature ID
       const signature = await this.shared.modules.signatures.get(transactionOrSignatureId)
       if (!signature) {

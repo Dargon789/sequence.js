@@ -158,11 +158,11 @@ export class ChainSessionManager {
     listener: ChainSessionManagerEventMap[K],
   ): () => void {
     if (!this.eventListeners[event]) {
-      this.eventListeners[event] = new Set() as any
+      this.eventListeners[event] = new Set<ChainSessionManagerEventMap[K]>()
     }
-    ;(this.eventListeners[event] as any).add(listener)
+    this.eventListeners[event].add(listener)
     return () => {
-      ;(this.eventListeners[event] as any)?.delete(listener)
+      this.eventListeners[event]?.delete(listener)
     }
   }
 
@@ -865,7 +865,13 @@ export class ChainSessionManager {
       }
       const walletAddress = this.walletAddress
       if (!walletAddress) throw new InitializationError('Wallet is not initialized.')
-      const feeOptions = await this.relayer.feeOptions(walletAddress, this.chainId, signedCall.to, callsToSend)
+      const feeOptions = await this.relayer.feeOptions(
+        walletAddress,
+        this.chainId,
+        signedCall.to,
+        callsToSend,
+        signedCall.data,
+      )
       return feeOptions.options
     } catch (err) {
       throw new FeeOptionError(`Failed to get fee options: ${err instanceof Error ? err.message : String(err)}`)
