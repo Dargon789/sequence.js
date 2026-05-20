@@ -1,4 +1,197 @@
-# @0xsequence/api
+# @0xsequence/abi
+
+## 3.0.9
+
+### Patch Changes
+
+- Fee options fixes
+
+## 3.0.8
+
+### Patch Changes
+
+- Bug fix for relayer fee options handling
+
+## 3.0.7
+
+### Patch Changes
+
+- Minor bug fixes
+
+## 3.0.6
+
+### Patch Changes
+
+- userdata upgrade, arweave support
+
+## 3.0.5
+
+### Patch Changes
+
+- Account federation support
+
+## 3.0.4
+
+### Patch Changes
+
+- id-token login support
+
+## 3.0.3
+
+### Patch Changes
+
+- 3.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- allow native self transfer
+
+## 3.0.1
+
+### Patch Changes
+
+- Network and session fixes
+
+## 3.0.0
+
+### Patch Changes
+
+- f68be62: ethauth support
+- 49d8a2f: New chains, minor fixes
+- 3411232: Beta release with dapp connector fixes
+- 23cb9e9: New chains, relayer rpc fix
+- f5f6a7a: dapp-client updates
+- e7de3b1: Fix signer 404 error, minor fixes
+- 493836f: multicall3 optimization
+- 30e1f1a: 3.0.0 beta
+- d5017e8: Beta release for v3
+- 24a5fab: Final RC before 3.0.0
+- e5e1a03: Apple auth fixes
+- 0b63113: Apple auth fix
+- a89134a: Userdata service updates
+- 7c6c811: 3.0.0-beta.3 with fixes
+- 3.0.0 release
+- 98ce38b: 3.0.0-beta.2 with identity instrument updates
+- 747e6b5: Relayer fee options fix
+- 40c19ff: dapp client updates for EOA login
+- 6d5de25: 3.0.0-beta.1
+- 934acd1: RC5 upgrade
+
+## 3.0.0-beta.19
+
+### Patch Changes
+
+- Final RC before 3.0.0
+
+## 3.0.0-beta.18
+
+### Patch Changes
+
+- multicall3 optimization
+
+## 3.0.0-beta.17
+
+### Patch Changes
+
+- New chains, relayer rpc fix
+
+## 3.0.0-beta.16
+
+### Patch Changes
+
+- ethauth support
+
+## 3.0.0-beta.15
+
+### Patch Changes
+
+- New chains, minor fixes
+
+## 3.0.0-beta.14
+
+### Patch Changes
+
+- Relayer fee options fix
+
+## 3.0.0-beta.13
+
+### Patch Changes
+
+- Userdata service updates
+
+## 3.0.0-beta.12
+
+### Patch Changes
+
+- Beta release with dapp connector fixes
+
+## 3.0.0-beta.11
+
+### Patch Changes
+
+- 3.0.0 beta
+
+## 3.0.0-beta.10
+
+### Patch Changes
+
+- dapp-client updates
+
+## 3.0.0-beta.9
+
+### Patch Changes
+
+- dapp client updates for EOA login
+
+## 3.0.0-beta.8
+
+### Patch Changes
+
+- Apple auth fixes
+
+## 3.0.0-beta.7
+
+### Patch Changes
+
+- Apple auth fix
+
+## 3.0.0-beta.6
+
+### Patch Changes
+
+- Fix signer 404 error, minor fixes
+
+## 3.0.0-beta.5
+
+### Patch Changes
+
+- Beta release for v3
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
 
 ## 2.3.43
 
@@ -1633,7 +1826,6 @@
 - relayer: fix Relayer.wait() interface
 
   The interface for calling Relayer.wait() has changed. Instead of a single optional ill-defined timeout/delay parameter, there are three optional parameters, in order:
-
   - timeout: the maximum time to wait for the transaction receipt
   - delay: the polling interval, i.e. the time to wait between requests
   - maxFails: the maximum number of hard failures to tolerate before giving up
@@ -1949,12 +2141,6 @@
 
 - - upgrade deps
 
-## 0.33.1
-
-### Patch Changes
-
-- update bindings
-
 ## 0.31.0
 
 ### Minor Changes
@@ -1967,38 +2153,17 @@
 
 - - upgrade most deps
 
-## 0.29.9
-
-### Patch Changes
-
-- update client
-
 ## 0.29.8
 
 ### Patch Changes
 
 - update api
 
-## 0.29.4
-
-### Patch Changes
-
-- api: update rpc bindings
-
-## 0.29.1
-
-### Patch Changes
-
-- metadata: ContractInfo.decimals is now optional, i.e. may be undefined
-
-  api: new APIs for user storage and isUsingGoogleMail
-
 ## 0.29.0
 
 ### Minor Changes
 
 - major architectural changes in Sequence design
-
   - only one API instance, API is no longer a per-chain service
   - separate per-chain indexer service, API no longer handles indexing
   - single contract metadata service, API no longer serves metadata
@@ -2035,12 +2200,6 @@
 
 - 10c8af8: Add estimator package
   Fix multicall few calls bug
-
-## 0.24.0
-
-### Minor Changes
-
-- pass wallet config and nonce to GetMetaTxnNetworkFeeOptions
 
 ## 0.23.0
 
@@ -2097,17 +2256,17 @@
 - - fix gas estimation on wallets with large number of signers
   - update to session handling and wallet config construction upon auth
 
-## 0.20.0
-
-### Minor Changes
-
-- revert JWT request piggybacking
-
 ## 0.19.3
 
 ### Patch Changes
 
 - jwtAuth visibility, package version sync
+
+## 0.19.2
+
+### Patch Changes
+
+- - api: change jwtAuth visibility
 
 ## 0.19.0
 
@@ -2121,18 +2280,6 @@
 
 - relayer improvements and pending transaction handling
 
-## 0.17.0
-
-### Minor Changes
-
-- ArcadeumAPIClient no longer exposes jwtAuth
-
-## 0.16.1
-
-### Patch Changes
-
-- api: add legacy types for bw compat
-
 ## 0.16.0
 
 ### Minor Changes
@@ -2145,13 +2292,6 @@
 
 - update api clients
 
-## 0.15.0
-
-### Patch Changes
-
-- - update chaind and api bindings
-  - replace EstimateMetaTxnGasReceipt with UpdateMetaTxnGasLimits and GetMetaTxnNetworkFeeOptions
-
 ## 0.14.3
 
 ### Patch Changes
@@ -2163,12 +2303,6 @@
 ### Patch Changes
 
 - Add debug logs to rpc-relayer
-
-## 0.14.1
-
-### Patch Changes
-
-- update api client
 
 ## 0.14.0
 
@@ -2290,23 +2424,11 @@
 
 - Update ABIs for latest sequence contracts
 
-## 0.9.5
-
-### Patch Changes
-
-- Implemented session class
-
 ## 0.9.3
 
 ### Patch Changes
 
 - - minor improvements
-
-## 0.9.2
-
-### Patch Changes
-
-- - Update api client
 
 ## 0.9.1
 

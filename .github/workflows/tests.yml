@@ -1,6 +1,10 @@
 on: [push]
 
 name: tests
+permissions:
+  contents: read
+permissions:
+  contents: read
 
 jobs:
   install:
