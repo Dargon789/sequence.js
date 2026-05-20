@@ -46,11 +46,10 @@ import {
 import { WaasAuthenticator, AnswerIncorrectError, Chain, EmailAlreadyInUseError, Session } from './clients/authenticator.gen'
 import { NoPrivateKeyError } from './errors'
 import { SimpleNetwork, WithSimpleNetwork } from './networks'
-import { EmailAuth } from './email'
 import { ethers } from 'ethers'
 import { getDefaultSubtleCryptoBackend, SubtleCryptoBackend } from './subtle-crypto'
 import { getDefaultSecureStoreBackend, SecureStoreBackend } from './secure-store'
-import { Challenge, EmailChallenge, GuestChallenge, IdTokenChallenge, PlayFabChallenge, StytchChallenge } from './challenge'
+import { Challenge, EmailChallenge, GuestChallenge, IdTokenChallenge, PlayFabChallenge, StytchChallenge, XAuthChallenge } from './challenge'
 import { jwtDecode } from 'jwt-decode'
 
 export type Sessions = (Session & { isThis: boolean })[]
@@ -81,8 +80,11 @@ export type PlayFabIdentity = {
   playFabTitleId: string
   playFabSessionTicket: string
 }
+export type XAuthIdentity = {
+  xAccessToken: string
+}
 
-export type Identity = IdTokenIdentity | EmailIdentity | PlayFabIdentity | GuestIdentity
+export type Identity = IdTokenIdentity | EmailIdentity | PlayFabIdentity | GuestIdentity | XAuthIdentity
 
 export type SignInResponse = {
   sessionId: string
@@ -173,8 +175,6 @@ export class SequenceWaaS {
   public readonly config: Required<SequenceConfig> & Required<WaaSConfigKey> & ExtendedSequenceConfig
 
   private readonly deviceName: StoreObj<string | undefined>
-
-  private emailClient: EmailAuth | undefined
 
   // The last Date header value returned by the server, used for users with desynchronised clocks
   private lastDate: Date | undefined
@@ -275,23 +275,6 @@ export class SequenceWaaS {
     return response
   }
 
-  public get email() {
-    if (this.emailClient) {
-      return this.emailClient
-    }
-
-    if (!this.config.emailRegion) {
-      throw new Error('Missing emailRegion')
-    }
-
-    if (!this.config.emailClientId) {
-      throw new Error('Missing emailClientId')
-    }
-
-    this.emailClient = new EmailAuth(this.config.emailRegion, this.config.emailClientId)
-    return this.emailClient
-  }
-
   async onValidationRequired(callback: () => void) {
     this.validationRequiredCallback.push(callback)
     return () => {
@@ -339,9 +322,21 @@ export class SequenceWaaS {
     }
   }
 
-  private async updateTimeDrift() {
+  /**
+   * Checks the server status and sets the time drift before sending any intent.
+   * @throws {Error} If server status check fails or Date header is missing
+   */
+  private async preSendIntent() {
     if (getTimeDrift() === undefined) {
       const res = await fetch(`${this.config.rpcServer}/status`)
+
+      if (res.status !== 200) {
+        if (res.status === 451) {
+          throw new Error('Service unavailable due to legal and geographic restrictions')
+        }
+        throw new Error(`Error with status ${res.status}`)
+      }
+      
       const date = res.headers.get('Date')
       if (!date) {
         throw new Error('failed to get Date header value from /status')
@@ -446,7 +441,7 @@ export class SequenceWaaS {
   }
 
   async initAuth(identity: Identity): Promise<Challenge> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     if ('guest' in identity && identity.guest) {
       return this.initGuestAuth()
@@ -456,6 +451,8 @@ export class SequenceWaaS {
       return this.initEmailAuth(identity.email)
     } else if ('playFabTitleId' in identity) {
       return this.initPlayFabAuth(identity.playFabTitleId, identity.playFabSessionTicket)
+    } else if ('xAccessToken' in identity) {
+      return this.initXAuth(identity.xAccessToken)
     }
 
     throw new Error('invalid identity')
@@ -507,11 +504,21 @@ export class SequenceWaaS {
     return new PlayFabChallenge(titleId, sessionTicket)
   }
 
+  private async initXAuth(accessToken: string) {
+    const intent = await this.waas.initiateXAuth(accessToken)
+    const res = await this.sendIntent(intent)
+
+    if (!isInitiateAuthResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+    return new XAuthChallenge(accessToken)
+  }
+
   async completeAuth(
     challenge: Challenge,
     opts?: { sessionName?: string; forceCreateAccount?: boolean }
   ): Promise<SignInResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     // initAuth can start while user is already signed in and continue with linkAccount method,
     // but it can't be used to completeAuth while user is already signed in. In this
@@ -579,7 +586,7 @@ export class SequenceWaaS {
   }
 
   async dropSession({ sessionId, strict }: { sessionId?: string; strict?: boolean } = {}) {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const thisSessionId = await this.waas.getSessionId()
     if (!thisSessionId) {
@@ -627,7 +634,7 @@ export class SequenceWaaS {
   }
 
   async listSessions(): Promise<Sessions> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const sessionId = await this.waas.getSessionId()
     if (!sessionId) {
@@ -649,7 +656,7 @@ export class SequenceWaaS {
   }
 
   async validateSession(args?: ValidationArgs) {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     if (await this.isSessionValid()) {
       return true
@@ -659,7 +666,7 @@ export class SequenceWaaS {
   }
 
   async finishValidateSession(challenge: string): Promise<boolean> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.finishValidateSession(this.validationRequiredSalt, challenge)
     const result = await this.sendIntent(intent)
@@ -673,7 +680,7 @@ export class SequenceWaaS {
   }
 
   async isSessionValid(): Promise<boolean> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.getSession()
     const result = await this.sendIntent(intent)
@@ -700,14 +707,14 @@ export class SequenceWaaS {
   }
 
   async sessionAuthProof({ nonce, network, validation }: { nonce?: string; network?: string; validation?: ValidationArgs }) {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.sessionAuthProof({ nonce, network })
     return await this.trySendIntent({ validation }, intent, isSessionAuthProofResponse)
   }
 
   async listAccounts() {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.listAccounts()
     const res = await this.sendIntent(intent)
@@ -720,7 +727,7 @@ export class SequenceWaaS {
   }
 
   async linkAccount(challenge: Challenge) {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.linkAccount(challenge.getIntentParams())
     const res = await this.sendIntent(intent)
@@ -733,14 +740,14 @@ export class SequenceWaaS {
   }
 
   async removeAccount(accountId: string) {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.removeAccount({ accountId })
     await this.sendIntent(intent)
   }
 
   async getIdToken(args?: { nonce?: string }): Promise<IntentResponseIdToken> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.getIdToken({ nonce: args?.nonce })
     const res = await this.sendIntent(intent)
@@ -788,14 +795,14 @@ export class SequenceWaaS {
   }
 
   async signMessage(args: WithSimpleNetwork<SignMessageArgs> & CommonAuthArgs): Promise<SignedMessageResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.signMessage(await this.useIdentifier(args))
     return this.trySendIntent(args, intent, isSignedMessageResponse)
   }
 
   async signTypedData(args: WithSimpleNetwork<SignTypedDataArgs> & CommonAuthArgs): Promise<SignedTypedDataResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.signTypedData(await this.useIdentifier(args))
     return this.trySendIntent(args, intent, isSignedTypedDataResponse)
@@ -824,42 +831,42 @@ export class SequenceWaaS {
   }
 
   async sendTransaction(args: WithSimpleNetwork<SendTransactionsArgs> & CommonAuthArgs): Promise<MaySentTransactionResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.sendTransaction(await this.useIdentifier(args))
     return this.trySendTransactionIntent(intent, args)
   }
 
   async sendERC20(args: WithSimpleNetwork<SendERC20Args> & CommonAuthArgs): Promise<MaySentTransactionResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.sendERC20(await this.useIdentifier(args))
     return this.trySendTransactionIntent(intent, args)
   }
 
   async sendERC721(args: WithSimpleNetwork<SendERC721Args> & CommonAuthArgs): Promise<MaySentTransactionResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.sendERC721(await this.useIdentifier(args))
     return this.trySendTransactionIntent(intent, args)
   }
 
   async sendERC1155(args: WithSimpleNetwork<SendERC1155Args> & CommonAuthArgs): Promise<MaySentTransactionResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.sendERC1155(await this.useIdentifier(args))
     return this.trySendTransactionIntent(intent, args)
   }
 
   async callContract(args: WithSimpleNetwork<SendContractCallArgs> & CommonAuthArgs): Promise<MaySentTransactionResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.callContract(await this.useIdentifier(args))
     return this.trySendTransactionIntent(intent, args)
   }
 
   async feeOptions(args: WithSimpleNetwork<SendTransactionsArgs> & CommonAuthArgs): Promise<FeeOptionsResponse> {
-    await this.updateTimeDrift()
+    await this.preSendIntent()
 
     const intent = await this.waas.feeOptions(await this.useIdentifier(args))
     return this.trySendIntent(args, intent, isFeeOptionsResponse)

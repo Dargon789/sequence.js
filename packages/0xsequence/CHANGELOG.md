@@ -1,5 +1,834 @@
 # 0xsequence
 
+## 2.3.43
+
+### Patch Changes
+
+- Remove cognito dependency from waas
+- Updated dependencies
+  - @0xsequence/migration@2.3.43
+  - @0xsequence/metadata@2.3.43
+  - @0xsequence/provider@2.3.43
+  - @0xsequence/sessions@2.3.43
+  - @0xsequence/account@2.3.43
+  - @0xsequence/indexer@2.3.43
+  - @0xsequence/network@2.3.43
+  - @0xsequence/relayer@2.3.43
+  - @0xsequence/signhub@2.3.43
+  - @0xsequence/wallet@2.3.43
+  - @0xsequence/guard@2.3.43
+  - @0xsequence/utils@2.3.43
+  - @0xsequence/auth@2.3.43
+  - @0xsequence/core@2.3.43
+  - @0xsequence/abi@2.3.43
+  - @0xsequence/api@2.3.43
+
+## 2.3.42
+
+### Patch Changes
+
+- Disable deprecated chains
+- Updated dependencies
+  - @0xsequence/migration@2.3.42
+  - @0xsequence/metadata@2.3.42
+  - @0xsequence/provider@2.3.42
+  - @0xsequence/sessions@2.3.42
+  - @0xsequence/account@2.3.42
+  - @0xsequence/indexer@2.3.42
+  - @0xsequence/network@2.3.42
+  - @0xsequence/relayer@2.3.42
+  - @0xsequence/signhub@2.3.42
+  - @0xsequence/wallet@2.3.42
+  - @0xsequence/guard@2.3.42
+  - @0xsequence/utils@2.3.42
+  - @0xsequence/auth@2.3.42
+  - @0xsequence/core@2.3.42
+  - @0xsequence/abi@2.3.42
+  - @0xsequence/api@2.3.42
+
+## 2.3.41
+
+### Patch Changes
+
+- Add new chains, indexer upgrade
+- Updated dependencies
+  - @0xsequence/migration@2.3.41
+  - @0xsequence/metadata@2.3.41
+  - @0xsequence/provider@2.3.41
+  - @0xsequence/sessions@2.3.41
+  - @0xsequence/account@2.3.41
+  - @0xsequence/indexer@2.3.41
+  - @0xsequence/network@2.3.41
+  - @0xsequence/relayer@2.3.41
+  - @0xsequence/signhub@2.3.41
+  - @0xsequence/wallet@2.3.41
+  - @0xsequence/guard@2.3.41
+  - @0xsequence/utils@2.3.41
+  - @0xsequence/auth@2.3.41
+  - @0xsequence/core@2.3.41
+  - @0xsequence/abi@2.3.41
+  - @0xsequence/api@2.3.41
+
+## 2.3.40
+
+### Patch Changes
+
+- Remove legacy etherlink testnet
+- Updated dependencies
+  - @0xsequence/migration@2.3.40
+  - @0xsequence/metadata@2.3.40
+  - @0xsequence/provider@2.3.40
+  - @0xsequence/sessions@2.3.40
+  - @0xsequence/account@2.3.40
+  - @0xsequence/indexer@2.3.40
+  - @0xsequence/network@2.3.40
+  - @0xsequence/relayer@2.3.40
+  - @0xsequence/signhub@2.3.40
+  - @0xsequence/wallet@2.3.40
+  - @0xsequence/guard@2.3.40
+  - @0xsequence/utils@2.3.40
+  - @0xsequence/auth@2.3.40
+  - @0xsequence/core@2.3.40
+  - @0xsequence/abi@2.3.40
+  - @0xsequence/api@2.3.40
+
+## 2.3.39
+
+### Patch Changes
+
+- Add incentiv mainnet
+- Updated dependencies
+  - @0xsequence/migration@2.3.39
+  - @0xsequence/metadata@2.3.39
+  - @0xsequence/provider@2.3.39
+  - @0xsequence/sessions@2.3.39
+  - @0xsequence/account@2.3.39
+  - @0xsequence/indexer@2.3.39
+  - @0xsequence/network@2.3.39
+  - @0xsequence/relayer@2.3.39
+  - @0xsequence/signhub@2.3.39
+  - @0xsequence/wallet@2.3.39
+  - @0xsequence/guard@2.3.39
+  - @0xsequence/utils@2.3.39
+  - @0xsequence/auth@2.3.39
+  - @0xsequence/core@2.3.39
+  - @0xsequence/abi@2.3.39
+  - @0xsequence/api@2.3.39
+
+## 2.3.38
+
+### Patch Changes
+
+- Add Etherlink Shadownet
+- Updated dependencies
+  - @0xsequence/migration@2.3.38
+  - @0xsequence/metadata@2.3.38
+  - @0xsequence/provider@2.3.38
+  - @0xsequence/sessions@2.3.38
+  - @0xsequence/account@2.3.38
+  - @0xsequence/indexer@2.3.38
+  - @0xsequence/network@2.3.38
+  - @0xsequence/relayer@2.3.38
+  - @0xsequence/signhub@2.3.38
+  - @0xsequence/wallet@2.3.38
+  - @0xsequence/guard@2.3.38
+  - @0xsequence/utils@2.3.38
+  - @0xsequence/auth@2.3.38
+  - @0xsequence/core@2.3.38
+  - @0xsequence/abi@2.3.38
+  - @0xsequence/api@2.3.38
+
+## 2.3.37
+
+### Patch Changes
+
+- API updates
+- Updated dependencies
+  - @0xsequence/migration@2.3.37
+  - @0xsequence/metadata@2.3.37
+  - @0xsequence/provider@2.3.37
+  - @0xsequence/sessions@2.3.37
+  - @0xsequence/account@2.3.37
+  - @0xsequence/indexer@2.3.37
+  - @0xsequence/network@2.3.37
+  - @0xsequence/relayer@2.3.37
+  - @0xsequence/signhub@2.3.37
+  - @0xsequence/wallet@2.3.37
+  - @0xsequence/guard@2.3.37
+  - @0xsequence/utils@2.3.37
+  - @0xsequence/auth@2.3.37
+  - @0xsequence/core@2.3.37
+  - @0xsequence/abi@2.3.37
+  - @0xsequence/api@2.3.37
+
+## 2.3.36
+
+### Patch Changes
+
+- API interface updates, new chains
+- Updated dependencies
+  - @0xsequence/migration@2.3.36
+  - @0xsequence/metadata@2.3.36
+  - @0xsequence/provider@2.3.36
+  - @0xsequence/sessions@2.3.36
+  - @0xsequence/account@2.3.36
+  - @0xsequence/indexer@2.3.36
+  - @0xsequence/network@2.3.36
+  - @0xsequence/relayer@2.3.36
+  - @0xsequence/signhub@2.3.36
+  - @0xsequence/wallet@2.3.36
+  - @0xsequence/guard@2.3.36
+  - @0xsequence/utils@2.3.36
+  - @0xsequence/auth@2.3.36
+  - @0xsequence/core@2.3.36
+  - @0xsequence/abi@2.3.36
+  - @0xsequence/api@2.3.36
+
+## 2.3.35
+
+### Patch Changes
+
+- Network and API updates
+- Updated dependencies
+  - @0xsequence/migration@2.3.35
+  - @0xsequence/metadata@2.3.35
+  - @0xsequence/provider@2.3.35
+  - @0xsequence/sessions@2.3.35
+  - @0xsequence/account@2.3.35
+  - @0xsequence/indexer@2.3.35
+  - @0xsequence/network@2.3.35
+  - @0xsequence/relayer@2.3.35
+  - @0xsequence/signhub@2.3.35
+  - @0xsequence/wallet@2.3.35
+  - @0xsequence/guard@2.3.35
+  - @0xsequence/utils@2.3.35
+  - @0xsequence/auth@2.3.35
+  - @0xsequence/core@2.3.35
+  - @0xsequence/abi@2.3.35
+  - @0xsequence/api@2.3.35
+
+## 2.3.34
+
+### Patch Changes
+
+- API updates, remove Sei
+- Updated dependencies
+  - @0xsequence/migration@2.3.34
+  - @0xsequence/metadata@2.3.34
+  - @0xsequence/provider@2.3.34
+  - @0xsequence/sessions@2.3.34
+  - @0xsequence/account@2.3.34
+  - @0xsequence/indexer@2.3.34
+  - @0xsequence/network@2.3.34
+  - @0xsequence/relayer@2.3.34
+  - @0xsequence/signhub@2.3.34
+  - @0xsequence/wallet@2.3.34
+  - @0xsequence/guard@2.3.34
+  - @0xsequence/utils@2.3.34
+  - @0xsequence/auth@2.3.34
+  - @0xsequence/core@2.3.34
+  - @0xsequence/abi@2.3.34
+  - @0xsequence/api@2.3.34
+
+## 2.3.33
+
+### Patch Changes
+
+- Arc Testnet fixes
+- Updated dependencies
+  - @0xsequence/migration@2.3.33
+  - @0xsequence/metadata@2.3.33
+  - @0xsequence/provider@2.3.33
+  - @0xsequence/sessions@2.3.33
+  - @0xsequence/account@2.3.33
+  - @0xsequence/indexer@2.3.33
+  - @0xsequence/network@2.3.33
+  - @0xsequence/relayer@2.3.33
+  - @0xsequence/signhub@2.3.33
+  - @0xsequence/wallet@2.3.33
+  - @0xsequence/guard@2.3.33
+  - @0xsequence/utils@2.3.33
+  - @0xsequence/auth@2.3.33
+  - @0xsequence/core@2.3.33
+  - @0xsequence/abi@2.3.33
+  - @0xsequence/api@2.3.33
+
+## 2.3.32
+
+### Patch Changes
+
+- Remove LAOS and TRN
+- Updated dependencies
+  - @0xsequence/migration@2.3.32
+  - @0xsequence/metadata@2.3.32
+  - @0xsequence/provider@2.3.32
+  - @0xsequence/sessions@2.3.32
+  - @0xsequence/account@2.3.32
+  - @0xsequence/indexer@2.3.32
+  - @0xsequence/network@2.3.32
+  - @0xsequence/relayer@2.3.32
+  - @0xsequence/signhub@2.3.32
+  - @0xsequence/wallet@2.3.32
+  - @0xsequence/guard@2.3.32
+  - @0xsequence/utils@2.3.32
+  - @0xsequence/auth@2.3.32
+  - @0xsequence/core@2.3.32
+  - @0xsequence/abi@2.3.32
+  - @0xsequence/api@2.3.32
+
+## 2.3.31
+
+### Patch Changes
+
+- Update marketplace API
+- Updated dependencies
+  - @0xsequence/migration@2.3.31
+  - @0xsequence/metadata@2.3.31
+  - @0xsequence/provider@2.3.31
+  - @0xsequence/sessions@2.3.31
+  - @0xsequence/account@2.3.31
+  - @0xsequence/indexer@2.3.31
+  - @0xsequence/network@2.3.31
+  - @0xsequence/relayer@2.3.31
+  - @0xsequence/signhub@2.3.31
+  - @0xsequence/wallet@2.3.31
+  - @0xsequence/guard@2.3.31
+  - @0xsequence/utils@2.3.31
+  - @0xsequence/auth@2.3.31
+  - @0xsequence/core@2.3.31
+  - @0xsequence/abi@2.3.31
+  - @0xsequence/api@2.3.31
+
+## 2.3.30
+
+### Patch Changes
+
+- Add Monad mainnet
+- Updated dependencies
+  - @0xsequence/migration@2.3.30
+  - @0xsequence/metadata@2.3.30
+  - @0xsequence/provider@2.3.30
+  - @0xsequence/sessions@2.3.30
+  - @0xsequence/account@2.3.30
+  - @0xsequence/indexer@2.3.30
+  - @0xsequence/network@2.3.30
+  - @0xsequence/relayer@2.3.30
+  - @0xsequence/signhub@2.3.30
+  - @0xsequence/wallet@2.3.30
+  - @0xsequence/guard@2.3.30
+  - @0xsequence/utils@2.3.30
+  - @0xsequence/auth@2.3.30
+  - @0xsequence/core@2.3.30
+  - @0xsequence/abi@2.3.30
+  - @0xsequence/api@2.3.30
+
+## 2.3.29
+
+### Patch Changes
+
+- Update relayer and api interfaces
+- Updated dependencies
+  - @0xsequence/migration@2.3.29
+  - @0xsequence/metadata@2.3.29
+  - @0xsequence/provider@2.3.29
+  - @0xsequence/sessions@2.3.29
+  - @0xsequence/account@2.3.29
+  - @0xsequence/indexer@2.3.29
+  - @0xsequence/network@2.3.29
+  - @0xsequence/relayer@2.3.29
+  - @0xsequence/signhub@2.3.29
+  - @0xsequence/wallet@2.3.29
+  - @0xsequence/guard@2.3.29
+  - @0xsequence/utils@2.3.29
+  - @0xsequence/auth@2.3.29
+  - @0xsequence/core@2.3.29
+  - @0xsequence/abi@2.3.29
+  - @0xsequence/api@2.3.29
+
+## 2.3.28
+
+### Patch Changes
+
+- Deprecate Incentiv Testnet v1
+- Updated dependencies
+  - @0xsequence/migration@2.3.28
+  - @0xsequence/metadata@2.3.28
+  - @0xsequence/provider@2.3.28
+  - @0xsequence/sessions@2.3.28
+  - @0xsequence/account@2.3.28
+  - @0xsequence/indexer@2.3.28
+  - @0xsequence/network@2.3.28
+  - @0xsequence/relayer@2.3.28
+  - @0xsequence/signhub@2.3.28
+  - @0xsequence/wallet@2.3.28
+  - @0xsequence/guard@2.3.28
+  - @0xsequence/utils@2.3.28
+  - @0xsequence/auth@2.3.28
+  - @0xsequence/core@2.3.28
+  - @0xsequence/abi@2.3.28
+  - @0xsequence/api@2.3.28
+
+## 2.3.27
+
+### Patch Changes
+
+- Minor fix for return types in relay
+- Updated dependencies
+  - @0xsequence/migration@2.3.27
+  - @0xsequence/metadata@2.3.27
+  - @0xsequence/provider@2.3.27
+  - @0xsequence/sessions@2.3.27
+  - @0xsequence/account@2.3.27
+  - @0xsequence/indexer@2.3.27
+  - @0xsequence/network@2.3.27
+  - @0xsequence/relayer@2.3.27
+  - @0xsequence/signhub@2.3.27
+  - @0xsequence/wallet@2.3.27
+  - @0xsequence/guard@2.3.27
+  - @0xsequence/utils@2.3.27
+  - @0xsequence/auth@2.3.27
+  - @0xsequence/core@2.3.27
+  - @0xsequence/abi@2.3.27
+  - @0xsequence/api@2.3.27
+
+## 2.3.26
+
+### Patch Changes
+
+- Expose waitForReceipt for AccountSigner
+- Updated dependencies
+  - @0xsequence/migration@2.3.26
+  - @0xsequence/metadata@2.3.26
+  - @0xsequence/provider@2.3.26
+  - @0xsequence/sessions@2.3.26
+  - @0xsequence/account@2.3.26
+  - @0xsequence/indexer@2.3.26
+  - @0xsequence/network@2.3.26
+  - @0xsequence/relayer@2.3.26
+  - @0xsequence/signhub@2.3.26
+  - @0xsequence/wallet@2.3.26
+  - @0xsequence/guard@2.3.26
+  - @0xsequence/utils@2.3.26
+  - @0xsequence/auth@2.3.26
+  - @0xsequence/core@2.3.26
+  - @0xsequence/abi@2.3.26
+  - @0xsequence/api@2.3.26
+
+## 2.3.25
+
+### Patch Changes
+
+- Add Katana, Sandbox Testnet
+- Updated dependencies
+  - @0xsequence/migration@2.3.25
+  - @0xsequence/metadata@2.3.25
+  - @0xsequence/provider@2.3.25
+  - @0xsequence/sessions@2.3.25
+  - @0xsequence/account@2.3.25
+  - @0xsequence/indexer@2.3.25
+  - @0xsequence/network@2.3.25
+  - @0xsequence/relayer@2.3.25
+  - @0xsequence/signhub@2.3.25
+  - @0xsequence/wallet@2.3.25
+  - @0xsequence/guard@2.3.25
+  - @0xsequence/utils@2.3.25
+  - @0xsequence/auth@2.3.25
+  - @0xsequence/core@2.3.25
+  - @0xsequence/abi@2.3.25
+  - @0xsequence/api@2.3.25
+
+## 2.3.24
+
+### Patch Changes
+
+- Add Incentiv Testnet v2
+- Updated dependencies
+  - @0xsequence/migration@2.3.24
+  - @0xsequence/metadata@2.3.24
+  - @0xsequence/provider@2.3.24
+  - @0xsequence/sessions@2.3.24
+  - @0xsequence/account@2.3.24
+  - @0xsequence/indexer@2.3.24
+  - @0xsequence/network@2.3.24
+  - @0xsequence/relayer@2.3.24
+  - @0xsequence/signhub@2.3.24
+  - @0xsequence/wallet@2.3.24
+  - @0xsequence/guard@2.3.24
+  - @0xsequence/utils@2.3.24
+  - @0xsequence/auth@2.3.24
+  - @0xsequence/core@2.3.24
+  - @0xsequence/abi@2.3.24
+  - @0xsequence/api@2.3.24
+
+## 2.3.23
+
+### Patch Changes
+
+- Networks update
+- Updated dependencies
+  - @0xsequence/migration@2.3.23
+  - @0xsequence/metadata@2.3.23
+  - @0xsequence/provider@2.3.23
+  - @0xsequence/sessions@2.3.23
+  - @0xsequence/account@2.3.23
+  - @0xsequence/indexer@2.3.23
+  - @0xsequence/network@2.3.23
+  - @0xsequence/relayer@2.3.23
+  - @0xsequence/signhub@2.3.23
+  - @0xsequence/wallet@2.3.23
+  - @0xsequence/guard@2.3.23
+  - @0xsequence/utils@2.3.23
+  - @0xsequence/auth@2.3.23
+  - @0xsequence/core@2.3.23
+  - @0xsequence/abi@2.3.23
+  - @0xsequence/api@2.3.23
+
+## 2.3.22
+
+### Patch Changes
+
+- Add Sei and Somnia
+- Updated dependencies
+  - @0xsequence/migration@2.3.22
+  - @0xsequence/metadata@2.3.22
+  - @0xsequence/provider@2.3.22
+  - @0xsequence/sessions@2.3.22
+  - @0xsequence/account@2.3.22
+  - @0xsequence/indexer@2.3.22
+  - @0xsequence/network@2.3.22
+  - @0xsequence/relayer@2.3.22
+  - @0xsequence/signhub@2.3.22
+  - @0xsequence/wallet@2.3.22
+  - @0xsequence/guard@2.3.22
+  - @0xsequence/utils@2.3.22
+  - @0xsequence/auth@2.3.22
+  - @0xsequence/core@2.3.22
+  - @0xsequence/abi@2.3.22
+  - @0xsequence/api@2.3.22
+
+## 2.3.21
+
+### Patch Changes
+
+- waas: x (twitter) authentication
+- Updated dependencies
+  - @0xsequence/migration@2.3.21
+  - @0xsequence/metadata@2.3.21
+  - @0xsequence/provider@2.3.21
+  - @0xsequence/sessions@2.3.21
+  - @0xsequence/account@2.3.21
+  - @0xsequence/indexer@2.3.21
+  - @0xsequence/network@2.3.21
+  - @0xsequence/relayer@2.3.21
+  - @0xsequence/signhub@2.3.21
+  - @0xsequence/wallet@2.3.21
+  - @0xsequence/guard@2.3.21
+  - @0xsequence/utils@2.3.21
+  - @0xsequence/auth@2.3.21
+  - @0xsequence/core@2.3.21
+  - @0xsequence/abi@2.3.21
+  - @0xsequence/api@2.3.21
+
+## 2.3.20
+
+### Patch Changes
+
+- Release fix
+- Updated dependencies
+  - @0xsequence/migration@2.3.20
+  - @0xsequence/metadata@2.3.20
+  - @0xsequence/provider@2.3.20
+  - @0xsequence/sessions@2.3.20
+  - @0xsequence/account@2.3.20
+  - @0xsequence/indexer@2.3.20
+  - @0xsequence/network@2.3.20
+  - @0xsequence/relayer@2.3.20
+  - @0xsequence/signhub@2.3.20
+  - @0xsequence/wallet@2.3.20
+  - @0xsequence/guard@2.3.20
+  - @0xsequence/utils@2.3.20
+  - @0xsequence/auth@2.3.20
+  - @0xsequence/core@2.3.20
+  - @0xsequence/abi@2.3.20
+  - @0xsequence/api@2.3.20
+
+## 2.3.19
+
+### Patch Changes
+
+- Downgrade pnpm to 10.11.0
+- Updated dependencies
+  - @0xsequence/migration@2.3.19
+  - @0xsequence/metadata@2.3.19
+  - @0xsequence/provider@2.3.19
+  - @0xsequence/sessions@2.3.19
+  - @0xsequence/account@2.3.19
+  - @0xsequence/indexer@2.3.19
+  - @0xsequence/network@2.3.19
+  - @0xsequence/relayer@2.3.19
+  - @0xsequence/signhub@2.3.19
+  - @0xsequence/wallet@2.3.19
+  - @0xsequence/guard@2.3.19
+  - @0xsequence/utils@2.3.19
+  - @0xsequence/auth@2.3.19
+  - @0xsequence/core@2.3.19
+  - @0xsequence/abi@2.3.19
+  - @0xsequence/api@2.3.19
+
+## 2.3.18
+
+### Patch Changes
+
+- Marketplace API update
+- Updated dependencies
+  - @0xsequence/migration@2.3.18
+  - @0xsequence/metadata@2.3.18
+  - @0xsequence/provider@2.3.18
+  - @0xsequence/sessions@2.3.18
+  - @0xsequence/account@2.3.18
+  - @0xsequence/indexer@2.3.18
+  - @0xsequence/network@2.3.18
+  - @0xsequence/relayer@2.3.18
+  - @0xsequence/signhub@2.3.18
+  - @0xsequence/wallet@2.3.18
+  - @0xsequence/guard@2.3.18
+  - @0xsequence/utils@2.3.18
+  - @0xsequence/auth@2.3.18
+  - @0xsequence/core@2.3.18
+  - @0xsequence/abi@2.3.18
+  - @0xsequence/api@2.3.18
+
+## 2.3.17
+
+### Patch Changes
+
+- Add Incentiv Testnet, remove Frequency
+- Updated dependencies
+  - @0xsequence/migration@2.3.17
+  - @0xsequence/metadata@2.3.17
+  - @0xsequence/provider@2.3.17
+  - @0xsequence/sessions@2.3.17
+  - @0xsequence/account@2.3.17
+  - @0xsequence/indexer@2.3.17
+  - @0xsequence/network@2.3.17
+  - @0xsequence/relayer@2.3.17
+  - @0xsequence/signhub@2.3.17
+  - @0xsequence/wallet@2.3.17
+  - @0xsequence/guard@2.3.17
+  - @0xsequence/utils@2.3.17
+  - @0xsequence/auth@2.3.17
+  - @0xsequence/core@2.3.17
+  - @0xsequence/abi@2.3.17
+  - @0xsequence/api@2.3.17
+
+## 2.3.16
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 10M gas limit
+- Updated dependencies
+  - @0xsequence/migration@2.3.16
+  - @0xsequence/metadata@2.3.16
+  - @0xsequence/provider@2.3.16
+  - @0xsequence/sessions@2.3.16
+  - @0xsequence/account@2.3.16
+  - @0xsequence/indexer@2.3.16
+  - @0xsequence/network@2.3.16
+  - @0xsequence/relayer@2.3.16
+  - @0xsequence/signhub@2.3.16
+  - @0xsequence/wallet@2.3.16
+  - @0xsequence/guard@2.3.16
+  - @0xsequence/utils@2.3.16
+  - @0xsequence/auth@2.3.16
+  - @0xsequence/core@2.3.16
+  - @0xsequence/abi@2.3.16
+  - @0xsequence/api@2.3.16
+
+## 2.3.15
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 1M gas limit
+- Updated dependencies
+  - @0xsequence/migration@2.3.15
+  - @0xsequence/metadata@2.3.15
+  - @0xsequence/provider@2.3.15
+  - @0xsequence/sessions@2.3.15
+  - @0xsequence/account@2.3.15
+  - @0xsequence/indexer@2.3.15
+  - @0xsequence/network@2.3.15
+  - @0xsequence/relayer@2.3.15
+  - @0xsequence/signhub@2.3.15
+  - @0xsequence/wallet@2.3.15
+  - @0xsequence/guard@2.3.15
+  - @0xsequence/utils@2.3.15
+  - @0xsequence/auth@2.3.15
+  - @0xsequence/core@2.3.15
+  - @0xsequence/abi@2.3.15
+  - @0xsequence/api@2.3.15
+
+## 2.3.14
+
+### Patch Changes
+
+- Update stack api rpc
+- Updated dependencies
+  - @0xsequence/migration@2.3.14
+  - @0xsequence/metadata@2.3.14
+  - @0xsequence/provider@2.3.14
+  - @0xsequence/sessions@2.3.14
+  - @0xsequence/account@2.3.14
+  - @0xsequence/indexer@2.3.14
+  - @0xsequence/network@2.3.14
+  - @0xsequence/relayer@2.3.14
+  - @0xsequence/signhub@2.3.14
+  - @0xsequence/wallet@2.3.14
+  - @0xsequence/guard@2.3.14
+  - @0xsequence/utils@2.3.14
+  - @0xsequence/auth@2.3.14
+  - @0xsequence/core@2.3.14
+  - @0xsequence/abi@2.3.14
+  - @0xsequence/api@2.3.14
+
+## 2.3.13
+
+### Patch Changes
+
+- - Improvements to geoblock check
+  - Updated Somnia explorer url
+- Updated dependencies
+  - @0xsequence/migration@2.3.13
+  - @0xsequence/metadata@2.3.13
+  - @0xsequence/provider@2.3.13
+  - @0xsequence/sessions@2.3.13
+  - @0xsequence/account@2.3.13
+  - @0xsequence/indexer@2.3.13
+  - @0xsequence/network@2.3.13
+  - @0xsequence/relayer@2.3.13
+  - @0xsequence/signhub@2.3.13
+  - @0xsequence/wallet@2.3.13
+  - @0xsequence/guard@2.3.13
+  - @0xsequence/utils@2.3.13
+  - @0xsequence/auth@2.3.13
+  - @0xsequence/core@2.3.13
+  - @0xsequence/abi@2.3.13
+  - @0xsequence/api@2.3.13
+
+## 2.3.12
+
+### Patch Changes
+
+- Stack API updates
+- Updated dependencies
+  - @0xsequence/migration@2.3.12
+  - @0xsequence/metadata@2.3.12
+  - @0xsequence/provider@2.3.12
+  - @0xsequence/sessions@2.3.12
+  - @0xsequence/account@2.3.12
+  - @0xsequence/indexer@2.3.12
+  - @0xsequence/network@2.3.12
+  - @0xsequence/relayer@2.3.12
+  - @0xsequence/signhub@2.3.12
+  - @0xsequence/wallet@2.3.12
+  - @0xsequence/guard@2.3.12
+  - @0xsequence/utils@2.3.12
+  - @0xsequence/auth@2.3.12
+  - @0xsequence/core@2.3.12
+  - @0xsequence/abi@2.3.12
+  - @0xsequence/api@2.3.12
+
+## 2.3.11
+
+### Patch Changes
+
+- Deprecate XR1
+- Updated dependencies
+  - @0xsequence/migration@2.3.11
+  - @0xsequence/metadata@2.3.11
+  - @0xsequence/provider@2.3.11
+  - @0xsequence/sessions@2.3.11
+  - @0xsequence/account@2.3.11
+  - @0xsequence/indexer@2.3.11
+  - @0xsequence/network@2.3.11
+  - @0xsequence/relayer@2.3.11
+  - @0xsequence/signhub@2.3.11
+  - @0xsequence/wallet@2.3.11
+  - @0xsequence/guard@2.3.11
+  - @0xsequence/utils@2.3.11
+  - @0xsequence/auth@2.3.11
+  - @0xsequence/core@2.3.11
+  - @0xsequence/abi@2.3.11
+  - @0xsequence/api@2.3.11
+
+## 2.3.10
+
+### Patch Changes
+
+- RPC API updates
+- Updated dependencies
+  - @0xsequence/migration@2.3.10
+  - @0xsequence/metadata@2.3.10
+  - @0xsequence/provider@2.3.10
+  - @0xsequence/sessions@2.3.10
+  - @0xsequence/account@2.3.10
+  - @0xsequence/indexer@2.3.10
+  - @0xsequence/network@2.3.10
+  - @0xsequence/relayer@2.3.10
+  - @0xsequence/signhub@2.3.10
+  - @0xsequence/wallet@2.3.10
+  - @0xsequence/guard@2.3.10
+  - @0xsequence/utils@2.3.10
+  - @0xsequence/auth@2.3.10
+  - @0xsequence/core@2.3.10
+  - @0xsequence/abi@2.3.10
+  - @0xsequence/api@2.3.10
+
+## 2.3.9
+
+### Patch Changes
+
+- update indexer rpc client
+- Updated dependencies
+  - @0xsequence/account@2.3.9
+  - @0xsequence/indexer@2.3.9
+  - @0xsequence/abi@2.3.9
+  - @0xsequence/api@2.3.9
+  - @0xsequence/auth@2.3.9
+  - @0xsequence/core@2.3.9
+  - @0xsequence/guard@2.3.9
+  - @0xsequence/metadata@2.3.9
+  - @0xsequence/migration@2.3.9
+  - @0xsequence/network@2.3.9
+  - @0xsequence/provider@2.3.9
+  - @0xsequence/relayer@2.3.9
+  - @0xsequence/sessions@2.3.9
+  - @0xsequence/signhub@2.3.9
+  - @0xsequence/utils@2.3.9
+  - @0xsequence/wallet@2.3.9
+
+## 2.3.8
+
+### Patch Changes
+
+- indexer: update clients
+- Updated dependencies
+  - @0xsequence/abi@2.3.8
+  - @0xsequence/account@2.3.8
+  - @0xsequence/api@2.3.8
+  - @0xsequence/auth@2.3.8
+  - @0xsequence/core@2.3.8
+  - @0xsequence/guard@2.3.8
+  - @0xsequence/indexer@2.3.8
+  - @0xsequence/metadata@2.3.8
+  - @0xsequence/migration@2.3.8
+  - @0xsequence/network@2.3.8
+  - @0xsequence/provider@2.3.8
+  - @0xsequence/relayer@2.3.8
+  - @0xsequence/sessions@2.3.8
+  - @0xsequence/signhub@2.3.8
+  - @0xsequence/utils@2.3.8
+  - @0xsequence/wallet@2.3.8
+
 ## 2.3.7
 
 ### Patch Changes

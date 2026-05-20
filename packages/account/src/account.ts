@@ -739,6 +739,12 @@ export class Account {
         case BigInt(ChainId.SKALE_NEBULA):
           gasLimit = 10000000n
           break
+        case BigInt(ChainId.SOMNIA_TESTNET):
+          gasLimit = 10000000n
+          break
+        case BigInt(ChainId.SOMNIA):
+          gasLimit = 10000000n
+          break
       }
 
       // Wallet deployment will vary depending on the version
@@ -790,11 +796,11 @@ export class Account {
 
   /**
    * Signs a message.
-   * 
+   *
    * This method will sign the message using the account associated with this signer
-   * and the specified chain ID. If the message is already prefixed with the EIP-191 
+   * and the specified chain ID. If the message is already prefixed with the EIP-191
    * prefix, it will be hashed directly. Otherwise, it will be prefixed before hashing.
-   * 
+   *
    * @param message - The message to sign. Can be a string or BytesLike.
    * @param chainId - The chain ID to use for signing
    * @param cantValidateBehavior - Behavior when the wallet cannot validate on-chain
@@ -805,20 +811,20 @@ export class Account {
     chainId: ethers.BigNumberish,
     cantValidateBehavior: 'ignore' | 'eip6492' | 'throw' = 'ignore'
   ): Promise<string> {
-    const messageHex = ethers.hexlify(message);
-    const prefixHex = ethers.hexlify(ethers.toUtf8Bytes(MessagePrefix));
-    
-    let digest: string;
-    
+    const messageHex = ethers.hexlify(message)
+    const prefixHex = ethers.hexlify(ethers.toUtf8Bytes(MessagePrefix))
+
+    let digest: string
+
     // We check if the message is already prefixed with EIP-191
     // This will avoid breaking changes for codebases where the message is already prefixed
     if (messageHex.substring(2).startsWith(prefixHex.substring(2))) {
-      digest = ethers.keccak256(message);
+      digest = ethers.keccak256(message)
     } else {
-      digest = ethers.hashMessage(message);
+      digest = ethers.hashMessage(message)
     }
-    
-    return this.signDigest(digest, chainId, true, cantValidateBehavior);
+
+    return this.signDigest(digest, chainId, true, cantValidateBehavior)
   }
 
   async signTransactions(
@@ -940,8 +946,9 @@ export class Account {
     quote?: FeeQuote,
     pstatus?: AccountStatus,
     callback?: (bundle: commons.transaction.IntendedTransactionBundle) => void,
-    projectAccessKey?: string
-  ): Promise<ethers.TransactionResponse> {
+    projectAccessKey?: string,
+    waitForReceipt?: boolean
+  ): Promise<commons.transaction.TransactionResponse> {
     if (!Array.isArray(signedBundle)) {
       return this.sendSignedTransactions([signedBundle], chainId, quote, pstatus, callback, projectAccessKey)
     }
@@ -951,7 +958,7 @@ export class Account {
     const decoratedBundle = await this.decorateTransactions(signedBundle, status, chainId)
     callback?.(decoratedBundle)
 
-    return this.relayer(chainId).relay(decoratedBundle, quote, undefined, projectAccessKey)
+    return this.relayer(chainId).relay(decoratedBundle, quote, waitForReceipt, projectAccessKey)
   }
 
   async fillGasLimits(
@@ -1041,9 +1048,10 @@ export class Account {
     options?: {
       nonceSpace?: ethers.BigNumberish
       serial?: boolean
-      projectAccessKey?: string
-    }
-  ): Promise<ethers.TransactionResponse | undefined> {
+      projectAccessKey?: string,
+      waitForReceipt?: boolean
+    } 
+  ): Promise<commons.transaction.TransactionResponse | undefined> {
     const status = await this.status(chainId)
 
     const predecorated = skipPreDecorate ? txs : await this.predecorateTransactions(txs, status, chainId)
@@ -1058,7 +1066,7 @@ export class Account {
     }
     bundles.push(...childBundles.filter(b => b.transactions.length > 0))
 
-    return this.sendSignedTransactions(bundles, chainId, quote, undefined, callback, options?.projectAccessKey)
+    return this.sendSignedTransactions(bundles, chainId, quote, undefined, callback, options?.projectAccessKey, options?.waitForReceipt)
   }
 
   async signTypedData(

@@ -4,3 +4,4 @@ minimumReleaseAge: 10080 # 60 * 24 * 7 = do not install package releases that ar
 
 packages:
   - 'packages/*'
+minimumReleaseAge: 20160

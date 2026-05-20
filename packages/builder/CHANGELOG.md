@@ -1,5 +1,222 @@
 # @0xsequence/builder
 
+## 2.3.43
+
+### Patch Changes
+
+- Remove cognito dependency from waas
+
+## 2.3.42
+
+### Patch Changes
+
+- Disable deprecated chains
+
+## 2.3.41
+
+### Patch Changes
+
+- Add new chains, indexer upgrade
+
+## 2.3.40
+
+### Patch Changes
+
+- Remove legacy etherlink testnet
+
+## 2.3.39
+
+### Patch Changes
+
+- Add incentiv mainnet
+
+## 2.3.38
+
+### Patch Changes
+
+- Add Etherlink Shadownet
+
+## 2.3.37
+
+### Patch Changes
+
+- API updates
+
+## 2.3.36
+
+### Patch Changes
+
+- API interface updates, new chains
+
+## 2.3.35
+
+### Patch Changes
+
+- Network and API updates
+
+## 2.3.34
+
+### Patch Changes
+
+- API updates, remove Sei
+
+## 2.3.33
+
+### Patch Changes
+
+- Arc Testnet fixes
+
+## 2.3.32
+
+### Patch Changes
+
+- Remove LAOS and TRN
+
+## 2.3.31
+
+### Patch Changes
+
+- Update marketplace API
+
+## 2.3.30
+
+### Patch Changes
+
+- Add Monad mainnet
+
+## 2.3.29
+
+### Patch Changes
+
+- Update relayer and api interfaces
+
+## 2.3.28
+
+### Patch Changes
+
+- Deprecate Incentiv Testnet v1
+
+## 2.3.27
+
+### Patch Changes
+
+- Minor fix for return types in relay
+
+## 2.3.26
+
+### Patch Changes
+
+- Expose waitForReceipt for AccountSigner
+
+## 2.3.25
+
+### Patch Changes
+
+- Add Katana, Sandbox Testnet
+
+## 2.3.24
+
+### Patch Changes
+
+- Add Incentiv Testnet v2
+
+## 2.3.23
+
+### Patch Changes
+
+- Networks update
+
+## 2.3.22
+
+### Patch Changes
+
+- Add Sei and Somnia
+
+## 2.3.21
+
+### Patch Changes
+
+- waas: x (twitter) authentication
+
+## 2.3.20
+
+### Patch Changes
+
+- Release fix
+
+## 2.3.19
+
+### Patch Changes
+
+- Downgrade pnpm to 10.11.0
+
+## 2.3.18
+
+### Patch Changes
+
+- Marketplace API update
+
+## 2.3.17
+
+### Patch Changes
+
+- Add Incentiv Testnet, remove Frequency
+
+## 2.3.16
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 10M gas limit
+
+## 2.3.15
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 1M gas limit
+
+## 2.3.14
+
+### Patch Changes
+
+- Update stack api rpc
+
+## 2.3.13
+
+### Patch Changes
+
+- - Improvements to geoblock check
+  - Updated Somnia explorer url
+
+## 2.3.12
+
+### Patch Changes
+
+- Stack API updates
+
+## 2.3.11
+
+### Patch Changes
+
+- Deprecate XR1
+
+## 2.3.10
+
+### Patch Changes
+
+- RPC API updates
+
+## 2.3.9
+
+### Patch Changes
+
+- update indexer rpc client
+
+## 2.3.8
+
+### Patch Changes
+
+- indexer: update clients
+
 ## 2.3.7
 
 ### Patch Changes

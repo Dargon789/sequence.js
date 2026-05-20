@@ -1,197 +1,215 @@
 # @0xsequence/metadata
 
-## 3.0.9
+## 2.3.43
 
 ### Patch Changes
 
-- Fee options fixes
+- Remove cognito dependency from waas
 
-## 3.0.8
-
-### Patch Changes
-
-- Bug fix for relayer fee options handling
-
-## 3.0.7
+## 2.3.42
 
 ### Patch Changes
 
-- Minor bug fixes
+- Disable deprecated chains
 
-## 3.0.6
-
-### Patch Changes
-
-- userdata upgrade, arweave support
-
-## 3.0.5
+## 2.3.41
 
 ### Patch Changes
 
-- Account federation support
+- Add new chains, indexer upgrade
 
-## 3.0.4
-
-### Patch Changes
-
-- id-token login support
-
-## 3.0.3
+## 2.3.40
 
 ### Patch Changes
 
-- 3.0.3
+- Remove legacy etherlink testnet
 
-## 3.0.2
-
-### Patch Changes
-
-- allow native self transfer
-
-## 3.0.1
+## 2.3.39
 
 ### Patch Changes
 
-- Network and session fixes
+- Add incentiv mainnet
 
-## 3.0.0
-
-### Patch Changes
-
-- f68be62: ethauth support
-- 49d8a2f: New chains, minor fixes
-- 3411232: Beta release with dapp connector fixes
-- 23cb9e9: New chains, relayer rpc fix
-- f5f6a7a: dapp-client updates
-- e7de3b1: Fix signer 404 error, minor fixes
-- 493836f: multicall3 optimization
-- 30e1f1a: 3.0.0 beta
-- d5017e8: Beta release for v3
-- 24a5fab: Final RC before 3.0.0
-- e5e1a03: Apple auth fixes
-- 0b63113: Apple auth fix
-- a89134a: Userdata service updates
-- 7c6c811: 3.0.0-beta.3 with fixes
-- 3.0.0 release
-- 98ce38b: 3.0.0-beta.2 with identity instrument updates
-- 747e6b5: Relayer fee options fix
-- 40c19ff: dapp client updates for EOA login
-- 6d5de25: 3.0.0-beta.1
-- 934acd1: RC5 upgrade
-
-## 3.0.0-beta.19
+## 2.3.38
 
 ### Patch Changes
 
-- Final RC before 3.0.0
+- Add Etherlink Shadownet
 
-## 3.0.0-beta.18
-
-### Patch Changes
-
-- multicall3 optimization
-
-## 3.0.0-beta.17
+## 2.3.37
 
 ### Patch Changes
 
-- New chains, relayer rpc fix
+- API updates
 
-## 3.0.0-beta.16
-
-### Patch Changes
-
-- ethauth support
-
-## 3.0.0-beta.15
+## 2.3.36
 
 ### Patch Changes
 
-- New chains, minor fixes
+- API interface updates, new chains
 
-## 3.0.0-beta.14
-
-### Patch Changes
-
-- Relayer fee options fix
-
-## 3.0.0-beta.13
+## 2.3.35
 
 ### Patch Changes
 
-- Userdata service updates
+- Network and API updates
 
-## 3.0.0-beta.12
-
-### Patch Changes
-
-- Beta release with dapp connector fixes
-
-## 3.0.0-beta.11
+## 2.3.34
 
 ### Patch Changes
 
-- 3.0.0 beta
+- API updates, remove Sei
 
-## 3.0.0-beta.10
-
-### Patch Changes
-
-- dapp-client updates
-
-## 3.0.0-beta.9
+## 2.3.33
 
 ### Patch Changes
 
-- dapp client updates for EOA login
+- Arc Testnet fixes
 
-## 3.0.0-beta.8
-
-### Patch Changes
-
-- Apple auth fixes
-
-## 3.0.0-beta.7
+## 2.3.32
 
 ### Patch Changes
 
-- Apple auth fix
+- Remove LAOS and TRN
 
-## 3.0.0-beta.6
-
-### Patch Changes
-
-- Fix signer 404 error, minor fixes
-
-## 3.0.0-beta.5
+## 2.3.31
 
 ### Patch Changes
 
-- Beta release for v3
+- Update marketplace API
 
-## 3.0.0-beta.4
-
-### Patch Changes
-
-- RC5 upgrade
-
-## 3.0.0-beta.3
+## 2.3.30
 
 ### Patch Changes
 
-- 3.0.0-beta.3 with fixes
+- Add Monad mainnet
 
-## 3.0.0-beta.2
-
-### Patch Changes
-
-- 3.0.0-beta.2 with identity instrument updates
-
-## 3.0.0-beta.1
+## 2.3.29
 
 ### Patch Changes
 
-- 3.0.0-beta.1
+- Update relayer and api interfaces
+
+## 2.3.28
+
+### Patch Changes
+
+- Deprecate Incentiv Testnet v1
+
+## 2.3.27
+
+### Patch Changes
+
+- Minor fix for return types in relay
+
+## 2.3.26
+
+### Patch Changes
+
+- Expose waitForReceipt for AccountSigner
+
+## 2.3.25
+
+### Patch Changes
+
+- Add Katana, Sandbox Testnet
+
+## 2.3.24
+
+### Patch Changes
+
+- Add Incentiv Testnet v2
+
+## 2.3.23
+
+### Patch Changes
+
+- Networks update
+
+## 2.3.22
+
+### Patch Changes
+
+- Add Sei and Somnia
+
+## 2.3.21
+
+### Patch Changes
+
+- waas: x (twitter) authentication
+
+## 2.3.20
+
+### Patch Changes
+
+- Release fix
+
+## 2.3.19
+
+### Patch Changes
+
+- Downgrade pnpm to 10.11.0
+
+## 2.3.18
+
+### Patch Changes
+
+- Marketplace API update
+
+## 2.3.17
+
+### Patch Changes
+
+- Add Incentiv Testnet, remove Frequency
+
+## 2.3.16
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 10M gas limit
+
+## 2.3.15
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 1M gas limit
+
+## 2.3.14
+
+### Patch Changes
+
+- Update stack api rpc
+
+## 2.3.13
+
+### Patch Changes
+
+- - Improvements to geoblock check
+  - Updated Somnia explorer url
+
+## 2.3.12
+
+### Patch Changes
+
+- Stack API updates
+
+## 2.3.11
+
+### Patch Changes
+
+- Deprecate XR1
+
+## 2.3.10
+
+### Patch Changes
+
+- RPC API updates
+
+## 2.3.9
+
+### Patch Changes
+
+- update indexer rpc client
 
 ## 2.3.8
 
@@ -1615,6 +1633,7 @@
 - relayer: fix Relayer.wait() interface
 
   The interface for calling Relayer.wait() has changed. Instead of a single optional ill-defined timeout/delay parameter, there are three optional parameters, in order:
+
   - timeout: the maximum time to wait for the transaction receipt
   - delay: the polling interval, i.e. the time to wait between requests
   - maxFails: the maximum number of hard failures to tolerate before giving up
@@ -1967,6 +1986,7 @@
 ### Minor Changes
 
 - major architectural changes in Sequence design
+
   - only one API instance, API is no longer a per-chain service
   - separate per-chain indexer service, API no longer handles indexing
   - single contract metadata service, API no longer serves metadata

@@ -79,17 +79,17 @@ export class AccountSigner implements ethers.AbstractSigner<ethers.Provider> {
 
   /**
    * Signs a message.
-   * 
+   *
    * This method will sign the message using the account associated with this signer
    * and the specified chain ID. The message is already being prefixed with the EIP-191 prefix.
-   * 
+   *
    * @param message - The message to sign. Can be a string or BytesLike.
    * @returns A Promise that resolves to the signature as a hexadecimal string
-   * 
+   *
    * @example
    * ```typescript
    * const signer = account.getSigner(chainId)
-   * 
+   *
    * const message = "Hello, Sequence!";
    * const signature = await signer.signMessage(message);
    * console.log(signature);
@@ -149,8 +149,10 @@ export class AccountSigner implements ethers.AbstractSigner<ethers.Provider> {
     txs: commons.transaction.Transactionish,
     options?: {
       simulateForFeeOptions?: boolean
+      projectAccessKey?: string
+      waitForReceipt?: boolean
     }
-  ): Promise<ethers.TransactionResponse> {
+  ): Promise<commons.transaction.TransactionResponse> {
     const prepare = await this.account.prepareTransactions({
       txs,
       chainId: this.chainId,
@@ -169,12 +171,12 @@ export class AccountSigner implements ethers.AbstractSigner<ethers.Provider> {
       prepare.feeQuote,
       undefined,
       undefined,
-      this.options?.nonceSpace !== undefined
-        ? {
-            nonceSpace: this.options.nonceSpace
-          }
-        : undefined
-    ) as Promise<ethers.TransactionResponse> // Will always have a transaction response
+      {
+        nonceSpace: this.options?.nonceSpace,
+        projectAccessKey: options?.projectAccessKey,
+        waitForReceipt: options?.waitForReceipt
+      }
+    ) as Promise<commons.transaction.TransactionResponse> // Will always have a transaction response
   }
 
   getBalance(blockTag?: ethers.BlockTag | undefined): Promise<bigint> {

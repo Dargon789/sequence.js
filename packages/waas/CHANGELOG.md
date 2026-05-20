@@ -1,5 +1,366 @@
 # @0xsequence/waas
 
+## 2.3.43
+
+### Patch Changes
+
+- Remove cognito dependency from waas
+- Updated dependencies
+  - @0xsequence/network@2.3.43
+  - @0xsequence/utils@2.3.43
+  - @0xsequence/core@2.3.43
+
+## 2.3.42
+
+### Patch Changes
+
+- Disable deprecated chains
+- Updated dependencies
+  - @0xsequence/network@2.3.42
+  - @0xsequence/utils@2.3.42
+  - @0xsequence/core@2.3.42
+
+## 2.3.41
+
+### Patch Changes
+
+- Add new chains, indexer upgrade
+- Updated dependencies
+  - @0xsequence/network@2.3.41
+  - @0xsequence/utils@2.3.41
+  - @0xsequence/core@2.3.41
+
+## 2.3.40
+
+### Patch Changes
+
+- Remove legacy etherlink testnet
+- Updated dependencies
+  - @0xsequence/network@2.3.40
+  - @0xsequence/utils@2.3.40
+  - @0xsequence/core@2.3.40
+
+## 2.3.39
+
+### Patch Changes
+
+- Add incentiv mainnet
+- Updated dependencies
+  - @0xsequence/network@2.3.39
+  - @0xsequence/utils@2.3.39
+  - @0xsequence/core@2.3.39
+
+## 2.3.38
+
+### Patch Changes
+
+- Add Etherlink Shadownet
+- Updated dependencies
+  - @0xsequence/network@2.3.38
+  - @0xsequence/utils@2.3.38
+  - @0xsequence/core@2.3.38
+
+## 2.3.37
+
+### Patch Changes
+
+- API updates
+- Updated dependencies
+  - @0xsequence/network@2.3.37
+  - @0xsequence/utils@2.3.37
+  - @0xsequence/core@2.3.37
+
+## 2.3.36
+
+### Patch Changes
+
+- API interface updates, new chains
+- Updated dependencies
+  - @0xsequence/network@2.3.36
+  - @0xsequence/utils@2.3.36
+  - @0xsequence/core@2.3.36
+
+## 2.3.35
+
+### Patch Changes
+
+- Network and API updates
+- Updated dependencies
+  - @0xsequence/network@2.3.35
+  - @0xsequence/utils@2.3.35
+  - @0xsequence/core@2.3.35
+
+## 2.3.34
+
+### Patch Changes
+
+- API updates, remove Sei
+- Updated dependencies
+  - @0xsequence/network@2.3.34
+  - @0xsequence/utils@2.3.34
+  - @0xsequence/core@2.3.34
+
+## 2.3.33
+
+### Patch Changes
+
+- Arc Testnet fixes
+- Updated dependencies
+  - @0xsequence/network@2.3.33
+  - @0xsequence/utils@2.3.33
+  - @0xsequence/core@2.3.33
+
+## 2.3.32
+
+### Patch Changes
+
+- Remove LAOS and TRN
+- Updated dependencies
+  - @0xsequence/network@2.3.32
+  - @0xsequence/utils@2.3.32
+  - @0xsequence/core@2.3.32
+
+## 2.3.31
+
+### Patch Changes
+
+- Update marketplace API
+- Updated dependencies
+  - @0xsequence/network@2.3.31
+  - @0xsequence/utils@2.3.31
+  - @0xsequence/core@2.3.31
+
+## 2.3.30
+
+### Patch Changes
+
+- Add Monad mainnet
+- Updated dependencies
+  - @0xsequence/network@2.3.30
+  - @0xsequence/utils@2.3.30
+  - @0xsequence/core@2.3.30
+
+## 2.3.29
+
+### Patch Changes
+
+- Update relayer and api interfaces
+- Updated dependencies
+  - @0xsequence/network@2.3.29
+  - @0xsequence/utils@2.3.29
+  - @0xsequence/core@2.3.29
+
+## 2.3.28
+
+### Patch Changes
+
+- Deprecate Incentiv Testnet v1
+- Updated dependencies
+  - @0xsequence/network@2.3.28
+  - @0xsequence/utils@2.3.28
+  - @0xsequence/core@2.3.28
+
+## 2.3.27
+
+### Patch Changes
+
+- Minor fix for return types in relay
+- Updated dependencies
+  - @0xsequence/network@2.3.27
+  - @0xsequence/utils@2.3.27
+  - @0xsequence/core@2.3.27
+
+## 2.3.26
+
+### Patch Changes
+
+- Expose waitForReceipt for AccountSigner
+- Updated dependencies
+  - @0xsequence/network@2.3.26
+  - @0xsequence/utils@2.3.26
+  - @0xsequence/core@2.3.26
+
+## 2.3.25
+
+### Patch Changes
+
+- Add Katana, Sandbox Testnet
+- Updated dependencies
+  - @0xsequence/network@2.3.25
+  - @0xsequence/utils@2.3.25
+  - @0xsequence/core@2.3.25
+
+## 2.3.24
+
+### Patch Changes
+
+- Add Incentiv Testnet v2
+- Updated dependencies
+  - @0xsequence/network@2.3.24
+  - @0xsequence/utils@2.3.24
+  - @0xsequence/core@2.3.24
+
+## 2.3.23
+
+### Patch Changes
+
+- Networks update
+- Updated dependencies
+  - @0xsequence/network@2.3.23
+  - @0xsequence/utils@2.3.23
+  - @0xsequence/core@2.3.23
+
+## 2.3.22
+
+### Patch Changes
+
+- Add Sei and Somnia
+- Updated dependencies
+  - @0xsequence/network@2.3.22
+  - @0xsequence/utils@2.3.22
+  - @0xsequence/core@2.3.22
+
+## 2.3.21
+
+### Patch Changes
+
+- waas: x (twitter) authentication
+- Updated dependencies
+  - @0xsequence/network@2.3.21
+  - @0xsequence/utils@2.3.21
+  - @0xsequence/core@2.3.21
+
+## 2.3.20
+
+### Patch Changes
+
+- Release fix
+- Updated dependencies
+  - @0xsequence/network@2.3.20
+  - @0xsequence/utils@2.3.20
+  - @0xsequence/core@2.3.20
+
+## 2.3.19
+
+### Patch Changes
+
+- Downgrade pnpm to 10.11.0
+- Updated dependencies
+  - @0xsequence/network@2.3.19
+  - @0xsequence/utils@2.3.19
+  - @0xsequence/core@2.3.19
+
+## 2.3.18
+
+### Patch Changes
+
+- Marketplace API update
+- Updated dependencies
+  - @0xsequence/network@2.3.18
+  - @0xsequence/utils@2.3.18
+  - @0xsequence/core@2.3.18
+
+## 2.3.17
+
+### Patch Changes
+
+- Add Incentiv Testnet, remove Frequency
+- Updated dependencies
+  - @0xsequence/network@2.3.17
+  - @0xsequence/utils@2.3.17
+  - @0xsequence/core@2.3.17
+
+## 2.3.16
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 10M gas limit
+- Updated dependencies
+  - @0xsequence/network@2.3.16
+  - @0xsequence/utils@2.3.16
+  - @0xsequence/core@2.3.16
+
+## 2.3.15
+
+### Patch Changes
+
+- somnia-testnet: wallet deployment 1M gas limit
+- Updated dependencies
+  - @0xsequence/network@2.3.15
+  - @0xsequence/utils@2.3.15
+  - @0xsequence/core@2.3.15
+
+## 2.3.14
+
+### Patch Changes
+
+- Update stack api rpc
+- Updated dependencies
+  - @0xsequence/network@2.3.14
+  - @0xsequence/utils@2.3.14
+  - @0xsequence/core@2.3.14
+
+## 2.3.13
+
+### Patch Changes
+
+- - Improvements to geoblock check
+  - Updated Somnia explorer url
+- Updated dependencies
+  - @0xsequence/network@2.3.13
+  - @0xsequence/utils@2.3.13
+  - @0xsequence/core@2.3.13
+
+## 2.3.12
+
+### Patch Changes
+
+- Stack API updates
+- Updated dependencies
+  - @0xsequence/network@2.3.12
+  - @0xsequence/utils@2.3.12
+  - @0xsequence/core@2.3.12
+
+## 2.3.11
+
+### Patch Changes
+
+- Deprecate XR1
+- Updated dependencies
+  - @0xsequence/network@2.3.11
+  - @0xsequence/utils@2.3.11
+  - @0xsequence/core@2.3.11
+
+## 2.3.10
+
+### Patch Changes
+
+- RPC API updates
+- Updated dependencies
+  - @0xsequence/network@2.3.10
+  - @0xsequence/utils@2.3.10
+  - @0xsequence/core@2.3.10
+
+## 2.3.9
+
+### Patch Changes
+
+- update indexer rpc client
+- Updated dependencies
+  - @0xsequence/core@2.3.9
+  - @0xsequence/network@2.3.9
+  - @0xsequence/utils@2.3.9
+
+## 2.3.8
+
+### Patch Changes
+
+- indexer: update clients
+- Updated dependencies
+  - @0xsequence/core@2.3.8
+  - @0xsequence/network@2.3.8
+  - @0xsequence/utils@2.3.8
+
 ## 2.3.7
 
 ### Patch Changes
