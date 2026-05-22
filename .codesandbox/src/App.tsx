@@ -79,7 +79,7 @@ const defaultChainId = getDefaultChainId() || ChainId.MAINNET
 const urlParams = new URLSearchParams(window.location.search)
 
 const env = urlParams.get('env') ?? 'production'
-const envConfig = environments.find(x => x.name === env)
+const envConfig = environments.find(x => x.name === env) ?? environments[0]
 const walletAppURL = urlParams.get('walletAppURL') ?? envConfig.walletUrl
 const projectAccessKey = urlParams.get('projectAccessKey') ?? envConfig.projectAccessKey
 const showProhibitedActions = urlParams.has('showProhibitedActions')
