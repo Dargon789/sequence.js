@@ -969,8 +969,8 @@ And that has made all the difference.
   }, [email, isOpen])
 
   const sanitizeEmail = (email: string | null) => {
-    if (!email) return false
-    const trimmedEmail = email.trim()
+    return !!email && email.trim().length > 0
+  }
 
   return (
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
