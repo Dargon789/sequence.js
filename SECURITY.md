@@ -16,6 +16,5 @@ currently being supported with security updates.
 
 Use this section to tell people how to report a vulnerability.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+To report a vulnerability, please email us at [dev@wevm.dev](mailto:dev@wevm.dev). We aim to provide an initial response within 48 hours and will keep you updated on the status of the reported vulnerability.
+
