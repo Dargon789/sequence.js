@@ -29,7 +29,7 @@ export async function findItems(
     values === undefined
       ? []
       : [
-          `{ name: "${namespace ? `${namespace}-${name}` : name}", values: [${typeof values === 'string' ? `"${values}"` : values.map((value) => `"${value}"`).join(', ')}] }`,
+          `{ name: ${JSON.stringify(namespace ? `${namespace}-${name}` : name)}, values: ${JSON.stringify(Array.isArray(values) ? values : [values])} }`,
         ],
   )
 
@@ -73,6 +73,10 @@ export async function findItems(
         `rate limited by ${graphqlUrl}, trying again in ${rateLimitRetryDelayMs / 1000} seconds at ${new Date(Date.now() + rateLimitRetryDelayMs).toISOString()}`,
       )
       await new Promise((resolve) => setTimeout(resolve, rateLimitRetryDelayMs))
+    }
+
+    if (!response.ok) {
+      throw new Error(`GraphQL query failed with status ${response.status}: ${await response.text()}`)
     }
 
     const {

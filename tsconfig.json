@@ -12,6 +12,7 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
     "typeRoots": [
       "node_modules/@types"
     ],

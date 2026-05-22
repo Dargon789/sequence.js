@@ -1,40 +1,54 @@
 import { Observer, SequenceWaaSBase } from './base'
-import {IntentDataOpenSession, IntentDataSendTransaction} from './clients/intent.gen'
+import {
+  Account,
+  IdentityType,
+  IntentDataOpenSession,
+  IntentDataSendTransaction,
+  IntentResponseIdToken
+} from './clients/intent.gen'
 import { newSessionFromSessionId } from './session'
 import { LocalStore, Store, StoreObj } from './store'
 import {
+  GetTransactionReceiptArgs,
   SendDelayedEncodeArgs,
   SendERC1155Args,
   SendERC20Args,
   SendERC721Args,
-  SignMessageArgs,
   SendTransactionsArgs,
   SignedIntent,
-  GetTransactionReceiptArgs
+  SignMessageArgs
 } from './intents'
 import {
-  MaySentTransactionResponse,
-  SignedMessageResponse,
   FeeOptionsResponse,
-  isGetSessionResponse,
-  isMaySentTransactionResponse,
-  isSignedMessageResponse,
-  isValidationRequiredResponse,
-  isFinishValidateSessionResponse,
   isCloseSessionResponse,
-  isTimedOutTransactionResponse,
   isFeeOptionsResponse,
-  isSessionAuthProofResponse,
+  isFinishValidateSessionResponse,
+  isGetIdTokenResponse,
+  isGetSessionResponse,
+  isInitiateAuthResponse,
   isIntentTimeError,
+  isLinkAccountResponse,
+  isListAccountsResponse,
+  isMaySentTransactionResponse,
+  isSessionAuthProofResponse,
+  isSignedMessageResponse,
+  isTimedOutTransactionResponse,
+  isValidationRequiredResponse,
+  MaySentTransactionResponse,
+  SignedMessageResponse
 } from './intents/responses'
-import { WaasAuthenticator, Session, Chain } from './clients/authenticator.gen'
-import { jwtDecode } from 'jwt-decode'
+import { WaasAuthenticator, AnswerIncorrectError, Chain, EmailAlreadyInUseError, Session } from './clients/authenticator.gen'
 import { SimpleNetwork, WithSimpleNetwork } from './networks'
-import { LOCAL } from './defaults'
 import { EmailAuth } from './email'
 import { ethers } from 'ethers'
+import { getDefaultSubtleCryptoBackend, SubtleCryptoBackend } from './subtle-crypto'
+import { getDefaultSecureStoreBackend, SecureStoreBackend } from './secure-store'
+import { Challenge, EmailChallenge, GuestChallenge, IdTokenChallenge, PlayFabChallenge, StytchChallenge } from './challenge'
+import { jwtDecode } from 'jwt-decode'
 
 export type Sessions = (Session & { isThis: boolean })[]
+export type { Account }
+export { IdentityType }
 
 export type SequenceConfig = {
   projectAccessKey: string
@@ -52,8 +66,20 @@ export type WaaSConfigKey = {
   emailClientId?: string
 }
 
-export type Identity = {
-  idToken: string
+export type GuestIdentity = { guest: true }
+export type IdTokenIdentity = { idToken: string }
+export type EmailIdentity = { email: string }
+export type PlayFabIdentity = {
+  playFabTitleId: string
+  playFabSessionTicket: string
+}
+
+export type Identity = IdTokenIdentity | EmailIdentity | PlayFabIdentity | GuestIdentity
+
+export type SignInResponse = {
+  sessionId: string
+  wallet: string
+  email?: string
 }
 
 function encodeHex(data: string | Uint8Array) {
@@ -87,17 +113,22 @@ export type Network = Chain
 
 export type NetworkList = Network[]
 
+export type EmailConflictInfo = {
+  type: IdentityType
+  email: string
+  issuer: string
+}
+
 export function parseSequenceWaaSConfigKey<T>(key: string): Partial<T> {
   return JSON.parse(atob(key))
 }
 
 export function defaultArgsOrFail(
-  config: SequenceConfig & Partial<ExtendedSequenceConfig>,
-  preset: ExtendedSequenceConfig
+  config: SequenceConfig & Partial<ExtendedSequenceConfig>
 ): Required<SequenceConfig> & Required<WaaSConfigKey> & ExtendedSequenceConfig {
   const key = (config as any).waasConfigKey
   const keyOverrides = key ? parseSequenceWaaSConfigKey<SequenceConfig & WaaSConfigKey & ExtendedSequenceConfig>(key) : {}
-  const preconfig = { ...preset, ...config, ...keyOverrides }
+  const preconfig = { ...config, ...keyOverrides }
 
   if (preconfig.network === undefined) {
     preconfig.network = 1
@@ -119,6 +150,8 @@ export class SequenceWaaS {
   private client: WaasAuthenticator
 
   private validationRequiredCallback: (() => void)[] = []
+  private emailConflictCallback: ((info: EmailConflictInfo, forceCreate: () => Promise<void>) => Promise<void>)[] = []
+  private emailAuthCodeRequiredCallback: ((respondWithCode: (code: string) => Promise<void>) => Promise<void>)[] = []
   private validationRequiredSalt: string
 
   public readonly config: Required<SequenceConfig> & Required<WaaSConfigKey> & ExtendedSequenceConfig
@@ -132,11 +165,12 @@ export class SequenceWaaS {
 
   constructor(
     config: SequenceConfig & Partial<ExtendedSequenceConfig>,
-    preset: ExtendedSequenceConfig = LOCAL,
-    private readonly store: Store = new LocalStore()
+    private readonly store: Store = new LocalStore(),
+    private readonly cryptoBackend: SubtleCryptoBackend | null = getDefaultSubtleCryptoBackend(),
+    private readonly secureStoreBackend: SecureStoreBackend | null = getDefaultSecureStoreBackend()
   ) {
-    this.config = defaultArgsOrFail(config, preset)
-    this.waas = new SequenceWaaSBase({ network: 1, ...config }, this.store)
+    this.config = defaultArgsOrFail(config)
+    this.waas = new SequenceWaaSBase({ network: 1, ...config }, this.store, this.cryptoBackend, this.secureStoreBackend)
     this.client = new WaasAuthenticator(this.config.rpcServer, this.fetch.bind(this))
     this.deviceName = new StoreObj(this.store, '@0xsequence.waas.auth.deviceName', undefined)
   }
@@ -162,6 +196,20 @@ export class SequenceWaaS {
     this.validationRequiredCallback.push(callback)
     return () => {
       this.validationRequiredCallback = this.validationRequiredCallback.filter(c => c !== callback)
+    }
+  }
+
+  onEmailConflict(callback: (info: EmailConflictInfo, forceCreate: () => Promise<void>) => Promise<void>) {
+    this.emailConflictCallback.push(callback)
+    return () => {
+      this.emailConflictCallback = this.emailConflictCallback.filter(c => c !== callback)
+    }
+  }
+
+  onEmailAuthCodeRequired(callback: (respondWithCode: (code: string) => Promise<void>) => Promise<void>) {
+    this.emailAuthCodeRequiredCallback.push(callback)
+    return () => {
+      this.emailAuthCodeRequiredCallback = this.emailAuthCodeRequiredCallback.filter(c => c !== callback)
     }
   }
 
@@ -214,24 +262,141 @@ export class SequenceWaaS {
     return this.waas.isSignedIn()
   }
 
-  async signIn(creds: Identity, name: string): Promise<{ sessionId: string; wallet: string }> {
-    // TODO: Be smarter about this, for cognito (or some other cases) we may
-    // want to send the email instead of the idToken
-    const signInIntent = await this.waas.signIn({
-      idToken: creds.idToken
-    })
-
-    // Login on WaaS
-    const decoded = jwtDecode(creds.idToken)
-
-    if (!decoded.iss) {
-      throw new Error('Invalid idToken')
+  signIn(creds: Identity, sessionName: string): Promise<SignInResponse> {
+    const isEmailAuth = 'email' in creds
+    if (isEmailAuth && this.emailAuthCodeRequiredCallback.length == 0) {
+      return Promise.reject('Missing emailAuthCodeRequired callback')
     }
 
-    await this.deviceName.set(name)
+    return new Promise<SignInResponse>(async (resolve, reject) => {
+      const challenge = await this.initAuth(creds)
 
+      const respondToChallenge = async (answer: string) => {
+        try {
+          const res = await this.completeAuth(challenge.withAnswer(answer), { sessionName })
+          resolve(res)
+        } catch (e) {
+          if (e instanceof AnswerIncorrectError) {
+            // This will NOT resolve NOR reject the top-level promise returned from signIn, it'll keep being pending
+            // It allows the caller to retry calling the respondToChallenge callback
+            throw e
+          } else if (e instanceof EmailAlreadyInUseError) {
+            const forceCreate = async () => {
+              try {
+                const res = await this.completeAuth(challenge.withAnswer(answer), { sessionName, forceCreateAccount: true })
+                resolve(res)
+              } catch (e) {
+                reject(e)
+              }
+            }
+            const info: EmailConflictInfo = {
+              type: IdentityType.None,
+              email: '',
+              issuer: ''
+            }
+            if (e.cause) {
+              const parts = e.cause.split('|')
+              if (parts.length >= 2) {
+                info.type = parts[0] as IdentityType
+                info.email = parts[1]
+              }
+              if (parts.length >= 3) {
+                info.issuer = parts[2]
+              }
+            }
+            for (const callback of this.emailConflictCallback) {
+              callback(info, forceCreate)
+            }
+          } else {
+            reject(e)
+          }
+        }
+      }
+
+      if (isEmailAuth) {
+        for (const callback of this.emailAuthCodeRequiredCallback) {
+          callback(respondToChallenge)
+        }
+      } else {
+        respondToChallenge('')
+      }
+    })
+  }
+
+  async initAuth(identity: Identity): Promise<Challenge> {
+    if ('guest' in identity && identity.guest) {
+      return this.initGuestAuth()
+    } else if ('idToken' in identity) {
+      return this.initIdTokenAuth(identity.idToken)
+    } else if ('email' in identity) {
+      return this.initEmailAuth(identity.email)
+    } else if ('playFabTitleId' in identity) {
+      return this.initPlayFabAuth(identity.playFabTitleId, identity.playFabSessionTicket)
+    }
+
+    throw new Error('invalid identity')
+  }
+
+  private async initGuestAuth() {
+    const sessionId = await this.waas.getSessionId()
+    const intent = await this.waas.initiateGuestAuth()
+    const res = await this.sendIntent(intent)
+
+    if (!isInitiateAuthResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+    return new GuestChallenge(sessionId, res.data.challenge!)
+  }
+
+  private async initIdTokenAuth(idToken: string) {
+    const decoded = jwtDecode(idToken)
+    const isStytch = decoded.iss?.startsWith('stytch.com/') || false
+    const intent = isStytch
+      ? await this.waas.initiateStytchAuth(idToken, decoded.exp)
+      : await this.waas.initiateIdTokenAuth(idToken, decoded.exp)
+    const res = await this.sendIntent(intent)
+
+    if (!isInitiateAuthResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+    return isStytch ? new StytchChallenge(idToken) : new IdTokenChallenge(idToken)
+  }
+
+  private async initEmailAuth(email: string) {
+    const sessionId = await this.waas.getSessionId()
+    const intent = await this.waas.initiateEmailAuth(email)
+    const res = await this.sendIntent(intent)
+
+    if (!isInitiateAuthResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+    return new EmailChallenge(email, sessionId, res.data.challenge!)
+  }
+
+  private async initPlayFabAuth(titleId: string, sessionTicket: string) {
+    const intent = await this.waas.initiatePlayFabAuth(titleId, sessionTicket)
+    const res = await this.sendIntent(intent)
+
+    if (!isInitiateAuthResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+    return new PlayFabChallenge(titleId, sessionTicket)
+  }
+
+  async completeAuth(
+    challenge: Challenge,
+    opts?: { sessionName?: string; forceCreateAccount?: boolean }
+  ): Promise<SignInResponse> {
+    if (!opts) {
+      opts = {}
+    }
+    if (!opts.sessionName) {
+      opts.sessionName = 'session name'
+    }
+
+    const intent = await this.waas.completeAuth(challenge.getIntentParams(), { forceCreateAccount: opts.forceCreateAccount })
     try {
-      const res = await this.registerSession(signInIntent, name)
+      const res = await this.registerSession(intent, opts.sessionName)
 
       await this.waas.completeSignIn({
         code: 'sessionOpened',
@@ -243,10 +408,13 @@ export class SequenceWaaS {
 
       return {
         sessionId: res.session.id,
-        wallet: res.response.data.wallet
+        wallet: res.response.data.wallet,
+        email: res.session.identity.email
       }
     } catch (e) {
-      await this.waas.completeSignOut()
+      if (!(e instanceof EmailAlreadyInUseError) && !(e instanceof AnswerIncorrectError)) {
+        await this.waas.completeSignOut()
+      }
       throw e
     }
   }
@@ -301,7 +469,11 @@ export class SequenceWaaS {
     }
 
     if (closeSessionId === thisSessionId) {
-      const session = await newSessionFromSessionId(thisSessionId)
+      if (!this.secureStoreBackend) {
+        throw new Error('No secure store available')
+      }
+
+      const session = await newSessionFromSessionId(thisSessionId, this.cryptoBackend, this.secureStoreBackend)
       session.clear()
       await this.waas.completeSignOut()
       await this.deviceName.set(undefined)
@@ -376,6 +548,44 @@ export class SequenceWaaS {
   async sessionAuthProof({ nonce, network, validation }: { nonce?: string; network?: string; validation?: ValidationArgs }) {
     const intent = await this.waas.sessionAuthProof({ nonce, network })
     return await this.trySendIntent({ validation }, intent, isSessionAuthProofResponse)
+  }
+
+  async listAccounts() {
+    const intent = await this.waas.listAccounts()
+    const res = await this.sendIntent(intent)
+
+    if (!isListAccountsResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+
+    return res.data
+  }
+
+  async linkAccount(challenge: Challenge) {
+    const intent = await this.waas.linkAccount(challenge.getIntentParams())
+    const res = await this.sendIntent(intent)
+
+    if (!isLinkAccountResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+
+    return res.data
+  }
+
+  async removeAccount(accountId: string) {
+    const intent = await this.waas.removeAccount({ accountId })
+    await this.sendIntent(intent)
+  }
+
+  async getIdToken(args?: { nonce?: string }): Promise<IntentResponseIdToken> {
+    const intent = await this.waas.getIdToken({ nonce: args?.nonce })
+    const res = await this.sendIntent(intent)
+
+    if (!isGetIdTokenResponse(res)) {
+      throw new Error(`Invalid response: ${JSON.stringify(res)}`)
+    }
+
+    return res.data
   }
 
   async useIdentifier<T extends CommonAuthArgs>(args: T): Promise<T & { identifier: string }> {
