@@ -70,7 +70,7 @@ export async function findItems(
         break
       }
       console.warn(
-        `rate limited by ${graphqlUrl}, trying again in ${rateLimitRetryDelayMs / 1000} seconds at ${new Date(Date.now() + rateLimitRetryDelayMs).toLocaleTimeString()}`,
+        `rate limited by ${graphqlUrl}, trying again in ${rateLimitRetryDelayMs / 1000} seconds at ${new Date(Date.now() + rateLimitRetryDelayMs).toISOString()}`,
       )
       await new Promise((resolve) => setTimeout(resolve, rateLimitRetryDelayMs))
     }
