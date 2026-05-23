@@ -585,12 +585,6 @@
 
 - utils: extractProjectIdFromAccessKey
 
-## 2.0.0
-
-### Major Changes
-
-- changeset
-
 ## 1.10.14
 
 ### Patch Changes
