@@ -1,0 +1,58 @@
+[?25l[2J[m[2;1H> @0xsequence/wallet-primitives-cli@ typecheck C:\Users\Legion\sequence.js\packages\wallet\primitives-cli
+> tsc --noEmit[6;1H]0;C:\Windows\system32\cmd.exe[?25h[?25l[96msrc/subcommands/address.ts[m:[93m3[m:[93m53 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or its corresponding type declarations.[7m[9;1H3[27m import { Address as SequenceAddress, Context } from '@0xsequence/wallet-primitives'[7m
+ [27m[53X[91m[53C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[96m[12;1Hsrc/subcommands/config.ts[m:[93m4[m:[93m35 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or its corresponding type declarations.[7m[15;1H4[27m import { Signature, Config } from '@0xsequence/wallet-primitives'[7m
+ [27m[35X[91m[35C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[96m[18;1Hsrc/subcommands/devTools.ts[m:[93m1[m:[93m51 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or its corresponding type declarations.[7m[21;1H1[27m import { Permission, SessionConfig, Config } from '@0xsequence/wallet-primitives'[7m
+ [27m[51X[91m[51C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[96m[24;1Hsrc/subcommands/passkeys.ts[m:[93m6[m:[93m28 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or its corresponding type declarations.[7m[27;1H6[27m import { Extensions } from '@0xsequence/wallet-primitives'[7m
+ [27m[28X[91m[28C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[96m[30;1Hsrc/subcommands/payload.ts[m:[93m3[m:[93m25 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or its corresponding type declarations.[7m[33;1H3[27m import { Payload } from '@0xsequence/wallet-primitives'[?25h
+[7m [27m[25X[91m[25C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[K[m
+
+[96msrc/subcommands/recovery.ts[m:[93m4[m:[93m28 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or
+[32;102Hr its corresponding type declarations.
+
+[7m4[27m import { Extensions } from '@0xsequence/wallet-primitives'[K
+[7m [27m[28X[91m[28C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[K[m
+
+[96msrc/subcommands/session.ts[m:[93m6[m:[93m62 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' or 
+[32;102H its corresponding type declarations.
+
+[7m6[27m import { GenericTree, SessionConfig, SessionSignature } from '@0xsequence/wallet-primitives'        [33;1H
+[7m [27m[62X[91m[62C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        [33;1H[m
+
+[96msrc/subcommands/sessionExplicit.ts[m:[93m3[m:[93m43 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primiti
+[32;102Hives' or its corresponding type declarations.
+
+[7m3[27m import { Permission, SessionConfig } from '@0xsequence/wallet-primitives'[K
+[7m [27m[43X[91m[43C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[K[m
+
+[96msrc/subcommands/sessionImplicit.ts[m:[93m1[m:[93m31 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primiti
+[32;102Hives' or its corresponding type declarations.
+
+[7m1[27m import { SessionConfig } from '@0xsequence/wallet-primitives'[K
+[7m [27m[31X[91m[31C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[K[m
+
+[96msrc/subcommands/signature.ts[m:[93m1[m:[93m35 [m- [91merror [90mTS2307: [mCannot find module '@0xsequence/wallet-primitives' o
+[32;102Hor its corresponding type declarations.
+
+[7m1[27m import { Config, Signature } from '@0xsequence/wallet-primitives'[K
+[7m [27m[35X[91m[35C~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[K[m
+
+[96msrc/subcommands/signature.ts[m:[93m52[m:[93m63 [m- [91merror [90mTS7006: [mParameter 'leaf' implicitly has an 'any' type.     [33;1H
+
+[7m52[27m   const fullTopology = Signature.fillLeaves(config.topology, (leaf) => {[K
+[7m  [27m[63X[91m[63C~~~~[K[m
+
+
+Found 11 errors in 10 files.
+
+Errors  Files
+     1  src/subcommands/address.ts[90m:3[K[m
+     1  src/subcommands/config.ts[90m:4[K[m
+     1  src/subcommands/devTools.ts[90m:1[K[m
+     1  src/subcommands/passkeys.ts[90m:6[K[m
+     1  src/subcommands/payload.ts[90m:3[K[m
+     1  src/subcommands/recovery.ts[90m:4[K[m
+     1  src/subcommands/session.ts[90m:6[K[m
+     1  src/subcommands/sessionExplicit.ts[90m:3[K[m
+     1  src/subcommands/sessionImplicit.ts[90m:1[K[m
+     2  src/subcommands/signature.ts[90m:1[K[m
+[30m[41m ELIFECYCLE [m [31mCommand failed with exit code 2.[m

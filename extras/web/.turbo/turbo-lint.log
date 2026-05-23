@@ -1,0 +1,11 @@
+[?25l[2J[m[2;1H> web@0.1.0 lint C:\Users\Legion\sequence.js\extras\web
+> next lint --max-warnings 0[5;1H]0;C:\Windows\system32\cmd.exe[?25h[?25l[33m`next lint` is deprecated and will be removed in Next.js 16.[m
+For new projects, use [1mcreate-next-app[22m to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:[1m
+npx @next/codemod@canary next-lint-to-eslint-cli .[10;1H[?25h[22m[?25l [33m[1m⚠[m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\Legion\pnpm-lock.yaml as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Legion\sequence.js\pnpm-lock.yaml[20;1H[?25h[32m✔ No ESLint warnings or errors
+[m
