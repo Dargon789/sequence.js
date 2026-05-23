@@ -1,0 +1,185 @@
+[?25l[2J[m[2;1H> @0xsequence/wallet-primitives@0.0.0 test C:\Users\Legion\sequence.js\packages\wallet\primitives
+> vitest run[5;1H]0;C:\Windows\system32\cmd.exe[?25h]0;node (vitest)[?25l[46m[1m
+ RUN [m [36mv3.2.4 [90mC:/Users/Legion/sequence.js/packages/wallet/primitives[m]0;node (vitest 1)]0;node (vitest 6)]0;node (vitest 5)[?2026h[?2026l[33m[1m[9;1H ❯ [mtest/payload.test.ts[2m [queued][11;1H Test Files [32m[22m[1m0 passed[90m[22m (14)[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[m[2m
+   Start at [22m14:53:07[2m
+   Duration [22m649ms[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/config.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m [queued][22m[K[2m[17;1H Test Files [32m[22m[1m0 passed[90m[22m (14)[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[m[2m
+   Start at [22m14:53:07[2m
+   Duration [22m894ms[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/config.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m 0/47[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (47)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m1.99s[K
+[K[121C[?2026h[?2026l[8;1H [32m✓ [mtest/passkeys.test.ts [2m(47 tests)[32m[22m 55[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/config.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m 47/47[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 0/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 0/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m1 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m47 passed[90m[22m (212)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m2.10s[K[104C[?2026h[?2026l[9;1H [32m✓ [mtest/config.test.ts [2m(107 tests)[32m[22m 79[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/config.test.ts[2m 107/107[22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m 47/47[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m 0/100[22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m 0/93[22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 0/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 1/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 0/115[22m[K
+[K[2m
+ Test Files [32m[22m[1m2 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m155 passed[90m[22m (627)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m2.20s[K[104C[?2026h[?2026l[10;1H [32m✓ [mtest/session-signature.test.ts [2m(62 tests | [33m[22m8 skipped[m[2m)[32m[22m 78[2mms[m[K
+ [32m✓ [mtest/recovery.test.ts [2m(93 tests | [33m[22m20 skipped[m[2m)[32m[22m 135[2mms[m[K
+ [32m✓ [mtest/session-config.test.ts [2m(103 tests)[32m[22m 273[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/config.test.ts[2m 107/107[22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m 47/47[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m 82/100[22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m 93/93[22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 103/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 62/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 47/115[22m[K
+[K[2m
+ Test Files [32m[22m[1m5 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m511 passed[m[2m | [33m[22m30 skipped [90m(627)[K[m[2m
+   Start at [22m14:53:07[2m
+   Duration [22m2.42s]0;node (vitest 7)[?2026h[?2026l[13;1H[K[33m[1m
+ ❯ [mtest/config.test.ts[2m 107/107[22m[K[33m[1m
+ ❯ [mtest/passkeys.test.ts[2m 47/47[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m 82/100[22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m 93/93[22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 103/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 62/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 100/115[22m[K
+[K[2m
+ Test Files [32m[22m[1m5 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m559 passed[m[2m | [33m[22m35 skipped [90m(627)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m2.52s[K
+[K[121C]0;node (vitest 6)]0;node (vitest 2)[?2026h[?2026l[13;1H [32m✓ [mtest/signature.test.ts [2m(115 tests | [33m[22m7 skipped[m[2m)[33m[22m 423[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/config.test.ts[2m 107/107[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m 82/100[22m[K[33m[1m
+ ❯ [mtest/permission.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m 93/93[22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 103/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 62/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 115/115[22m[K
+[K[2m
+ Test Files [32m[22m[1m6 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m573 passed[m[2m | [33m[22m36 skipped [90m(627)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m2.85s[K[104C[?2026h[?2026l[14;1H[K[33m[1m
+ ❯ [mtest/config.test.ts[2m 107/107[22m[K[33m[1m
+ ❯ [mtest/payload.test.ts[2m 83/100[22m[K[33m[1m
+ ❯ [mtest/permission.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/recovery.test.ts[2m 93/93[22m[K[33m[1m
+ ❯ [mtest/session-config.test.ts[2m 103/103[22m[K[33m[1m
+ ❯ [mtest/session-signature.test.ts[2m 62/62[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 115/115[22m[K
+[K[2m
+ Test Files [32m[22m[1m6 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m574 passed[m[2m | [33m[22m36 skipped [90m(627)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m2.96s[K
+[K[121C]0;node (vitest 1)[?2026h[?2026l[14;1H [32m✓ [mtest/payload.test.ts [2m(100 tests | [33m[22m1 skipped[m[2m)[33m[22m 824[2mms[m[K
+   [33m[2m✓[m Payload[2m > [22mPayload Encoding and Decoding[2m > [22mencode[2m > [22mshould throw for data too large  [33m702[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/attestation.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/erc-6492.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/permission.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/precondition.test.ts[2m 0/52[22m[K[33m[1m
+ ❯ [mtest/signature.test.ts[2m 115/115[22m[K[33m[1m
+ ❯ [mtest/utils.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m7 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m591 passed[m[2m | [33m[22m36 skipped [90m(679)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m3.07s[K[104C[?2026h[?2026l[16;1H [32m✓ [mtest/precondition.test.ts [2m(52 tests)[32m[22m 37[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/attestation.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/erc-6492.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/generic-tree.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/permission.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m8 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m643 passed[m[2m | [33m[22m36 skipped [90m(679)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m3.29s[K
+[K[121C]0;node (vitest 3)]0;node (vitest 5)[?2026h[?2026l[17;1H[K[33m[1m
+ ❯ [mtest/address.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/attestation.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/erc-6492.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/generic-tree.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/permission.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m8 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m643 passed[m[2m | [33m[22m36 skipped [90m(679)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m3.61s[K[104C[?2026h[?2026l[17;1H [32m✓ [mtest/permission.test.ts [2m(53 tests)[32m[22m 46[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/address.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/attestation.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/erc-6492.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/generic-tree.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils.test.ts[2m 0/45[22m[K
+[K[2m
+ Test Files [32m[22m[1m9 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m696 passed[m[2m | [33m[22m36 skipped [90m(777)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m3.82s[K
+[K[121C[?2026h[?2026l[18;1H [32m✓ [mtest/utils.test.ts [2m(45 tests)[32m[22m 28[2mms[m[K
+ [32m✓ [mtest/attestation.test.ts [2m(31 tests)[32m[22m 30[2mms[m[K
+ [32m✓ [mtest/erc-6492.test.ts [2m(34 tests)[32m[22m 41[2mms[m[K
+[K
+[K[33m[1m
+ ❯ [mtest/address.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/generic-tree.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m12 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m806 passed[m[2m | [33m[22m36 skipped [90m(842)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m3.93s[K[104C]0;node (vitest 7)]0;node (vitest 6)]0;node (vitest 4)]0;node (vitest 1)[?2026h[?2026l[21;1H [32m✓ [mtest/generic-tree.test.ts [2m(42 tests)[32m[22m 48[2mms[m[K
+[K
+[K[33m[1m
+ ❯ [mtest/address.test.ts[2m 0/19[22m[K
+[K[2m
+ Test Files [32m[22m[1m13 passed[90m[22m (14)[K[m[2m
+      Tests [32m[22m[1m848 passed[m[2m | [33m[22m36 skipped [90m(903)[K[m[2m
+   Start at [22m14:53:07[K[2m
+   Duration [22m4.46s[K
+[K[121C[22;1H [32m✓ [mtest/address.test.ts [2m(19 tests)[32m[22m 34[2mms[m[K
+[K[2m
+ Test Files [22m [32m[1m14 passed[90m[22m (14)[K[m[2m
+      Tests [22m [32m[1m867 passed[m[2m | [33m[22m36 skipped [90m(903)[K[m[2m
+   Start at [22m 14:53:07[K[2m
+   Duration [22m 4.60s[2m (transform 1.73s, setup 0ms, collect 14.55s, tests 2.13s, environment 5ms, prepare 4.50s)[22m[K
+[K
+[K
+[K[29;1H[?25h]0;node (vitest 3)

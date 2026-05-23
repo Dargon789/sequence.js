@@ -1,0 +1,1581 @@
+[?25l[2J[m[2;1H> @0xsequence/wallet-core@0.0.0 test C:\Users\Legion\sequence.js\packages\wallet\core
+> vitest run[5;1H]0;C:\Windows\system32\cmd.exe[?25h]0;node (vitest)[?25l[46m[1m
+ RUN [m [36mv3.2.4 [90mC:/Users/Legion/sequence.js/packages/wallet/core[m]0;node (vitest 2)]0;node (vitest 7)]0;node (vitest 6)[?2026h[?2026l[33m[1m[9;1H ❯ [mtest/signers-pk.test.ts[2m [queued][11;1H Test Files [32m[22m[1m0 passed[90m[22m (21)[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m782ms[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K[2m[17;1H Test Files [32m[22m[1m0 passed[90m[22m (21)[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m883ms[?2026h
+[K[121C[19;1H[K
+[K[121C[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[K[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m1.91s[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m 0/16[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (16)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m2.63s[K
+[K[121C[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m 1/16[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m1 passed[90m[22m (16)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m2.74s[K
+[K[121C[?2026h[?2026l[8;1H [32m✓ [mtest/signers-pk.test.ts [2m(16 tests)[32m[22m 184[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m 16/16[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m1 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m16 passed[90m[22m (16)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m2.94s[K[104C[?2026h[?2026l[9;1H [32m✓ [mtest/state/utils.test.ts [2m(14 tests)[32m[22m 72[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk.test.ts[2m 16/16[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m 14/14[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m2 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m30 passed[90m[22m (30)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m3.04s[K[104C]0;node (vitest 4)]0;node (vitest 6)[?2026h[?2026l[10;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/utils.test.ts[2m 14/14[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m2 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m30 passed[90m[22m (30)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m3.54s[K
+[K[121C[?2026h[?2026l[10;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/cached.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m2 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m30 passed[90m[22m (30)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m3.86s[K
+[K[121C[?2026h[12;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[121C[?2026l[10;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/state/cached.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][19;1H Test Files [32m[22m[1m2 passed[90m[22m (21)[m[2m
+      Tests [32m[22m[1m30 passed[90m[22m (30)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m3.97s[?2026h[?2026l[10;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/cached.test.ts[2m 0/32[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m2 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m30 passed[90m[22m (62)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m4.81s[K
+[K[121C[?2026h[?2026l[10;1H [32m✓ [mtest/state/cached.test.ts [2m(32 tests)[32m[22m 85[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/cached.test.ts[2m 32/32[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m3 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m62 passed[90m[22m (62)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m5.02s[K[104C[?2026h[?2026l[11;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-passkey.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m3 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m62 passed[90m[22m (62)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m5.57s[K
+[K[121C[?2026h[?2026l[11;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-passkey.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m3 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m62 passed[90m[22m (62)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m5.99s[K
+[K[121C[?2026h[?2026l[11;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-passkey.test.ts[2m 0/29[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m3 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m62 passed[90m[22m (91)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m6.41s[K
+[K[121C[?2026h[?2026l[11;1H [32m✓ [mtest/signers-passkey.test.ts [2m(29 tests)[32m[22m 46[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m4 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m91 passed[90m[22m (91)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m6.94s[K[104C[?2026h[?2026l[12;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m4 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m91 passed[90m[22m (91)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m7.05s[K
+[K[121C[?2026h[?2026l[12;1H[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m 0/19[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m4 passed[90m[22m (21)[K[m[2m
+      Tests [32m[22m[1m91 passed[90m[22m (110)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m7.70s[K
+[K[121C[?2026h[18;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[121C[90m[12;1Hstdout[2m | test/utils/session/permission-builder.test.ts > PermissionBuilder > should build an exact match permission[m      
+random calldata 0x481948a90c8949c1a4adc140a3663f25148e00ce365c9c02782f7dfaab26a0aac247060cedca3856a4abffab1b01fe3d9055c680212a4e8805049c8c6afdfe5a6324fb8ba4f8[K
+random calldata 0x0d0bf8036689999dcb0a5d4f5a01572cdefd001fccd4f9ca01f6030fbe88fa3f31645cfe0cb598e331174e1a6c[K
+random calldata 0x012766[K
+random calldata 0xd1552ac0945c56c3484af672b5df0c659a6aa9b4addeba408945dad967e2d295068545bb809b959b923848de201fbbd639e0a92a6012
+random calldata 0xcdef1a78e11af73cbaf60e605fed3dfc1f9006317b72bb3f3506c050d09495135c1f82d16815ac77e38c88c559837d6c6f31bb90969943ad9f7e8ebff0ae12f664e4c8b8b89aa78b3167aaf3
+random calldata 0xe72d51fa23cf1774e1245c999a7432fbf45c24cc876fc4f3e4c3
+random calldata 0x4f5026e38b4360c763
+random calldata 0xd0d64dbee68dd9446f0c572a6420623fd5cdcea368c225102da599a260c5682ee008af77a9fed623aa2b76d43896b2b2587146fb58ccc144716e79c5
+random calldata 0x7920e39880874b308ac3aa034c659f0cff6be4c8038be27f1ebdb87ea664bb5144cc49e4309ecd7c97edb5099464a19b647a
+random calldata 0x[28;1H [32m✓ [mtest/signers-pk-encrypted.test.ts [2m(19 tests)[32m[22m 31[2mms[m
+ [32m✓ [mtest/signers-guard.test.ts [2m(4 tests)[32m[22m 46[2mms[m
+ [32m✓ [mtest/utils/session/permission-builder.test.ts [2m(28 tests)[32m[22m 90[2mms[33m[22m[1m[32;1H ❯ [mtest/session-manager.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[22m
+[33m[1m ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[22m[K[79C
+[33m[1m ❯ [mtest/signers-session-explicit.test.ts[2m 1/25[22m[K[76C
+[33m[1m ❯ [mtest/signers-session-implicit.test.ts[2m 0/28[22m[K[76C
+[33m[1m ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[67C
+[33m[1m ❯ [mtest/wallet.test.ts[2m 0/8[22m[K[95C
+[121C
+[2m Test Files [32m[22m[1m7 passed[90m[22m (21)[K[96C[m
+[2m      Tests [32m[22m[1m143 passed[90m[22m (203)[K[93C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m7.90s[K[104C[?2026l
+[121C[?2026h[20;1H [32m✓ [mtest/signers-session-explicit.test.ts [2m(25 tests)[32m[22m 82[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 0/36[22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[22m[K[33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 7/28[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m 1/8[22m[K
+[K[2m
+ Test Files [32m[22m[1m8 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m1 failed[m[2m | [32m[22m[1m174 passed[90m[22m (239)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m8.02s[K[104C[?2026l
+[121C[?2026h[27;1H[K
+[K
+[K
+[K
+[K
+[K
+[K[121C[20;1H [31m❯ [mtest/wallet.test.ts [2m(8 tests | [31m[22m4 failed[m[2m)[32m[22m 230[2mms[m[K[31m
+   × Wallet[2m > [22mdeployed[2m > [22mshould sign a message [32m172[2mms[m[K[31m
+     → fetch failed[K
+   × Wallet[2m > [22mdeployed[2m > [22mshould sign a typed data message [32m9[2mms[m[K[31m
+     → fetch failed[K
+   × Wallet[2m > [22mnot-deployed[2m > [22mshould sign a message [32m6[2mms[m[K[31m
+     → fetch failed[K
+   × Wallet[2m > [22mnot-deployed[2m > [22mshould sign a typed data message [32m5[2mms[31m[22m
+     → fetch failed[m
+   [32m✓ [mWallet[2m > [22mShould reject unsafe wallet creation [32m10[2mms[m
+   [32m✓ [mWallet[2m > [22mShould reject unsafe wallet update [32m10[2mms[m
+   [32m✓ [mWallet[2m > [22mShould accept unsafe wallet creation in unsafe mode [32m7[2mms[m
+   [32m✓ [mWallet[2m > [22mShould accept unsafe wallet update in unsafe mode [32m9[2mms[m
+
+[33m[1m ❯ [mtest/session-manager.test.ts[2m 1/36[22m[K[85C
+[33m[1m ❯ [mtest/signers-guard.test.ts[2m 4/4[22m[K[88C
+[33m[1m ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[22m[K[79C
+[33m[1m ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m[K[75C
+[33m[1m ❯ [mtest/signers-session-implicit.test.ts[2m 16/28[22m[K[75C
+[33m[1m ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[67C
+[33m[1m ❯ [mtest/wallet.test.ts[2m 8/8[22m[K[95C
+[121C
+[2m Test Files [31m[22m[1m1 failed[m[2m | [32m[22m[1m8 passed[90m[22m (21)[K[85C[m
+[2m      Tests [31m[22m[1m5 failed[m[2m | [32m[22m[1m187 passed[90m[22m (239)[K[82C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m8.12s[K[104C[?2026l[?2026h
+[90m[20;1Hstderr[2m | test/session-manager.test.ts > SessionManager (Dev1) > should fail to sign with an expired explicit session[m     
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in Vitest 3. Please remember to await the assertion. 
+    at C:/Users/Legion/sequence.js/packages/wallet/core/test/session-manager.test.ts:356:87                              
+                                                                                                                         
+                                                                                                                         [33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 1/36[22m                                                                                     [33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[22m                                                                                        [33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[22m                                                                               [33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m                                                                           [33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 16/28[22m                                                                           [33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m                                                                   [33m[1m
+ ❯ [mtest/wallet.test.ts[2m 8/8[22m                                                                                               
+[121C
+[2m Test Files [31m[22m[1m1 failed[m[2m | [32m[22m[1m8 passed[90m[22m (21)[K[85C[m
+[2m      Tests [31m[22m[1m5 failed[m[2m | [32m[22m[1m187 passed[90m[22m (239)[K[82C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m8.12s[K[104C[?2026l
+[121C]0;node (vitest 5)]0;node (vitest 4)[?2026h[22;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K]0;node (vitest 7)[121C[20;1H [32m✓ [mtest/signers-session-implicit.test.ts [2m(28 tests)[33m[22m 389[2mms[m[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 18/36[33m[22m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[33m[22m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[33m[22m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[33m[22m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 28/28[33m[22m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[33m[22m[1m
+ ❯ [mtest/wallet.test.ts[2m 8/8[30;1H Test Files [31m[22m[1m1 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[m[2m
+      Tests [31m[22m[1m20 failed[m[2m | [32m[22m[1m201 passed[90m[22m (239)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m8.34s[?2026l[?2026h
+[121C[90m[20;1Hstderr[2m | test/session-manager.test.ts > SessionManager (Dev2) > should fail to sign with an expired explicit session[m     
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in Vitest 3. Please remember to await the assertion. 
+    at C:/Users/Legion/sequence.js/packages/wallet/core/test/session-manager.test.ts:356:87[K
+[K
+[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 18/36[22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[22m[K[33m[1m
+ ❯ [mtest/signers-pk-encrypted.test.ts[2m 19/19[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m 8/8[22m[K[95C
+
+[2m Test Files [31m[22m[1m1 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[85C[m
+[2m      Tests [31m[22m[1m20 failed[m[2m | [32m[22m[1m201 passed[90m[22m (239)[K[81C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m8.34s[K[104C[?2026l
+[121C]0;node (vitest 2)[?2026h[90m[20;1Hstderr[2m | test/session-manager.test.ts > SessionManager (Rc3) > should fail to sign with an expired explicit session[m      
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in Vitest 3. Please remember to await the assertion. 
+    at C:/Users/Legion/sequence.js/packages/wallet/core/test/session-manager.test.ts:356:87[K
+[K
+[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 36/36[22m[K[33m[1m
+ ❯ [mtest/signers-guard.test.ts[2m 4/4[22m[K[33m[1m
+ ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m 8/8[22m[K
+[K[121C
+[2m Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[85C[m
+[2m      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (239)[K[81C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m8.55s[K[104C[?2026l[?2026h
+[20;1H [31m❯ [mtest/session-manager.test.ts [2m(36 tests | [31m[22m33 failed[m[2m)[33m[22m 502[2mms[m                                                             [31m
+   × SessionManager (Dev1)[2m > [22mshould load from state [32m121[2mms[m                                                                [31m
+     → fetch failed                                                                                                      
+   × SessionManager (Dev1)[2m > [22mshould create and sign with an implicit session [32m29[2mms[m                                        [31m
+     → fetch failed                                                                                                      
+   × SessionManager (Dev1)[2m > [22mshould create and sign with an explicit session [32m12[2mms[m                                        [31m
+     → fetch failed                                                                                                      
+   × SessionManager (Dev1)[2m > [22mshould create and sign with an explicit session with 0 chainId [32m13[2mms[m                         [31m
+     → fetch failed                                                                                                      [m
+   [32m✓ [mSessionManager (Dev1)[2m > [22mshould fail to sign with an expired explicit session [32m25[2mms[m                                   [31m
+   × SessionManager (Dev1)[2m > [22msigns a payload using an implicit session [32m15[2mms[m                                              [31m
+     → fetch failed                                                                                                      
+   × SessionManager (Dev1)[2m > [22msigns a payload using an explicit session [32m11[2mms[m                                              [31m
+     → fetch failed[102C[m
+[31m   × SessionManager (Dev1)[2m > [22msigns a payload using an explicit session [32m7[2mms[m[K[47C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev1)[2m > [22msigns an ERC20 approve using an explicit session [32m6[2mms[m[K[40C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev1)[2m > [22msigns a payload sending value using an explicit session [32m8[2mms[m[K[33C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev1)[2m > [22msigns a payload sending two transactions with cumulative rules using an explicit session [32m9[2mms[m
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev1)[2m > [22musing explicit session, sends value, then uses a non-incremental permission [32m15[2mms[m[K[12C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22mshould load from state [32m4[2mms[m[K[66C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22mshould create and sign with an implicit session [32m15[2mms[m[K[40C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22mshould create and sign with an explicit session [32m5[2mms[m[K[41C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22mshould create and sign with an explicit session with 0 chainId [32m15[2mms[m[K[25C
+[31m     → fetch failed[102C[m
+   [32m✓ [mSessionManager (Dev2)[2m > [22mshould fail to sign with an expired explicit session [32m7[2mms[m[K[36C
+[31m   × SessionManager (Dev2)[2m > [22msigns a payload using an implicit session [32m17[2mms[m[K[46C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22msigns a payload using an explicit session [32m11[2mms[m[K[46C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22msigns a payload using an explicit session [32m5[2mms[m[K[47C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22msigns an ERC20 approve using an explicit session [32m9[2mms[m[K[40C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22msigns a payload sending value using an explicit session [32m23[2mms[m[K[32C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22msigns a payload sending two transactions with cumulative rules using an explicit session [32m8[2mms[m
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Dev2)[2m > [22musing explicit session, sends value, then uses a non-incremental permission [32m5[2mms[m[K[13C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22mshould load from state [32m6[2mms[m[K[67C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22mshould create and sign with an implicit session [32m16[2mms[m[K[41C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22mshould create and sign with an explicit session [32m5[2mms[m[K[42C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22mshould create and sign with an explicit session with 0 chainId [32m10[2mms[m[K[26C
+[31m     → fetch failed[102C[m
+   [32m✓ [mSessionManager (Rc3)[2m > [22mshould fail to sign with an expired explicit session [32m8[2mms[m[K[37C
+[31m   × SessionManager (Rc3)[2m > [22msigns a payload using an implicit session [32m7[2mms[m[K[48C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22msigns a payload using an explicit session [32m8[2mms[m[K[48C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22msigns a payload using an explicit session [32m6[2mms[m[K[48C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22msigns an ERC20 approve using an explicit session [32m7[2mms[m[K[41C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22msigns a payload sending value using an explicit session [32m8[2mms[m[K[34C
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22msigns a payload sending two transactions with cumulative rules using an explicit session [32m10[2mms[m
+[31m     → fetch failed[102C[m
+[31m   × SessionManager (Rc3)[2m > [22musing explicit session, sends value, then uses a non-incremental permission [32m9[2mms[m[K[14C
+[31m     → fetch failed[102C[m
+[121C
+[33m[1m ❯ [mtest/preconditions/codec.test.ts[2m [queued][22m[K[77C
+[33m[1m ❯ [mtest/session-manager.test.ts[2m 36/36[22m[K[84C
+[33m[1m ❯ [mtest/signers-guard.test.ts[2m 4/4[22m[K[88C
+[33m[1m ❯ [mtest/signers-session-explicit.test.ts[2m 25/25[22m[K[75C
+[33m[1m ❯ [mtest/signers-session-implicit.test.ts[2m 28/28[22m[K[75C
+[33m[1m ❯ [mtest/utils/session/permission-builder.test.ts[2m 28/28[22m[K[67C
+[33m[1m ❯ [mtest/wallet.test.ts[2m 8/8[22m[K[95C
+[121C
+[2m Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[85C[m
+[2m      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (239)[K[81C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m8.55s[K[104C[?2026l
+[121C]0;node (vitest 3)[?2026h[?2026l[20;1H[K[33m[1m
+ ❯ [mtest/envelope.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/relayer/relayer.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 36/36[22m[K[33m[1m
+ ❯ [mtest/signers-session-implicit.test.ts[2m 28/28[22m[K[33m[1m
+ ❯ [mtest/wallet.test.ts[2m 8/8[22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (239)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m8.66s[K
+[K[121C]0;node (vitest 1)[?2026h[?2026l[20;1H[K[33m[1m
+ ❯ [mtest/envelope.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/types.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/relayer/relayer.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/session-manager.test.ts[2m 36/36[22m[K[33m[1m
+ ❯ [mtest/state/debug.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (239)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m8.97s[K
+[K[121C[?2026h[?2026l[20;1H[K[33m[1m
+ ❯ [mtest/envelope.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/types.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/relayer/relayer.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/debug.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (239)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m9.19s[K
+[K[121C[?2026h[21;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[121C[?2026l[20;1H[K[33m[1m
+ ❯ [mtest/envelope.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m 0/23[33m[22m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/preconditions/types.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/relayer/relayer.test.ts[2m [queued][33m[22m[1m
+ ❯ [mtest/state/debug.test.ts[2m [queued][29;1H Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m9 passed[90m[22m (21)[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m202 passed[90m[22m (262)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m9.52s[?2026h[90m[20;1Hstderr[2m | test/preconditions/selectors.test.ts > Preconditions Selectors > extractSupportedPreconditions > should filter out invalid preconditions[m[K
+Failed to decode precondition: SyntaxError: Unexpected token 'i', "invalid json" is not valid JSON[K
+[K[90m
+stderr[2m | test/preconditions/selectors.test.ts > Preconditions Selectors > extractNativeBalancePreconditions > should filter out invalid native balance preconditions[m[K
+Failed to decode precondition: SyntaxError: Unexpected token 'i', "invalid json" is not valid JSON[K
+Failed to decode precondition: Address.InvalidAddressError: Address "undefined" is invalid.[K
+[K
+Details: Address is not a 20 byte (40 hexadecimal character) value.[K
+[K[90m
+stderr[2m | test/preconditions/selectors.test.ts > Preconditions Selectors > extractERC20BalancePreconditions > should filter out invalid ERC20 balance preconditions[m[K
+Failed to decode precondition: SyntaxError: Unexpected token 'i', "invalid json" is not valid JSON[K[23C
+Failed to decode precondition: Address.InvalidAddressError: Address "undefined" is invalid.[30C
+[121C
+Details: Address is not a 20 byte (40 hexadecimal character) value.[54C
+[121C
+[121C
+[33m[1m ❯ [mtest/envelope.test.ts[2m 0/39[22m[K[92C
+[33m[1m ❯ [mtest/preconditions/codec.test.ts[2m 33/33[22m[K[80C
+[33m[1m ❯ [mtest/preconditions/selectors.test.ts[2m 23/23[22m[K[76C
+[33m[1m ❯ [mtest/preconditions.test.ts[2m [queued][22m[K[83C
+[33m[1m ❯ [mtest/preconditions/types.test.ts[2m [queued][22m[K[77C
+[33m[1m ❯ [mtest/relayer/relayer.test.ts[2m [queued][22m[K[81C
+[33m[1m ❯ [mtest/state/debug.test.ts[2m [queued][22m[K[85C
+[121C
+[2m Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m11 passed[90m[22m (21)[K[84C[m
+[2m      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m258 passed[90m[22m (334)[K[81C[m
+[2m   Start at [22m16:13:56[K[101C
+[2m   Duration [22m9.75s[K[104C[?2026l[?2026h
+[20;1H [32m✓ [mtest/preconditions/selectors.test.ts [2m(23 tests)[32m[22m 27[2mms[m                                                                  
+ [32m✓ [mtest/preconditions/codec.test.ts [2m(33 tests)[32m[22m 54[2mms[m                                                                      
+                                                                                                                         [33m[1m
+ ❯ [mtest/envelope.test.ts[2m 0/39[22m                                                                                            [33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m 33/33[22m                                                                                [33m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m 23/23[22m                                                                            [33m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][22m                                                                                   [33m[1m
+ ❯ [mtest/preconditions/types.test.ts[2m [queued][22m                                                                             [33m[1m
+ ❯ [mtest/relayer/relayer.test.ts[2m [queued][22m                                                                                 [33m[1m
+ ❯ [mtest/state/debug.test.ts[2m [queued][22m                                                                                     
+                                                                                                                         [2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m11 passed[90m[22m (21)                                                                                    [m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m258 passed[90m[22m (334)                                                                                 [m[2m
+   Start at [22m16:13:56[K[101C
+[2m   Duration [22m9.75s[K[104C[?2026l
+[121C[?2026h[20;1H [32m✓ [mtest/envelope.test.ts [2m(39 tests)[32m[22m 29[2mms[m[K
+ [32m✓ [mtest/relayer/relayer.test.ts [2m(18 tests)[32m[22m 22[2mms[m[K
+[K
+[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m 33/33[22m[K[33m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m 23/23[22m[K[33m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/preconditions/types.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/debug.test.ts[2m 0/14[22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m13 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m315 passed[90m[22m (366)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m9.95s[K[104C[?2026l
+[121C]0;node (vitest 4)[?2026h[23;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K]0;node (vitest 6)[121C[21;1H [32m✓ [mtest/preconditions/types.test.ts [2m(42 tests)[32m[22m 25[2mms[m[K
+ [32m✓ [mtest/state/debug.test.ts [2m(14 tests)[32m[22m 39[2mms[m[K[33m[1m[26;1H ❯ [mtest/preconditions/codec.test.ts[2m 33/33[33m[22m[1m
+ ❯ [mtest/preconditions/selectors.test.ts[2m 23/23[33m[22m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][30;1H Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m15 passed[90m[22m (21)[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m371 passed[90m[22m (408)[m[2m
+   Start at [22m16:13:56[2m
+   Duration [22m10.16s[?2026l
+[121C]0;node (vitest 7)]0;node (vitest 3)[?2026h[?2026l[22;1H[K
+[K
+[K[33m[1m
+ ❯ [mtest/preconditions/codec.test.ts[2m 33/33[22m[K[33m[1m
+ ❯ [mtest/preconditions.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/relayer/bundler.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m15 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m371 passed[90m[22m (408)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m10.47s[K
+[K[121C[?2026h[?2026l[22;1H [32m✓ [mtest/preconditions.test.ts [2m(7 tests)[32m[22m 31[2mms[m[K
+[K
+[K[33m[1m
+ ❯ [mtest/relayer/bundler.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-index.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/local/memory.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m16 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m378 passed[90m[22m (415)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m10.67s[K
+[K[121C]0;node (vitest 1)[?2026h[?2026l[23;1H[K
+[K[33m[1m
+ ❯ [mtest/relayer/bundler.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-index.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/local/memory.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m16 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m378 passed[90m[22m (415)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m10.99s[K
+[K[121C[?2026h[?2026l[23;1H[K
+[K[33m[1m
+ ❯ [mtest/relayer/bundler.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/signers-index.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/local/memory.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m16 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m378 passed[90m[22m (415)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m11.20s[K
+[K[121C[?2026h[?2026l[23;1H[K
+[K[33m[1m
+ ❯ [mtest/relayer/bundler.test.ts[2m 1/13[22m[K[33m[1m
+ ❯ [mtest/signers-index.test.ts[2m [queued][22m[K[33m[1m
+ ❯ [mtest/state/local/memory.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m16 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m379 passed[90m[22m (428)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m11.30s[K
+[K[121C[?2026h[23;1H [32m✓ [mtest/relayer/bundler.test.ts [2m(13 tests)[32m[22m 16[2mms[m[K
+ [32m✓ [mtest/state/local/memory.test.ts [2m(16 tests)[32m[22m 22[2mms[m[K
+[K
+[K
+[K[33m[1m
+ ❯ [mtest/signers-index.test.ts[2m 0/7[22m[K
+[K[2m
+ Test Files [31m[22m[1m2 failed[m[2m | [32m[22m[1m18 passed[90m[22m (21)[K[m[2m
+      Tests [31m[22m[1m37 failed[m[2m | [32m[22m[1m407 passed[90m[22m (451)[K[m[2m
+   Start at [22m16:13:56[K[2m
+   Duration [22m11.51s[K[103C[?2026l
+[121C[24;1H [32m✓ [mtest/signers-index.test.ts [2m(7 tests)[32m[22m 6[2mms[m[K
+[K[31m
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m[41m[1m Failed Tests 37 [31m[49m[22m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[K[41m[1m
+ FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22mshould load from state[K[41m[1m
+ FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22mshould load from state[K[41m[1m
+ FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22mshould load from state[K[31m[1m
+RpcResponse.InternalError[22m: fetch failed[K[90m
+ [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    [90m
+ [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m57:32[m[K[84C
+[121C     [90m55|       [35masync [m() [33m=> [m{
+     [90m56|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+     [90m57|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+     [90m58|[K[113C[m
+     [90m59|[9X[35m[9Clet [mtopology [33m= SessionConfig.[34memptySessionsTopology[m(identityAddress)[K[37C
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[121C[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22mshould create and sign with an implicit session[K[12C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22mshould create and sign with an implicit session[K[12C
+]0;node (vitest 4)[121C[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22mshould create and sign with an implicit session
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m204:32[m[K[83C
+    [90m202|[K[113C[m
+    [90m203|         // Sign the transaction[K[81C[m
+    [90m204|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m205|[9X[35m[9Cconst [msignature [33m= [35mawait [msessionManager[33m.[34msignSapient[m(wallet[33m.[maddress[33m, [mchainId[33m, [mpayload[33m, [mimageHash)[K[9C
+    [90m206|[K[113C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[121C[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22mshould create and sign with an explicit session[K[12C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22mshould create and sign with an explicit session[K[12C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22mshould create and sign with an explicit session[K[13C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m shouldCreateAndSignWithExplicitSession test/session-manager.test.ts:[2m220:30[m[K[44C
+    [90m218|     [35mconst [mshouldCreateAndSignWithExplicitSession [33m= [35masync [m(useChainId[33m: [mboolean) [33m=> [m{[K[29C
+    [90m219|       [35mconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[38C
+    [90m220|       [35mconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[33C
+       [90m|[30X[31m[30C^[K[82C[m
+    [90m221|[K[113C[m
+    [90m222|       // Create explicit signer[K[81C[m
+[90m [2m❯[22m test/session-manager.test.ts:[2m286:9[m[K[84C
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[121C[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22mshould create and sign with an explicit session with 0 chai
+[32;121HinId[118C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22mshould create and sign with an explicit session with 0 chai
+[32;121HinId[118C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22mshould create and sign with an explicit session with 0 chain
+[32;121HnId[119C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m shouldCreateAndSignWithExplicitSession test/session-manager.test.ts:[2m220:30[m[K[44C
+    [90m218|     [35mconst [mshouldCreateAndSignWithExplicitSession [33m= [35masync [m(useChainId[33m: [mboolean) [33m=> [m{[K[29C
+    [90m219|       [35mconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[38C
+    [90m220|       [35mconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[33C
+       [90m|[30X[31m[30C^[K[82C[m
+    [90m221|[K[113C[m
+    [90m222|       // Create explicit signer[K[81C[m
+[90m [2m❯[22m test/session-manager.test.ts:[2m294:9[m[K[84C
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns a payload using an implicit session[K[18C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns a payload using an implicit session[K[18C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns a payload using an implicit session[K[19C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m431:32[m[K[83C
+    [90m429|         // Check the contracts have been deployed[K[63C[m
+    [90m430|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m431|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m432|[K[113C[m
+    [90m433|         // Create an implicit signer[K[76C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+[121C{
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns a payload using an explicit session[K[18C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns a payload using an explicit session[K[18C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns a payload using an explicit session[K[19C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m503:32[m[K[83C
+    [90m501|       [35masync [m() [33m=> [m{[K[93C
+    [90m502|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m503|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m504|[K[113C[m
+    [90m505|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/37]⎯[m
+[121C
+[121C[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns a payload using an explicit session
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns a payload using an explicit session[K[18C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns a payload using an explicit session[K[19C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m571:32[m[K[83C
+    [90m569|       [35masync [m() [33m=> [m{[K[93C
+    [90m570|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m571|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m572|[K[113C[m
+    [90m573|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K]0;node (vitest 6)[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[121C[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns an ERC20 approve using an explicit session[K[11C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns an ERC20 approve using an explicit session[K[11C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns an ERC20 approve using an explicit session[K[12C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m658:32[m[K[83C
+    [90m656|       [35masync [m() [33m=> [m{[K[93C
+    [90m657|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m658|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m659|[K[113C[m
+    [90m660|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns a payload sending value using an explicit session    
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns a payload sending value using an explicit session    
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns a payload sending value using an explicit session     
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m756:32[m[K[83C
+    [90m754|       [35masync [m() [33m=> [m{[K[93C
+    [90m755|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m756|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m757|[K[113C[m
+    [90m758|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[121C[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22msigns a payload sending two transactions with cumulative ru
+[32;121Hules using an explicit session[92C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22msigns a payload sending two transactions with cumulative ru
+[32;121Hules using an explicit session[92C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22msigns a payload sending two transactions with cumulative rul
+[32;121Hles using an explicit session[93C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/session-manager.test.ts:[2m861:32[m[K[83C
+    [90m859|       [35masync [m() [33m=> [m{[K[93C
+    [90m860|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m861|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m862|[K[113C[m
+    [90m863|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/37]⎯[m
+[121C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev1)[2m > [22musing explicit session, sends value, then uses a non-increm
+[32;121Hmental permission[105C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Dev2)[2m > [22musing explicit session, sends value, then uses a non-increm
+[32;121Hmental permission[105C
+[41m[1m FAIL [m test/session-manager.test.ts[2m > [22mSessionManager (Rc3)[2m > [22musing explicit session, sends value, then uses a non-increme
+[32;121Hental permission[106C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[121C[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m
+[36m [2m❯[22m test/session-manager.test.ts:[2m980:32[m[K[83C
+    [90m978|       [35masync [m() [33m=> [m{[K[93C
+    [90m979|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+    [90m980|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+    [90m981|[K[113C[m
+    [90m982|         // Create explicit signer[K[79C[m
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/37]⎯[m
+[121C
+[41m[1m FAIL [m test/wallet.test.ts[2m > [22mWallet[2m > [22mdeployed[2m > [22mshould sign a message[K[51C
+[41m[1m FAIL [m test/wallet.test.ts[2m > [22mWallet[2m > [22mnot-deployed[2m > [22mshould sign a message[K[47C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/wallet.test.ts:[2m43:32[m[K[93C
+     [90m41|       [34mit[m([32m'should sign a message'[33m, [35masync [m() [33m=> [m{[K[65C
+     [90m42|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+     [90m43|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+     [90m44|[K[113C[m
+     [90m45|[9X[35m[9Cconst [msigner [33m= [34mcreateRandomSigner[m()[K[69C
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+[121C{
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/37]⎯[m
+[121C
+[41m[1m FAIL [m test/wallet.test.ts[2m > [22mWallet[2m > [22mdeployed[2m > [22mshould sign a typed data message[K[40C
+[41m[1m FAIL [m test/wallet.test.ts[2m > [22mWallet[2m > [22mnot-deployed[2m > [22mshould sign a typed data message[K[36C
+[31m[1mRpcResponse.InternalError[22m: fetch failed[K[82C[m
+[90m [2m❯[22m Module.parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/RpcResponse.ts:[2m289:12[m    
+[90m [2m❯[22m parseError ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m539:30[m[K[14C
+[90m [2m❯[22m Object.request ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/Provider.ts:[2m507:15[m[K[10C
+[36m [2m❯[22m test/wallet.test.ts:[2m91:32[m[K[93C
+     [90m89|       [34mit[m([32m'should sign a typed data message'[33m, [35masync [m() [33m=> [m{[K[54C
+     [90m90|[9X[35m[9Cconst [mprovider [33m= Provider.[35mfrom[m([33mRpcTransport.[34mfromHttp[m([33mLOCAL_RPC_URL[m))[K[36C
+     [90m91|[9X[35m[9Cconst [mchainId [33m= Number[m([35mawait [mprovider[33m.[34mrequest[m({ method[33m: [32m'eth_chainId' [m}))[K[31C
+       [90m|[32X[31m[32C^[K[80C[m
+     [90m92|[K[113C[m
+     [90m93|[9X[35m[9Cconst [msigner [33m= [34mcreateRandomSigner[m()[K[69C
+[121C
+[31m[1mCaused by: TypeError[22m: fetch failed[K[87C[m
+[90m [2m❯[22m ../../../node_modules/.pnpm/ox@0.7.2_typescript@5.8.3/node_modules/ox/core/internal/promise.ts:[2m22:17[m[K[18C
+[121C
+{[120C
+  stack: [32m'AggregateError: \n' [m+[K[90C
+    [32m'    at internalConnectMultiple (node:net:1134:18)\n' [m+[K[62C
+    [32m'    at afterConnectMultiple (node:net:1715:7)'[m,[K[69C
+  errors: [[110C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED ::1:8545\n' [m+[K[66C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED ::1:8545'[m,[K[74C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'::1'[m,[K[100C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    },[115C
+    {[116C
+      stack: [32m'Error: connect ECONNREFUSED 127.0.0.1:8545\n' [m+[K[60C
+        [32m'    at createConnectionError (node:net:1678:14)\n' [m+[K[60C
+        [32m'    at afterConnectMultiple (node:net:1708:16)'[m,[K[64C
+      message: [32m'connect ECONNREFUSED 127.0.0.1:8545'[m,[K[68C
+      errno: [33m-4078[m,[K[102C
+      code: [32m'ECONNREFUSED'[m,[K[94C
+      syscall: [32m'connect'[m,[K[96C
+      address: [32m'127.0.0.1'[m,[K[94C
+      port: [33m8545[m,[K[104C
+      constructor: [32m'Function<Error>'[m,[K[84C
+      name: [32m'Error'[m,[K[101C
+      toString: [32m'Function<toString>'[K[85C[m
+    }[116C
+  ],[117C
+  code: [32m'ECONNREFUSED'[m,[K[98C
+  message: [32m''[m,[K[107C
+  constructor: [32m'Function<AggregateError>'[m,[K[79C
+  name: [32m'Caused by: AggregateError'[m,[K[85C
+  toString: [32m'Function<toString>'[m,[K[88C
+  stacks: [][109C
+}[120C
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[m
+[31m[1mSerialized Error:[m [90m{ errors: [ { stack: 'Error: connect ECONNREFUSED ::1:8545\n    at createConnectionError (node:net:1678[m
+[90m[32;121H8:14)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED ::1:8545', errno: -4078, code: 'ECO[m
+[90m[32;121HONNREFUSED', syscall: 'connect', address: '::1', port: 8545, constructor: 'Function<Error>', name: 'Error', toString: 'Fun[m
+[90m[32;121Hnction<toString>' }, { stack: 'Error: connect ECONNREFUSED 127.0.0.1:8545\n    at createConnectionError (node:net:1678:14)[m
+[90m[32;121H)\n    at afterConnectMultiple (node:net:1708:16)', message: 'connect ECONNREFUSED 127.0.0.1:8545', errno: -4078, code: 'E[m
+[90m[32;121HECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8545, constructor: 'Function<Error>', name: 'Error', toStri[m
+[90m[32;121Hing: 'Function<toString>' } ], code: 'ECONNREFUSED' }[69C[m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/37]⎯[m
+[121C
+[121C
+[2m Test Files [22m [31m[1m2 failed[m[2m | [32m[22m[1m19 passed[90m[22m (21)[K[83C[m
+[2m      Tests [22m [31m[1m37 failed[m[2m | [32m[22m[1m414 passed[90m[22m (451)[K[80C[m
+[2m   Start at [22m 16:13:56[K[100C
+[121C[2m   Duration [22m 11.61s[2m (transform 2.62s, setup 0ms, collect 55.86s, tests 2.03s, environment 8ms, prepare 6.93s)[22m
+[121C
+[?25h]0;node (vitest 5)[30m[41m ELIFECYCLE [m [31mTest failed. See above for more details.[m
