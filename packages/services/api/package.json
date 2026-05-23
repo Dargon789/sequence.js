@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/api",
-  "version": "3.0.4",
+  "version": "3.0.10",
   "description": "api sub-package for Sequence",
   "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/services/api",
   "author": "Sequence Platforms ULC",
@@ -26,6 +26,6 @@
     "@repo/typescript-config": "workspace:^",
     "@types/node": "^25.3.0",
     "@repo/eslint-config": "workspace:^",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

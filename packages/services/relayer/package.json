@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/relayer",
-  "version": "3.0.4",
+  "version": "3.0.10",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -30,7 +30,7 @@
     "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:^",
     "@types/node": "^25.3.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "^4.0.18"
   },
   "dependencies": {
