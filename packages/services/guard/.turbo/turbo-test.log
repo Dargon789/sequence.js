@@ -1,0 +1,100 @@
+[?25l[2J[m[2;1H> @0xsequence/guard@3.0.0 test C:\Users\Legion\sequence.js\packages\services\guard
+> vitest run[5;1H]0;C:\Windows\system32\cmd.exe[?25h]0;node (vitest)[?25l[46m[1m
+ RUN [m [36mv3.2.4 [90mC:/Users/Legion/sequence.js/packages/services/guard[m]0;node (vitest 1)]0;node (vitest 2)]0;node (vitest 6)]0;node (vitest 5)]0;node (vitest 7)[?2026h[?2026l[33m[1m[9;1H ❯ [mtest/sequence.test.ts[2m [queued][11;1H Test Files [32m[22m[1m0 passed[90m[22m (1)[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[m[2m
+   Start at [22m14:53:13[2m
+   Duration [22m767ms[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/sequence.test.ts[2m [queued][22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (1)[K[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (0)[K[m[2m
+   Start at [22m14:53:13[K[2m
+   Duration [22m972ms[K
+[K[121C[?2026h[?2026l[8;1H[K[33m[1m
+ ❯ [mtest/sequence.test.ts[2m 0/8[22m[K
+[K[2m
+ Test Files [32m[22m[1m0 passed[90m[22m (1)[K[m[2m
+      Tests [32m[22m[1m0 passed[90m[22m (8)[K[m[2m
+   Start at [22m14:53:13[K[2m
+   Duration [22m1.42s[K
+[K[121C[?2026h[90m[8;1Hstderr[2m | test/sequence.test.ts > Sequence > GuardSigner > sign() > Should throw error when guard service fails[m[K
+WebrpcRequestFailed: request failed[K
+    at WebrpcRequestFailedError.new [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:654:12[90m) [m
+    at [90mC:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:440:40[K[90m
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)[K[m
+    at Guard.signPayload [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\sequence.ts:30:19[90m) [m{[K
+  code: [33m-1[m,[K
+  status: [33m0[m,[K
+  cause: [32m'fetch(): Network error'[m,
+  msg: [32m'request failed'[m
+}[90m[20;1Hstderr[2m | test/sequence.test.ts > Sequence > GuardSigner > sign() > Should throw error when guard service returns invalid response[m
+Error: Invalid JSON
+    at Object.text [90m(C:\Users\Legion\sequence.js\packages\services\guard\[mtest\sequence.test.ts:109:19[90m)[m
+    at buildResponse [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:606:14[90m)[m
+    at fetch.then.WebrpcRequestFailedError.new.cause [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:433:16[90m)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)[m
+    at Guard.signPayload [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\sequence.ts:30:19[90m)[30;1Hstderr[2m | test/sequence.test.ts > Sequence > GuardSigner > sign() > Error Handling > Should handle malformed guard service response[m
+InvalidHexTypeError [Hex.InvalidHexTypeError]: Value `undefined` of type `undefined` is an invalid hex type.
+
+Hex types must be represented as `"0x${string}"`.[72C
+    at Module.assert (file:///C:/Users/Legion/sequence.js/node_modules/[4m.pnpm[24m/ox@0.7.2_typescript@5.8.3/node_modules/[4mox[24m/co
+[32;121Hore/Hex.ts:38:21)[105C
+    at Guard.signPayload [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\sequence.ts:43:11[90m)[K[21C[m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[47C[m
+    at [90mC:\Users\Legion\sequence.js\packages\services\guard\[mtest\sequence.test.ts:154:11[K[34C
+    at file:///C:/Users/Legion/sequence.js/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest/runner[24m/dist/chunk
+[32;121Hk-hooks.js:752:20 {[103C
+  details: [90mundefined[m,[K[100C
+  docs: [32m'https://oxlib.sh'[m,[K[94C
+  docsPath: [90mundefined[m,[K[99C
+  shortMessage: [32m'Value `undefined` of type `undefined` is an invalid hex type.'[m,[K[41C
+  cause: [90mundefined[m,[K[102C
+  version: [32m'ox@0.1.1'[K[100C[m
+}[120C
+[121C
+[121C
+[33m[1m ❯ [mtest/sequence.test.ts[2m 1/8[22m[K[93C
+[121C
+[2m Test Files [32m[22m[1m0 passed[90m[22m (1)[K[97C[m
+[2m      Tests [32m[22m[1m1 passed[90m[22m (8)[K[97C[m
+[2m   Start at [22m14:53:13[K[101C
+[2m   Duration [22m1.53s[K[104C[?2026l
+[121C[90m[26;1Hstderr[2m | test/sequence.test.ts > Sequence > GuardSigner > sign() > Error Handling > Should handle network timeout errors[m 
+WebrpcRequestFailed: request failed[K
+    at WebrpcRequestFailedError.new [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:654:12[90m) [m
+    at [90mC:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:440:40[K
+    at Guard.signPayload [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\sequence.ts:30:19[90m)[K[m
+    at [90mC:\Users\Legion\sequence.js\packages\services\guard\[mtest\sequence.test.ts:164:11[K
+    at file:///C:/Users/Legion/sequence.js/node_modules/[4m.pnpm[24m/@vitest+runner@3.2.4/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:752:20 {[K[103C
+  code: [33m-1[m,[K[110C
+  status: [33m0[m,[K[109C
+  cause: [32m'fetch(): Timeout'[m,[K[93C
+  msg: [32m'request failed'[K[98C[m
+}[120C
+[121C
+[90mstderr[2m | test/sequence.test.ts > Sequence > GuardSigner > sign() > Error Handling > Should handle HTTP error responses[m   
+Internal server error: endpoint error[84C
+    at WebrpcEndpointError.new [90m(C:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:654:12[90m)      [m
+    at [90mC:\Users\Legion\sequence.js\packages\services\guard\[msrc\client\guard.gen.ts:622:54 {[K[30C
+  code: [33m0[m,[K[111C
+  status: [33m0[m,[K[109C
+  cause: [90mundefined[m,[K[102C
+  msg: [32m'endpoint error'[K[98C[m
+}[120C
+[121C
+ [32m✓ [mtest/sequence.test.ts [2m(8 tests)[32m[22m 140[2mms[m[K[81C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mShould successfully sign a payload with guard service [32m4[2mms[m[K[25C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mShould handle custom chainId in sign request [32m0[2mms[m[K[34C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mShould throw error when guard service fails [32m9[2mms[m[K[35C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mShould throw error when guard service returns invalid response [32m2[2mms[m[K[16C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mShould include proper headers and signer address in request [32m1[2mms[m[K[19C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mError Handling[2m > [22mShould handle malformed guard service response [32m6[2mms[m[K[15C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mError Handling[2m > [22mShould handle network timeout errors [32m114[2mms[m[K[23C
+   [32m✓ [mSequence[2m > [22mGuardSigner[2m > [22msign()[2m > [22mError Handling[2m > [22mShould handle HTTP error responses [32m1[2mms[m[K[27C
+[121C
+[2m Test Files [22m [32m[1m1 passed[90m[22m (1)[K[96C[m
+[2m      Tests [22m [32m[1m8 passed[90m[22m (8)[K[96C[m
+[2m   Start at [22m 14:53:13[K[100C
+[2m   Duration [22m 1.65s[2m (transform 146ms, setup 0ms, collect 674ms, tests 140ms, environment 0ms, prepare 333ms)[22m[K[14C
+[121C
+[?25h]0;node (vitest 1)
