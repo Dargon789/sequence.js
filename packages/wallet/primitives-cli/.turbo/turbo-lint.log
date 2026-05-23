@@ -1,2 +1,0 @@
-[?25l[2J[m[2;1H> @0xsequence/wallet-primitives-cli@ lint C:\Users\Legion\sequence.js\packages\wallet\primitives-cli
-> eslint . --max-warnings 0[5;1H]0;C:\Windows\system32\cmd.exe[?25hWarning: React version was set to "detect" in eslint-plugin-react settings, but the "react" package is not installed. Assuming latest React version for linting.

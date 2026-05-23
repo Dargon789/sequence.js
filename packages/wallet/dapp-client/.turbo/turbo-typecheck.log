@@ -1,5 +1,0 @@
-[?25l[2J[m[H]0;Administrator:  C:\Windows\system32\cmd.exe [?25h[?25l
-> @0xsequence/dapp-client@0.0.0 typecheck C:\Users\Legion\sequence.js\packages\wallet\dapp-client
-> tsc --noEmit[5;1H[?25h[?25l[96msrc/DappTransport.ts[m:[93m519[m:[93m21 [m- [91merror [90mTS2532: [mObject is possibly 'undefined'.[7m[7;1H519[27m     const randStr = array[0].toString(36)[7m
-   [27m[21X[91m[21C~~~~~~~~[m[11;1HFound 1 error in src/DappTransport.ts[90m:519[13;1H[?25h[m[30m[41m ELIFECYCLE [m [31mCommand failed with exit code 2.
-[m

@@ -1,4 +1,0 @@
-[?25l[2J[m[H]0;Administrator:  C:\Windows\system32\cmd.exe [?25h[?25l
-> @0xsequence/wallet-wdk@0.0.0 typecheck C:\Users\Legion\sequence.js\packages\wallet\wdk
-> tsc --noEmit[5;1H[?25h^C[30m[41m ELIFECYCLE [m [31mCommand failed with exit code 3221225786.
-[m
