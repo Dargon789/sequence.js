@@ -1,4 +1,4 @@
-# @0xsequence/userdata
+# @0xsequence/identity-instrument
 
 ## 3.0.10
 
@@ -77,9 +77,13 @@
 - e5e1a03: Apple auth fixes
 - 0b63113: Apple auth fix
 - a89134a: Userdata service updates
+- 7c6c811: 3.0.0-beta.3 with fixes
 - 3.0.0 release
+- 98ce38b: 3.0.0-beta.2 with identity instrument updates
 - 747e6b5: Relayer fee options fix
 - 40c19ff: dapp client updates for EOA login
+- 6d5de25: 3.0.0-beta.1
+- 934acd1: RC5 upgrade
 
 ## 3.0.0-beta.19
 
@@ -170,3 +174,27 @@
 ### Patch Changes
 
 - Beta release for v3
+
+## 3.0.0-beta.4
+
+### Patch Changes
+
+- RC5 upgrade
+
+## 3.0.0-beta.3
+
+### Patch Changes
+
+- 3.0.0-beta.3 with fixes
+
+## 3.0.0-beta.2
+
+### Patch Changes
+
+- 3.0.0-beta.2 with identity instrument updates
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- 3.0.0-beta.1
