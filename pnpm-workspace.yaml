@@ -1,19 +1,7 @@
-packages:
-  - packages/*
-  - "!packages/register-tests"
-  - packages/cli/src/plugins/__fixtures__/hardhat
-  - packages/register-tests/*
-  - playgrounds/*
-  - site
+minimumReleaseAge: 10080 # 60 * 24 * 7 = do not install package releases that are not at least 1 week old
+# DO NOT REMOVE OR MODIFY minimumReleaseAge without approval
+# list packages to be excluded from minimum release limitation
 
-catalog:
-  "@tanstack/query-core": "5.49.1"
-  "@tanstack/react-query": "5.49.2"
-  "@tanstack/vue-query": "5.49.1"
-  "@testing-library/dom": "10.4.0"
-  "@testing-library/react": "16.0.1"
-  "@types/react": "18.3.1"
-  "@types/react-dom": "18.3.0"
-  react-dom: "18.3.1"
-  react: "18.3.1"
-  vue: "3.4.27"
+packages:
+  - 'packages/*'
+minimumReleaseAge: 20160
