@@ -1,9 +1,5 @@
 name: Lock Issue
 
-permissions:
-  contents: read
-  issues: write
-
 on:
   schedule:
     - cron: '0 0 * * *'
