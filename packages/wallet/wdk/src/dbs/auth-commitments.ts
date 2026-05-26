@@ -10,7 +10,7 @@ export type CommitAuthArgs =
 
 export type AuthCommitment = {
   id: string
-  kind: 'google-pkce' | 'apple'
+  kind: 'google-pkce' | 'apple' | `custom-${string}`
   metadata: { [key: string]: string }
   verifier?: string
   challenge?: string
