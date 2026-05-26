@@ -3,5 +3,13 @@ minimumReleaseAge: 10080 # 60 * 24 * 7 = do not install package releases that ar
 # list packages to be excluded from minimum release limitation
 
 packages:
-  - 'packages/*'
-minimumReleaseAge: 20160
+  - extras/*
+  - packages/*
+  - packages/services/*
+  - packages/utils/*
+  - packages/wallet/*
+  - repo/*
+  - test/*
+
+publicHoistPattern:
+- "eslint"
