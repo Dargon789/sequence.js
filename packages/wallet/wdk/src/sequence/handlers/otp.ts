@@ -12,16 +12,18 @@ import type { WdkEnv } from '../../env.js'
 
 type RespondFn = (otp: string) => Promise<void>
 
+export type PromptOtpHandler = (recipient: string, respond: RespondFn) => Promise<void>
+
 export class OtpHandler extends IdentityHandler implements Handler {
   kind = Kinds.LoginEmailOtp
 
-  private onPromptOtp: undefined | ((recipient: string, respond: RespondFn) => Promise<void>)
+  private onPromptOtp: undefined | PromptOtpHandler
 
   constructor(nitro: Identity.IdentityInstrument, signatures: Signatures, authKeys: Db.AuthKeys, env?: WdkEnv) {
     super(nitro, authKeys, signatures, Identity.IdentityType.Email, env)
   }
 
-  public registerUI(onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>) {
+  public registerUI(onPromptOtp: PromptOtpHandler) {
     this.onPromptOtp = onPromptOtp
     return () => {
       this.onPromptOtp = undefined
@@ -92,14 +94,14 @@ export class OtpHandler extends IdentityHandler implements Handler {
 
   private handleAuth(
     challenge: Identity.OtpChallenge,
-    onPromptOtp: (recipient: string, respond: RespondFn) => Promise<void>,
+    onPromptOtp: PromptOtpHandler,
   ): Promise<{ signer: Signers.Signer & Signers.Witnessable; email: string }> {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
         const { loginHint, challenge: codeChallenge } = await this.nitroCommitVerifier(challenge)
 
-        const respond = async (otp: string) => {
+        const respond: RespondFn = async (otp) => {
           try {
             const { signer, email: returnedEmail } = await this.nitroCompleteAuth(
               challenge.withAnswer(codeChallenge, otp),

@@ -22,7 +22,7 @@ export function toIdentityAuthKey(authKey: AuthKey, crypto?: CryptoLike): Identi
           hash: 'SHA-256',
         },
         authKey.privateKey,
-        digest,
+        new Uint8Array(digest),
       )
       return Hex.fromBytes(new Uint8Array(authKeySignature))
     },

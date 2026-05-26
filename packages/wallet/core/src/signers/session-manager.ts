@@ -169,7 +169,7 @@ export class SessionManager implements SapientSigner {
         if (expiredSupportedSigner) {
           throw new Error(`Signer supporting call is expired: ${expiredSupportedSigner.address}`)
         }
-        throw new Error(`No signer supported for call. Call: to=${call.to}, data=${call.data}, value=${call.value}`)
+        throw new Error(`No signer supported for call. Call: to=${call.to}, data=${call.data}, value=${call.value}, `)
       }
     }
     return signers
