@@ -198,12 +198,7 @@ export async function generate(options: Generate = {}) {
             if (timeout) clearTimeout(timeout)
             timeout = setTimeout(async () => {
               timeout = null
-              // Sort contracts by name Ascending (low to high) as the key is `String`
-              const sortedAscContractMap = new Map([...contractMap].sort())
-              const contracts = [...sortedAscContractMap.values()]
-              const sortedAscContractMap = new Map(
-                [...contractMap].sort((a, b) => a[0].localeCompare(b[0])),
-              )
+              // Sort contracts by name Ascending (low to high) as the key is `String`\n              const sortedAscContractMap = new Map(\n                [...contractMap].sort((a, b) => a[0].localeCompare(b[0])),\n              )\n              const contracts = [...sortedAscContractMap.values()]
               const prepend = []
               const content = []
               const outputs: Output[] = []
