@@ -185,18 +185,18 @@ export class Account {
 
   providerFor(chainId: ethers.BigNumberish): ethers.Provider {
     const found = this.network(chainId)
-    if (!found.provider && !found.rpcUrl) {
-      throw new Error(`Provider not found for chainId ${chainId}`)
-    }
+    if (!found.provider) {
+      if (!found.rpcUrl) {
+        throw new Error(`Provider not found for chainId ${chainId}`)
+      }
 
-    const network = new ethers.Network(found.name, found.chainId)
-
-    return (
-      found.provider ||
-      new ethers.JsonRpcProvider(getFetchRequest(found.rpcUrl, this.projectAccessKey, this.jwt), network, {
+      const network = new ethers.Network(found.name, found.chainId)
+      found.provider = new ethers.JsonRpcProvider(getFetchRequest(found.rpcUrl, this.projectAccessKey, this.jwt), network, {
         staticNetwork: network
       })
-    )
+    }
+
+    return found.provider
   }
 
   reader(chainId: ethers.BigNumberish): commons.reader.Reader {
