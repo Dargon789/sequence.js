@@ -109,7 +109,7 @@ export class JsonRpcProvider extends ethers.JsonRpcProvider implements EIP1193Pr
     //   }
     // )
 
-    const fetchRequest = typeof this.url === 'string' ? new ethers.FetchRequest(this.url) : this.url
+    const fetchRequest = typeof this.url === 'string' ? new ethers.FetchRequest(this.url) : this.url.clone()
     fetchRequest.body = JSON.stringify(jsonRpcRequest)
 
     // TODOXXX: what about headers, etc..?
