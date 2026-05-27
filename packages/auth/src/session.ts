@@ -302,7 +302,7 @@ export class Session {
     let servicesObj: Services | undefined
 
     if (services) {
-      servicesObj = new Services(account, services, undefined, projectAccessKey)
+      servicesObj = new Services(account, services)
       servicesObj.auth() // fire and forget
 
       servicesObj.onAuth(result => {
