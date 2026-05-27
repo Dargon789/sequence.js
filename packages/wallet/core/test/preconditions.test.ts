@@ -9,10 +9,7 @@ import {
   Erc721OwnershipPrecondition,
   NativeBalancePrecondition,
 } from '../../src/preconditions/types.js'
-import {
-  LocalRelayer,
-  type GenericProvider,
-} from '../../src/relayer/standard/local.js'
+import { LocalRelayer, type GenericProvider } from '../../src/relayer/standard/local.js'
 import { Network } from '@0xsequence/wallet-primitives'
 
 const CAN_RUN_LIVE = false
@@ -177,8 +174,7 @@ describe('Preconditions', () => {
     }
 
     // getApproved returns 32-byte word: 12 zero bytes + 20-byte address. Codec uses ownerAddress as operator.
-    const approvedHex =
-      '0x' + '0'.repeat(24) + testWalletAddress.toString().slice(2).toLowerCase()
+    const approvedHex = '0x' + '0'.repeat(24) + testWalletAddress.toString().slice(2).toLowerCase()
     vi.mocked(provider.call).mockResolvedValue(approvedHex as Hex.Hex)
 
     const isValid = await relayer.checkPrecondition(transactionPrecondition)

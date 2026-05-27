@@ -328,7 +328,10 @@ export class DappTransport {
       return
     }
 
-    if (!this.walletWindow || event.source !== this.walletWindow) {
+    const isPotentiallyValidSource =
+      this.walletWindow && (event.source === this.walletWindow || !this.walletWindow.closed)
+
+    if (!isPotentiallyValidSource && event.data?.type !== MessageType.WALLET_OPENED) {
       return
     }
 
@@ -511,9 +514,9 @@ export class DappTransport {
 
   private generateId(): string {
     // Use crypto.getRandomValues for cryptographically secure randomness
-    const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    const randStr = array[0].toString(36).padStart(7, '0');
+    const array = new Uint32Array(2);
+    globalThis.crypto.getRandomValues(array);
+    const randStr = (array[0].toString(36).padStart(7, '0') + array[1].toString(36).padStart(7, '0')).slice(0, 9);
     return `${Date.now().toString(36)}-${randStr}`;
   }
 }
