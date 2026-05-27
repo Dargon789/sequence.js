@@ -157,7 +157,8 @@ export class AccountSigner implements ethers.AbstractSigner<ethers.Provider> {
       txs,
       chainId: this.chainId,
       stubSignatureOverrides: this.options?.stubSignatureOverrides ?? new Map(),
-      simulateForFeeOptions: options?.simulateForFeeOptions
+      simulateForFeeOptions: options?.simulateForFeeOptions,
+      projectAccessKey: options?.projectAccessKey
     })
 
     const selectMethod = this.options?.selectFee ?? this.defaultSelectFee.bind(this)
