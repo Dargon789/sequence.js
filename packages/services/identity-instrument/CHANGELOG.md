@@ -1,5 +1,17 @@
 # @0xsequence/identity-instrument
 
+## 3.0.11
+
+### Patch Changes
+
+- Fix for relayer sponsored fees
+
+## 3.0.10
+
+### Patch Changes
+
+- Minor network updates, relayer interface
+
 ## 3.0.9
 
 ### Patch Changes
