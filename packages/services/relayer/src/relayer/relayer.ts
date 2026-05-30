@@ -11,14 +11,20 @@ export interface Relayer {
 
   isAvailable(wallet: Address.Address, chainId: number): Promise<boolean>
 
-  feeTokens(): Promise<{ isFeeRequired: boolean; tokens?: FeeToken[]; paymentAddress?: Address.Address }>
+  feeTokens(): Promise<{
+    isFeeRequired: boolean
+    tokens?: FeeToken[]
+    paymentAddress?: Address.Address
+    failed?: boolean
+  }>
 
   feeOptions(
     wallet: Address.Address,
     chainId: number,
     to: Address.Address,
     calls: Payload.Call[],
-  ): Promise<{ options: FeeOption[]; quote?: FeeQuote }>
+    data?: Hex.Hex,
+  ): Promise<{ options: FeeOption[]; quote?: FeeQuote; sponsored: boolean; failed?: boolean }>
 
   relay(to: Address.Address, data: Hex.Hex, chainId: number, quote?: FeeQuote): Promise<{ opHash: Hex.Hex }>
 
