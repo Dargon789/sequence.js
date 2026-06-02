@@ -1,5 +1,13 @@
 # @0xsequence/deployer
 
+## 2.3.44
+
+### Patch Changes
+
+- Update relayer.gen.ts
+- Updated dependencies
+  - @0xsequence/utils@2.3.44
+
 ## 2.3.43
 
 ### Patch Changes

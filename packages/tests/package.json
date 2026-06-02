@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/tests",
-  "version": "2.3.43",
+  "version": "2.3.44",
   "description": "test tools for sequence.js",
   "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/tests",
   "source": "src/index.ts",
