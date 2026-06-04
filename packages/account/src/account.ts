@@ -458,7 +458,7 @@ export class Account {
     }
 
     // Default to chainId of first bundle when not supplied
-    chainId = chainId ?? (bundles.length > 0 ? bundles[0].chainId : undefined)
+    chainId = chainId ?? bundles[0].chainId
 
     const bootstrapBundle = await this.buildBootstrapTransactions(status, chainId)
     const hasBootstrapTxs = bootstrapBundle.transactions.length > 0
