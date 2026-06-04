@@ -7,6 +7,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     name: Verify
@@ -17,9 +20,6 @@ jobs:
     name: Size
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      contents: read
-      pull-requests: write
     permissions:
       contents: read
       pull-requests: write
