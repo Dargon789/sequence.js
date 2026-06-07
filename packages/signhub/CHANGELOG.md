@@ -1,5 +1,13 @@
 # @0xsequence/signhub
 
+## 2.3.44
+
+### Patch Changes
+
+- Update relayer.gen.ts
+- Updated dependencies
+  - @0xsequence/core@2.3.44
+
 ## 2.3.43
 
 ### Patch Changes

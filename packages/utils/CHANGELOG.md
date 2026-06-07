@@ -193,6 +193,12 @@
 
 - 3.0.0-beta.1
 
+## 2.3.44
+
+### Patch Changes
+
+- Update relayer.gen.ts
+
 ## 2.3.43
 
 ### Patch Changes

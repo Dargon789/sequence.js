@@ -1,5 +1,16 @@
 # @0xsequence/network
 
+## 2.3.44
+
+### Patch Changes
+
+- Update relayer.gen.ts
+- Updated dependencies
+  - @0xsequence/indexer@2.3.44
+  - @0xsequence/relayer@2.3.44
+  - @0xsequence/utils@2.3.44
+  - @0xsequence/core@2.3.44
+
 ## 2.3.43
 
 ### Patch Changes

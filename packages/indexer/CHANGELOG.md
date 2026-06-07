@@ -1,5 +1,11 @@
 # @0xsequence/indexer
 
+## 2.3.44
+
+### Patch Changes
+
+- Update relayer.gen.ts
+
 ## 2.3.43
 
 ### Patch Changes
