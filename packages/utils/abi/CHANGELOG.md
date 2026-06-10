@@ -1,5 +1,11 @@
 # @0xsequence/abi
 
+## 3.0.11
+
+### Patch Changes
+
+- Fix for relayer sponsored fees
+
 ## 3.0.10
 
 ### Patch Changes
