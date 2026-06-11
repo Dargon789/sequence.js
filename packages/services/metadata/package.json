@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/metadata",
-  "version": "3.0.0-beta.19",
+  "version": "3.0.11",
   "publishConfig": {
     "access": "public"
   },
@@ -26,6 +26,6 @@
     "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:^",
     "@types/node": "^25.3.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }
