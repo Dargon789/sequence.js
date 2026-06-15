@@ -11,11 +11,9 @@ function App() {
         <h2>Account</h2>
 
         <div>
-          status: {account.status}
-          <br />
-          addresses: {JSON.stringify(account.addresses)}
-          <br />
-          chainId: {account.chainId}
+          <div>status: {account.status}</div>
+          <div>addresses: {account.addresses?.map(addr => <div key={addr}>{addr}</div>)}</div>
+          <div>chainId: {account.chainId}</div>
         </div>
 
         {account.status === 'connected' && (
