@@ -17,7 +17,7 @@ import {
   TextInput,
   Modal
 } from '@0xsequence/design-system'
-import { ETHAuth } from '@0xsequence/ethane'
+import { ETHAuth } from '@0xsequence/ethauth'
 import { configureLogger } from '@0xsequence/utils'
 import { ConnectOptions, OpenWalletIntent, Settings } from '@0xsequence/provider'
 import { ChainId, NetworkType } from '@0xsequence/network'
@@ -27,8 +27,8 @@ import { Console } from './components/Console'
 import { Group } from './components/Group'
 import { getDefaultChainId, toHexString } from './helpers'
 import logoUrl from './images/logo.svg'
-import skyweaverBannerUrl from './images/sky weaver-banner.png'
-import skyweaverBannerLargeUrl from './images/sky weaver-banner-large.png'
+import skyweaverBannerUrl from './images/skyweaver-banner.png'
+import skyweaverBannerLargeUrl from './images/skyweaver-banner-large.png'
 
 configureLogger({ logLevel: 'DEBUG' })
 
@@ -69,7 +69,7 @@ const DEFAULT_API_URL = 'https://api.sequence.app'
 // chain is required.
 const defaultChainId = getDefaultChainId() || ChainId.MAINNET
 // const defaultChainId = ChainId.POLYGON
-// const defaultChainId = ChainId.GURLI
+// const defaultChainId = ChainId.GOERLI
 // const defaultChainId = ChainId.ARBITRUM
 // const defaultChainId = ChainId.AVALANCHE
 // etc.. see the full list here: https://docs.sequence.xyz/multi-chain-support
@@ -109,11 +109,15 @@ const App = () => {
   const [isOpen, toggleModal] = useState(false)
   const [warning, setWarning] = useState(false)
 
-  useMemo(() => {
-    wallet.on('chainChanged', (chainId: string) => {
+  useEffect(() => {
+    const listener = (chainId: string) => {
       setShowChainId(Number(BigInt(chainId)))
-    })
-  }, [])
+    }
+    wallet.on('chainChanged', listener)
+    return () => {
+      wallet.removeListener('chainChanged', listener)
+    }
+  }, [wallet])
 
   useEffect(() => {
     setIsWalletConnected(wallet.isConnected())
@@ -125,14 +129,20 @@ const App = () => {
   }, [isWalletConnected])
 
   useEffect(() => {
-    // Wallet events
-    wallet.client.onOpen(() => {
+    const onOpen = () => {
       console.log('wallet window opened')
-    })
-
-    wallet.client.onClose(() => {
+    }
+    const onClose = () => {
       console.log('wallet window closed')
-    })
+    }
+
+    wallet.client.onOpen(onOpen)
+    wallet.client.onClose(onClose)
+
+    return () => {
+      wallet.client.removeListener('open', onOpen)
+      wallet.client.removeListener('close', onClose)
+    }
   }, [wallet])
 
   const defaultConnectOptions: ConnectOptions = {
@@ -281,7 +291,7 @@ const App = () => {
       const topChainId = wallet.getChainId()
       appendConsoleLine(`top chainId: ${topChainId}`)
 
-      const provider = wallet.getProvider()
+      const provider = wallet
       const providerChainId = provider!.getChainId()
       appendConsoleLine(`provider.getChainId(): ${providerChainId}`)
 
@@ -958,18 +968,9 @@ And that has made all the difference.
     }
   }, [email, isOpen])
 
-  const sanitizeEmail = (email: string) => {
-    // Trim unnecessary spaces
-    email = email.trim()
-
-    // Check if the email matches the pattern of a typical email
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-    if (emailRegex.test(email)) {
-      return true
-    }
-
-    return false
-  }
+  const sanitizeEmail = (email: string | null) => {
+    if (!email) return false
+    const trimmedEmail = email.trim()
 
   return (
     <Box marginY="0" marginX="auto" paddingX="6" style={{ maxWidth: '720px', marginTop: '80px', marginBottom: '80px' }}>
@@ -1088,7 +1089,7 @@ And that has made all the difference.
           name="chainId"
           label={'Network'}
           labelLocation="top"
-          onValueChange={value => wallet.setDefaultChainId(Number(value))}
+          onValueChange={value => sequence.getWallet().setDefaultChainId(Number(value))}
           value={String(showChainId)}
           options={[
             ...Object.values(networks).map(network => ({

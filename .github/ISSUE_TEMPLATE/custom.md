@@ -1,11 +1,10 @@
 ---
-name: General issue
-about: Open an issue for topics not covered by other templates
+name: Custom issue template
+about: A brief description of this template's purpose.
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-**Description**
-A clear and concise description of the issue or suggestion.
+
