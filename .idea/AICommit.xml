@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.github.blarc.ai.commits.intellij.plugin.settings.ProjectSettings" isProjectSpecificLLMClient="true" isProjectSpecificPrompt="true">
+    <option name="projectSpecificLLMClient" value="true" />
+    <option name="projectSpecificPrompt" value="true" />
+  </component>
+</project>
