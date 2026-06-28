@@ -2,6 +2,7 @@ import { Context, Payload, Signature, Config, GenericTree } from '@0xsequence/wa
 import { Address, Hex } from 'ox'
 import type { CoreEnv } from '../../env.js'
 import { Store } from './index.js'
+import { Migration } from '../index.js'
 
 const DB_VERSION = 1
 const STORE_CONFIGS = 'configs'
@@ -12,6 +13,7 @@ const STORE_SIGNATURES = 'signatures'
 const STORE_SAPIENT_SIGNER_SUBDIGESTS = 'sapientSignerSubdigests'
 const STORE_SAPIENT_SIGNATURES = 'sapientSignatures'
 const STORE_TREES = 'trees'
+const STORE_MIGRATIONS = 'migrations'
 
 export class IndexedDbStore implements Store {
   private _db: IDBDatabase | null = null
@@ -64,6 +66,9 @@ export class IndexedDbStore implements Store {
         }
         if (!db.objectStoreNames.contains(STORE_TREES)) {
           db.createObjectStore(STORE_TREES)
+        }
+        if (!db.objectStoreNames.contains(STORE_MIGRATIONS)) {
+          db.createObjectStore(STORE_MIGRATIONS)
         }
       }
 
@@ -213,5 +218,29 @@ export class IndexedDbStore implements Store {
 
   async saveTree(rootHash: Hex.Hex, tree: GenericTree.Tree): Promise<void> {
     await this.put(STORE_TREES, rootHash.toLowerCase(), tree)
+  }
+
+  private getMigrationKey(
+    wallet: Address.Address,
+    fromImageHash: Hex.Hex,
+    fromVersion: number,
+    chainId: number,
+  ): string {
+    return `${wallet.toLowerCase()}-${fromImageHash.toLowerCase()}-${fromVersion}-${chainId}`
+  }
+
+  async loadMigration(
+    wallet: Address.Address,
+    fromImageHash: Hex.Hex,
+    fromVersion: number,
+    chainId: number,
+  ): Promise<Migration | undefined> {
+    const key = this.getMigrationKey(wallet, fromImageHash, fromVersion, chainId)
+    return this.get(STORE_MIGRATIONS, key)
+  }
+
+  async saveMigration(wallet: Address.Address, migration: Migration): Promise<void> {
+    const key = this.getMigrationKey(wallet, migration.fromImageHash, migration.fromVersion, migration.chainId)
+    await this.put(STORE_MIGRATIONS, key, migration)
   }
 }
