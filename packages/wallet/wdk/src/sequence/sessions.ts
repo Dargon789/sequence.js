@@ -9,7 +9,9 @@ import {
   SessionConfig,
 } from '@0xsequence/wallet-primitives'
 import { Address, Bytes, Hash, Hex } from 'ox'
+import { AuthCodeHandler } from './handlers/authcode.js'
 import { AuthCodePkceHandler } from './handlers/authcode-pkce.js'
+import { IdTokenHandler } from './handlers/idtoken.js'
 import { IdentityHandler, identityTypeToHex } from './handlers/identity.js'
 import { Handler } from './handlers/index.js'
 import { ManagerOptionsDefaults, Shared } from './manager.js'
@@ -253,7 +255,7 @@ export class Sessions implements SessionsInterface {
     return modules.some((m) => Address.isEqual(m.sapientLeaf.address, this.shared.sequence.extensions.sessions))
   }
 
-  async initSessionModule(modules: Module[], identitySigners: Address.Address[], guardTopology?: Config.NestedLeaf) {
+  async initSessionModule(modules: Module[], identitySigners: Address.Address[], guardTopology?: Config.Topology) {
     if (this.hasSessionModule(modules)) {
       throw new Error('session-module-already-initialized')
     }
@@ -336,11 +338,20 @@ export class Sessions implements SessionsInterface {
         continue
       }
       const iHandler = this.shared.handlers.get(identityKind)
-      if (iHandler) {
-        handler = iHandler
-        identitySignerAddress = identitySigner
-        break
+      if (!iHandler) {
+        continue
       }
+      if (identityKind === Kinds.LocalDevice) {
+        const hasLocalDevice = await this.shared.modules.devices.has(identitySigner)
+        if (!hasLocalDevice) {
+          console.warn('Identity signer not on this device, skipping', identitySigner)
+          continue
+        }
+      }
+
+      handler = iHandler
+      identitySignerAddress = identitySigner
+      break
     }
 
     if (!handler || !identitySignerAddress) {
@@ -353,7 +364,11 @@ export class Sessions implements SessionsInterface {
     let audienceHash: Hex.Hex = '0x'
     if (handler instanceof IdentityHandler) {
       identityType = handler.identityType
-      if (handler instanceof AuthCodePkceHandler) {
+      if (
+        handler instanceof AuthCodeHandler ||
+        handler instanceof AuthCodePkceHandler ||
+        handler instanceof IdTokenHandler
+      ) {
         issuerHash = Hash.keccak256(Hex.fromString(handler.issuer))
         audienceHash = Hash.keccak256(Hex.fromString(handler.audience))
       }

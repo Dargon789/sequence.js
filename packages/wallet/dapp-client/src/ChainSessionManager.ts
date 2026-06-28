@@ -37,12 +37,14 @@ import {
   TransportMode,
   GuardConfig,
   CreateNewSessionPayload,
+  EthAuthSettings,
   ModifyExplicitSessionPayload,
   SessionResponse,
   AddExplicitSessionPayload,
   FeeOption,
   OperationFailedStatus,
   OperationStatus,
+  ETHAuthProof,
 } from './types/index.js'
 import { CACHE_DB_NAME, VALUE_FORWARDER_ADDRESS } from './utils/constants.js'
 import { ExplicitSession, ImplicitSession, ExplicitSessionConfig } from './index.js'
@@ -84,6 +86,11 @@ export class ChainSessionManager {
   public loginMethod: LoginMethod | null = null
   public userEmail: string | null = null
   private guard?: GuardConfig
+  private lastSignedCallCache?: {
+    fingerprint: string
+    signedCall: { to: Address.Address; data: Hex.Hex }
+    createdAtMs: number
+  }
 
   /**
    * @param chainId The ID of the chain this manager is responsible for.
@@ -114,7 +121,8 @@ export class ChainSessionManager {
     const rpcUrl = getRpcUrl(chainId, nodesUrl, projectAccessKey)
     this.chainId = chainId
 
-    if (canUseIndexedDb) {
+    const canUseIndexedDbInEnv = canUseIndexedDb && typeof indexedDB !== 'undefined'
+    if (canUseIndexedDbInEnv) {
       this.stateProvider = new State.Cached({
         source: new State.Sequence.Provider(keyMachineUrl),
         cache: new State.Local.Provider(new State.Local.IndexedDbStore(CACHE_DB_NAME)),
@@ -150,11 +158,11 @@ export class ChainSessionManager {
     listener: ChainSessionManagerEventMap[K],
   ): () => void {
     if (!this.eventListeners[event]) {
-      this.eventListeners[event] = new Set() as any
+      this.eventListeners[event] = new Set<ChainSessionManagerEventMap[K]>()
     }
-    ;(this.eventListeners[event] as any).add(listener)
+    this.eventListeners[event].add(listener)
     return () => {
-      ;(this.eventListeners[event] as any)?.delete(listener)
+      this.eventListeners[event]?.delete(listener)
     }
   }
 
@@ -221,7 +229,7 @@ export class ChainSessionManager {
       stateProvider: this.stateProvider,
     })
     this.sessionManager = new Signers.SessionManager(this.wallet, {
-      sessionManagerAddress: Extensions.Rc3.sessions,
+      sessionManagerAddress: Extensions.Rc5.sessions,
       provider: this.provider!,
     })
     this.isInitialized = true
@@ -279,6 +287,7 @@ export class ChainSessionManager {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (this.isInitialized) {
@@ -305,6 +314,7 @@ export class ChainSessionManager {
         origin,
         session: completeSession as ExplicitSession | undefined,
         includeImplicitSession: options.includeImplicitSession ?? false,
+        ethAuth: options.ethAuth,
         preferredLoginMethod: options.preferredLoginMethod,
         email: options.preferredLoginMethod === 'email' ? options.email : undefined,
       }
@@ -369,6 +379,10 @@ export class ChainSessionManager {
         this.loginMethod = loginMethod ?? null
         this.userEmail = userEmail ?? null
         this.guard = guard
+      }
+
+      if (payload.ethAuth) {
+        await this._saveEthAuthProofIfProvided(connectResponse.ethAuthProof)
       }
 
       if (this.transport.mode === TransportMode.POPUP) {
@@ -537,7 +551,7 @@ export class ChainSessionManager {
       const { userEmail, loginMethod, guard } = connectResponse
       const savedRequest = await this.sequenceStorage.peekPendingRequest()
       const savedPayload = savedRequest?.payload as CreateNewSessionPayload | undefined
-      const explicitSessionRequested = !!savedPayload?.session
+      const explicitSessionRequested = (savedPayload?.session?.permissions?.length ?? 0) > 0
       const implicitSessionRequested = savedPayload?.includeImplicitSession ?? false
       const needsTempPk = explicitSessionRequested || implicitSessionRequested
       const tempPk = needsTempPk ? await this.sequenceStorage.getAndClearTempSessionPk() : null
@@ -589,6 +603,10 @@ export class ChainSessionManager {
           this.loginMethod = loginMethod ?? null
           this.userEmail = userEmail ?? null
           this.guard = guard
+        }
+
+        if (savedPayload?.ethAuth) {
+          await this._saveEthAuthProofIfProvided(connectResponse.ethAuthProof)
         }
       } else if (response.action === RequestActionType.ADD_EXPLICIT_SESSION) {
         if (!this.walletAddress || !Address.isEqual(receivedAddress, this.walletAddress)) {
@@ -730,7 +748,7 @@ export class ChainSessionManager {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const tempManager = new Signers.SessionManager(this.wallet, {
-          sessionManagerAddress: Extensions.Rc3.sessions,
+          sessionManagerAddress: Extensions.Rc5.sessions,
           provider: this.provider,
         })
         const topology = await tempManager.getTopology()
@@ -810,19 +828,6 @@ export class ChainSessionManager {
       await this.sessionManager.findSignersForCalls(this.wallet.address, this.chainId, calls)
       return true
     } catch (error) {
-      if (error instanceof Error && error.message.includes('Signer supporting call is expired')) {
-        // Extract the expired signer address from the message with address regex
-        const expiredSignerAddress = error.message.match(/(0x[0-9a-fA-F]{40})/)?.[1]
-        if (expiredSignerAddress) {
-          // Refresh the session
-          await this._refreshExplicitSession(Address.from(expiredSignerAddress))
-          // Retry the permission check
-          return this.hasPermission(transactions)
-        } else {
-          // Could not parse error message. Rethrow as this shouldn't happen.
-          throw error
-        }
-      }
       // An error from findSignersForCalls indicates a permission failure.
       console.warn(
         `Permission check failed for chain ${this.chainId}:`,
@@ -850,10 +855,74 @@ export class ChainSessionManager {
     }))
     try {
       const signedCall = await this._buildAndSignCalls(callsToSend)
-      const feeOptions = await this.relayer.feeOptions(signedCall.to, this.chainId, callsToSend)
+      const fingerprint = this._fingerprintCalls(callsToSend)
+      if (fingerprint) {
+        this.lastSignedCallCache = {
+          fingerprint,
+          signedCall,
+          createdAtMs: Date.now(),
+        }
+      }
+      const walletAddress = this.walletAddress
+      if (!walletAddress) throw new InitializationError('Wallet is not initialized.')
+      const feeOptions = await this.relayer.feeOptions(
+        walletAddress,
+        this.chainId,
+        signedCall.to,
+        callsToSend,
+        signedCall.data,
+      )
       return feeOptions.options
     } catch (err) {
       throw new FeeOptionError(`Failed to get fee options: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+
+  /**
+   * Checks whether the given transactions would be sponsored by an active
+   * relayer policy on this chain.
+   *
+   * Returns `true` only when the relayer's `/FeeOptions` endpoint explicitly
+   * reports sponsorship. A failed quote, network error, or absence of
+   * sponsorship all return `false`, so a `true` result is always safe to
+   * surface as "free gas" in UI.
+   */
+  async isSponsored(calls: Transaction[]): Promise<boolean> {
+    const callsToSend = calls.map((tx) => ({
+      to: tx.to,
+      value: tx.value,
+      data: tx.data,
+      gasLimit: tx.gasLimit ?? BigInt(0),
+      delegateCall: tx.delegateCall ?? false,
+      onlyFallback: tx.onlyFallback ?? false,
+      behaviorOnError: tx.behaviorOnError ?? ('revert' as const),
+    }))
+    try {
+      const signedCall = await this._buildAndSignCalls(callsToSend)
+      const fingerprint = this._fingerprintCalls(callsToSend)
+      if (fingerprint) {
+        this.lastSignedCallCache = {
+          fingerprint,
+          signedCall,
+          createdAtMs: Date.now(),
+        }
+      }
+      const walletAddress = this.walletAddress
+      if (!walletAddress) throw new InitializationError('Wallet is not initialized.')
+      const feeOptions = await this.relayer.feeOptions(
+        walletAddress,
+        this.chainId,
+        signedCall.to,
+        callsToSend,
+        signedCall.data,
+      )
+      return feeOptions.sponsored === true && !feeOptions.failed
+    } catch (err) {
+      console.warn(
+        `isSponsored check failed for chain ${this.chainId}:`,
+        err instanceof Error ? err.message : String(err),
+      )
+      return false
     }
   }
 
@@ -906,7 +975,7 @@ export class ChainSessionManager {
           callsToSend.unshift(transferCall)
         }
       }
-      const signedCalls = await this._buildAndSignCalls(callsToSend)
+      const signedCalls = this._getCachedSignedCall(callsToSend) ?? (await this._buildAndSignCalls(callsToSend))
       const hash = await this.relayer.relay(signedCalls.to, signedCalls.data, this.chainId)
       const status = await this._waitForTransactionReceipt(hash.opHash, this.chainId)
       if (status.status === 'confirmed') {
@@ -1099,5 +1168,50 @@ export class ChainSessionManager {
     await this.sequenceStorage.clearImplicitSession()
     await this.sequenceStorage.clearExplicitSessions()
     await this.sequenceStorage.clearSessionlessConnection()
+  }
+
+  private async _saveEthAuthProofIfProvided(ethAuthProof?: ETHAuthProof): Promise<void> {
+    if (!ethAuthProof) {
+      return
+    }
+    await this.sequenceStorage.saveEthAuthProof(ethAuthProof)
+  }
+
+  private _getCachedSignedCall(calls: Payload.Call[]): { to: Address.Address; data: Hex.Hex } | null {
+    if (!this.lastSignedCallCache) {
+      return null
+    }
+    const ttlMs = 30_000
+    if (Date.now() - this.lastSignedCallCache.createdAtMs > ttlMs) {
+      this.lastSignedCallCache = undefined
+      return null
+    }
+    const fingerprint = this._fingerprintCalls(calls)
+    if (!fingerprint) {
+      return null
+    }
+    if (fingerprint !== this.lastSignedCallCache.fingerprint) {
+      return null
+    }
+    return this.lastSignedCallCache.signedCall
+  }
+
+  private _fingerprintCalls(calls: Payload.Call[]): string | null {
+    try {
+      return JSON.stringify(
+        calls.map((call) => ({
+          to: call.to,
+          value: call.value?.toString() ?? '0',
+          data: call.data ?? '0x',
+          gasLimit: call.gasLimit?.toString() ?? '0',
+          delegateCall: call.delegateCall ?? false,
+          onlyFallback: call.onlyFallback ?? false,
+          behaviorOnError: call.behaviorOnError ?? 'revert',
+        })),
+      )
+    } catch (error) {
+      console.warn('ChainSessionManager._fingerprintCalls failed:', error)
+      return null
+    }
   }
 }

@@ -5,7 +5,7 @@ import { type ExplicitSession, type ExplicitSessionConfig, type ImplicitSession,
 import { ChainSessionManager } from './ChainSessionManager.js'
 import { DappTransport } from './DappTransport.js'
 import { ConnectionError, InitializationError, SigningError, TransactionError } from './utils/errors.js'
-import { SequenceStorage, WebStorage } from './utils/storage.js'
+import { SequenceStorage, WebStorage, type SessionlessConnectionData } from './utils/storage.js'
 import {
   CreateNewSessionResponse,
   DappClientExplicitSessionEventListener,
@@ -14,8 +14,10 @@ import {
   GetFeeTokensResponse,
   GuardConfig,
   LoginMethod,
+  EthAuthSettings,
   RandomPrivateKeyFn,
   RequestActionType,
+  ETHAuthProof,
   SendWalletTransactionPayload,
   SequenceSessionStorage,
   SignMessagePayload,
@@ -30,7 +32,7 @@ import { KEYMACHINE_URL, NODES_URL, RELAYER_URL } from './utils/constants.js'
 import { getRelayerUrl, getRpcUrl } from './utils/index.js'
 import { Relayer } from '@0xsequence/relayer'
 
-export type DappClientEventListener = (data?: any) => void
+export type DappClientEventListener = (data?: unknown) => void
 
 interface DappClientEventMap {
   sessionsUpdated: () => void
@@ -69,7 +71,8 @@ export class DappClient {
   private chainSessionManagers: Map<number, ChainSessionManager> = new Map()
 
   private walletUrl: string
-  private transport: DappTransport
+  private transport: DappTransport | null = null
+  private transportModeSetting: TransportMode
   private projectAccessKey: string
   private nodesUrl: string
   private relayerUrl: string
@@ -85,9 +88,14 @@ export class DappClient {
 
   private walletAddress: Address.Address | null = null
   private hasSessionlessConnection = false
+  private cachedSessionlessConnection: SessionlessConnectionData | null = null
   private eventListeners: {
     [K in keyof DappClientEventMap]?: Set<DappClientEventMap[K]>
   } = {}
+
+  private get isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof document !== 'undefined'
+  }
 
   /**
    * @param walletUrl The URL of the Wallet Webapp.
@@ -133,17 +141,13 @@ export class DappClient {
       canUseIndexedDb = true,
     } = options || {}
 
-    this.transport = new DappTransport(
-      walletUrl,
-      transportMode,
-      undefined,
-      sequenceSessionStorage,
-      redirectActionHandler,
-    )
     this.walletUrl = walletUrl
+    this.transportModeSetting = transportMode
     this.projectAccessKey = projectAccessKey
     this.nodesUrl = options?.nodesUrl || NODES_URL
     this.relayerUrl = options?.relayerUrl || RELAYER_URL
+    this.sequenceSessionStorage = sequenceSessionStorage
+    this.redirectActionHandler = redirectActionHandler
     this.origin = origin
     this.keymachineUrl = keymachineUrl
     this.sequenceStorage = sequenceStorage
@@ -158,7 +162,7 @@ export class DappClient {
    * @returns The transport mode of the client. {@link TransportMode}
    */
   public get transportMode(): TransportMode {
-    return this.transport.mode
+    return this.transport?.mode ?? this.transportModeSetting
   }
 
   /**
@@ -180,11 +184,12 @@ export class DappClient {
    */
   public on<K extends keyof DappClientEventMap>(event: K, listener: DappClientEventMap[K]): () => void {
     if (!this.eventListeners[event]) {
-      this.eventListeners[event] = new Set() as any
+      // @ts-expect-error - indexing into evenListeners will improperly create a union of all the possible types
+      this.eventListeners[event] = new Set<DappClientEventMap[K]>()
     }
-    ;(this.eventListeners[event] as any).add(listener)
+    this.eventListeners[event].add(listener)
     return () => {
-      ;(this.eventListeners[event] as any)?.delete(listener)
+      this.eventListeners[event]?.delete(listener)
     }
   }
 
@@ -273,10 +278,14 @@ export class DappClient {
   private async _loadStateFromStorage(): Promise<void> {
     const implicitSession = await this.sequenceStorage.getImplicitSession()
 
-    const [explicitSessions, sessionlessConnection] = await Promise.all([
+    const [explicitSessions, sessionlessConnection, sessionlessSnapshot] = await Promise.all([
       this.sequenceStorage.getExplicitSessions(),
       this.sequenceStorage.getSessionlessConnection(),
+      this.sequenceStorage.getSessionlessConnectionSnapshot
+        ? this.sequenceStorage.getSessionlessConnectionSnapshot()
+        : Promise.resolve(null),
     ])
+    this.cachedSessionlessConnection = sessionlessSnapshot ?? null
     const chainIdsToInitialize = new Set([
       ...(implicitSession?.chainId !== undefined ? [implicitSession.chainId] : []),
       ...explicitSessions.map((s) => s.chainId),
@@ -316,6 +325,10 @@ export class DappClient {
     this.userEmail = result[0]?.userEmail || null
     this.guard = implicitSession?.guard || explicitSessions.find((s) => !!s.guard)?.guard
     await this.sequenceStorage.clearSessionlessConnection()
+    if (this.sequenceStorage.clearSessionlessConnectionSnapshot) {
+      await this.sequenceStorage.clearSessionlessConnectionSnapshot()
+    }
+    this.cachedSessionlessConnection = null
 
     this.isInitialized = true
     this.emit('sessionsUpdated')
@@ -370,6 +383,70 @@ export class DappClient {
   }
 
   /**
+   * Indicates if there is cached sessionless connection data that can be restored.
+   */
+  public async hasRestorableSessionlessConnection(): Promise<boolean> {
+    if (this.cachedSessionlessConnection) return true
+    this.cachedSessionlessConnection = this.sequenceStorage.getSessionlessConnectionSnapshot
+      ? await this.sequenceStorage.getSessionlessConnectionSnapshot()
+      : null
+    return this.cachedSessionlessConnection !== null
+  }
+
+  /**
+   * Returns the cached sessionless connection metadata without altering client state.
+   * @returns The cached sessionless connection or null if none is available.
+   */
+  public async getSessionlessConnectionInfo(): Promise<SessionlessConnectionData | null> {
+    if (!this.cachedSessionlessConnection) {
+      this.cachedSessionlessConnection = this.sequenceStorage.getSessionlessConnectionSnapshot
+        ? await this.sequenceStorage.getSessionlessConnectionSnapshot()
+        : null
+    }
+    if (!this.cachedSessionlessConnection) return null
+    return {
+      walletAddress: this.cachedSessionlessConnection.walletAddress,
+      loginMethod: this.cachedSessionlessConnection.loginMethod,
+      userEmail: this.cachedSessionlessConnection.userEmail,
+      guard: this.cachedSessionlessConnection.guard,
+    }
+  }
+
+  /**
+   * Returns the latest persisted ETHAuth proof, if one has been received from the wallet.
+   */
+  public async getEthAuthProof(): Promise<ETHAuthProof | null> {
+    return this.sequenceStorage.getEthAuthProof()
+  }
+
+  /**
+   * Restores a sessionless connection that was previously persisted via {@link disconnect} or a connect flow.
+   * @returns A promise that resolves to true if a sessionless connection was applied.
+   */
+  public async restoreSessionlessConnection(): Promise<boolean> {
+    const sessionlessConnection =
+      this.cachedSessionlessConnection ??
+      (this.sequenceStorage.getSessionlessConnectionSnapshot
+        ? await this.sequenceStorage.getSessionlessConnectionSnapshot()
+        : null)
+    if (!sessionlessConnection) {
+      return false
+    }
+
+    await this.applySessionlessConnectionState(
+      sessionlessConnection.walletAddress,
+      sessionlessConnection.loginMethod,
+      sessionlessConnection.userEmail,
+      sessionlessConnection.guard,
+    )
+    if (this.sequenceStorage.clearSessionlessConnectionSnapshot) {
+      await this.sequenceStorage.clearSessionlessConnectionSnapshot()
+    }
+    this.cachedSessionlessConnection = null
+    return true
+  }
+
+  /**
    * Handles the redirect response from the Wallet.
    * This is called automatically on `initialize()` for web environments but can be called manually
    * with a URL in environments like React Native.
@@ -379,7 +456,11 @@ export class DappClient {
   public async handleRedirectResponse(url?: string): Promise<void> {
     const pendingRequest = await this.sequenceStorage.peekPendingRequest()
 
-    const response = await this.transport.getRedirectResponse(true, url)
+    if (!this.transport && this.transportMode === TransportMode.POPUP && !this.isBrowser) {
+      return
+    }
+
+    const response = await this.ensureTransport().getRedirectResponse(true, url)
     if (!response) {
       return
     }
@@ -490,6 +571,7 @@ export class DappClient {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (this.isInitialized) {
@@ -504,7 +586,7 @@ export class DappClient {
 
       // For popup mode, we need to manually update the state and emit an event.
       // For redirect mode, this code won't be reached; the page will navigate away.
-      if (this.transport.mode === TransportMode.POPUP) {
+      if (this.transportMode === TransportMode.POPUP) {
         const hasImplicitSession = !!chainSessionManager.getImplicitSession()
         const hasExplicitSessions = chainSessionManager.getExplicitSessions().length > 0
         if (shouldCreateSession && (hasImplicitSession || hasExplicitSessions)) {
@@ -545,6 +627,7 @@ export class DappClient {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (!this.isInitialized || !this.hasSessionlessConnection || !this.walletAddress) {
@@ -579,7 +662,7 @@ export class DappClient {
       chainSessionManager = chainSessionManager ?? this.getChainSessionManager(chainId)
       await chainSessionManager.createNewSession(this.origin, sessionConfig, options)
 
-      if (this.transport.mode === TransportMode.POPUP) {
+      if (this.transportMode === TransportMode.POPUP) {
         const hasImplicitSession = !!chainSessionManager.getImplicitSession()
         const hasExplicitSessions = chainSessionManager.getExplicitSessions().length > 0
 
@@ -653,7 +736,7 @@ export class DappClient {
     }
     await chainSessionManager.addExplicitSession(explicitSessionConfig)
 
-    if (this.transport.mode === TransportMode.POPUP) {
+    if (this.transportMode === TransportMode.POPUP) {
       await this._loadStateFromStorage()
     }
   }
@@ -688,7 +771,7 @@ export class DappClient {
     }
     await chainSessionManager.modifyExplicitSession(explicitSession)
 
-    if (this.transport.mode === TransportMode.POPUP) {
+    if (this.transportMode === TransportMode.POPUP) {
       await this._loadStateFromStorage()
     }
   }
@@ -723,6 +806,30 @@ export class DappClient {
   async getFeeOptions(chainId: number, transactions: Transaction[]): Promise<FeeOption[]> {
     const chainSessionManager = await this.getOrInitializeChainManager(chainId)
     return await chainSessionManager.getFeeOptions(transactions)
+  }
+
+  /**
+   * Checks whether the given transactions would be sponsored on `chainId`.
+   *
+   * Returns `true` only when the relayer's `/FeeOptions` endpoint explicitly
+   * reports sponsorship. A failed quote, network error, or absence of
+   * sponsorship all return `false`, so a `true` result is always safe to
+   * surface as "free gas" in UI.
+   *
+   * Prefer this over inferring sponsorship from an empty `getFeeOptions`
+   * array — a swallowed `/FeeOptions` error also produces an empty array.
+   *
+   * @example
+   * if (await dappClient.isSponsored(1, transactions)) {
+   *   // safe to show "Free gas, sponsored by app"
+   * } else {
+   *   const feeOptions = await dappClient.getFeeOptions(1, transactions)
+   *   // present feeOptions[0..n] to the user as payment choices
+   * }
+   */
+  async isSponsored(chainId: number, transactions: Transaction[]): Promise<boolean> {
+    const chainSessionManager = await this.getOrInitializeChainManager(chainId)
+    return await chainSessionManager.isSponsored(transactions)
   }
 
   /**
@@ -881,6 +988,8 @@ export class DappClient {
   /**
    * Disconnects the client, clearing all session data from browser storage.
    * @remarks This action does not revoke the sessions on-chain. Sessions remain active until they expire or are manually revoked by the user in their wallet.
+   * @param options Options to control the disconnection behavior.
+   * @param options.keepSessionlessConnection When true, retains the latest wallet metadata so it can be restored later as a sessionless connection. Defaults to true.
    * @returns A promise that resolves when disconnection is complete.
    *
    * @example
@@ -888,23 +997,42 @@ export class DappClient {
    * await dappClient.initialize();
    *
    * if (dappClient.isInitialized) {
-   *   await dappClient.disconnect();
+   *   await dappClient.disconnect({ keepSessionlessConnection: true });
    * }
    */
-  async disconnect(): Promise<void> {
-    const transportMode = this.transport.mode
+  async disconnect(options?: { keepSessionlessConnection?: boolean }): Promise<void> {
+    const keepSessionlessConnection = options?.keepSessionlessConnection ?? true
 
-    this.transport.destroy()
-    this.transport = new DappTransport(
-      this.walletUrl,
-      transportMode,
-      undefined,
-      this.sequenceSessionStorage,
-      this.redirectActionHandler,
-    )
+    if (this.transport) {
+      this.transport.destroy()
+    }
+    this.transport = null
 
     this.chainSessionManagers.clear()
+    const sessionlessSnapshot =
+      keepSessionlessConnection && this.walletAddress
+        ? {
+            walletAddress: this.walletAddress,
+            loginMethod: this.loginMethod ?? undefined,
+            userEmail: this.userEmail ?? undefined,
+            guard: this.guard,
+          }
+        : undefined
+
     await this.sequenceStorage.clearAllData()
+
+    if (sessionlessSnapshot) {
+      if (this.sequenceStorage.saveSessionlessConnectionSnapshot) {
+        await this.sequenceStorage.saveSessionlessConnectionSnapshot(sessionlessSnapshot)
+      }
+      this.cachedSessionlessConnection = sessionlessSnapshot
+    } else {
+      if (this.sequenceStorage.clearSessionlessConnectionSnapshot) {
+        await this.sequenceStorage.clearSessionlessConnectionSnapshot()
+      }
+      this.cachedSessionlessConnection = null
+    }
+
     this.isInitialized = false
     this.walletAddress = null
     this.loginMethod = null
@@ -926,6 +1054,22 @@ export class DappClient {
     }
   }
 
+  private ensureTransport(): DappTransport {
+    if (!this.transport) {
+      if (this.transportModeSetting === TransportMode.POPUP && !this.isBrowser) {
+        throw new InitializationError('Popup transport requires a browser environment.')
+      }
+      this.transport = new DappTransport(
+        this.walletUrl,
+        this.transportModeSetting,
+        undefined,
+        this.sequenceSessionStorage,
+        this.redirectActionHandler,
+      )
+    }
+    return this.transport
+  }
+
   private async applySessionlessConnectionState(
     walletAddress: Address.Address,
     loginMethod?: LoginMethod | null,
@@ -939,6 +1083,7 @@ export class DappClient {
     this.guard = guard
     this.hasSessionlessConnection = true
     this.isInitialized = true
+    this.cachedSessionlessConnection = null
     this.emit('sessionsUpdated')
     if (persist) {
       await this.sequenceStorage.saveSessionlessConnection({
@@ -962,17 +1107,18 @@ export class DappClient {
     try {
       const redirectUrl = this.origin + (this.redirectPath ? this.redirectPath : '')
       const path = action === RequestActionType.SEND_WALLET_TRANSACTION ? '/request/transaction' : '/request/sign'
+      const transport = this.ensureTransport()
 
-      if (this.transport.mode === TransportMode.REDIRECT) {
+      if (transport.mode === TransportMode.REDIRECT) {
         await this.sequenceStorage.savePendingRequest({
           action,
           payload,
           chainId: chainId,
         })
         await this.sequenceStorage.setPendingRedirectRequest(true)
-        await this.transport.sendRequest(action, redirectUrl, payload, { path })
+        await transport.sendRequest(action, redirectUrl, payload, { path })
       } else {
-        const response = await this.transport.sendRequest<WalletActionResponse>(action, redirectUrl, payload, {
+        const response = await transport.sendRequest<WalletActionResponse>(action, redirectUrl, payload, {
           path,
         })
         this.emit('walletActionResponse', { action, response, chainId })
@@ -982,7 +1128,7 @@ export class DappClient {
       this.emit('walletActionResponse', { action, error, chainId })
       throw error
     } finally {
-      if (this.transport.mode === TransportMode.POPUP) {
+      if (this.transportMode === TransportMode.POPUP && this.transport) {
         this.transport.closeWallet()
       }
     }
@@ -1018,9 +1164,10 @@ export class DappClient {
   private getChainSessionManager(chainId: number): ChainSessionManager {
     let chainSessionManager = this.chainSessionManagers.get(chainId)
     if (!chainSessionManager) {
+      const transport = this.ensureTransport()
       chainSessionManager = new ChainSessionManager(
         chainId,
-        this.transport,
+        transport,
         this.projectAccessKey,
         this.keymachineUrl,
         this.nodesUrl,
