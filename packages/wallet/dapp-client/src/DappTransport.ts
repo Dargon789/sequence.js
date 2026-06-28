@@ -15,21 +15,21 @@ import {
 const isBrowserEnvironment = typeof window !== 'undefined' && typeof document !== 'undefined'
 
 const base64Encode = (value: string) => {
-  if (typeof btoa !== 'undefined') {
-    return btoa(value)
-  }
   if (typeof Buffer !== 'undefined') {
     return Buffer.from(value, 'utf-8').toString('base64')
+  }
+  if (typeof btoa !== 'undefined') {
+    return btoa(unescape(encodeURIComponent(value)))
   }
   throw new Error('Base64 encoding is not supported in this environment.')
 }
 
 const base64Decode = (value: string) => {
-  if (typeof atob !== 'undefined') {
-    return atob(value)
-  }
   if (typeof Buffer !== 'undefined') {
     return Buffer.from(value, 'base64').toString('utf-8')
+  }
+  if (typeof atob !== 'undefined') {
+    return decodeURIComponent(escape(atob(value)))
   }
   throw new Error('Base64 decoding is not supported in this environment.')
 }
