@@ -29,7 +29,7 @@ function encodeGasRefundTransaction(option?: FeeOption) {
           gasLimit: option.gasLimit,
           to: option.to,
           value: value.toHexString(),
-          data: '0x'
+          data: []
         }
       ]
 

@@ -262,7 +262,7 @@ export const tests = async () => {
 
     const ethAmount = ethers.utils.parseEther('10.1234')
     const txResp = await sendETH(testAccount, wallet.getAddress(), ethAmount)
-    const txReceipt = await txResp.wait()
+    const txReceipt = await provider.getTransactionReceipt(txResp.hash)
     assert.true(txReceipt.status === 1, 'eth sent from signer1')
 
     const walletBalanceAfter = await signer.getBalance()
