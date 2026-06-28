@@ -146,6 +146,8 @@ export class DappClient {
     this.projectAccessKey = projectAccessKey
     this.nodesUrl = options?.nodesUrl || NODES_URL
     this.relayerUrl = options?.relayerUrl || RELAYER_URL
+    this.sequenceSessionStorage = sequenceSessionStorage
+    this.redirectActionHandler = redirectActionHandler
     this.origin = origin
     this.keymachineUrl = keymachineUrl
     this.sequenceStorage = sequenceStorage
