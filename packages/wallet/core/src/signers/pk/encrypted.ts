@@ -3,8 +3,8 @@ import { resolveCoreEnv, type CoreEnv, type CryptoLike, type StorageLike, type T
 import { PkStore } from './index.js'
 
 export interface EncryptedData {
-  iv: BufferSource
-  data: BufferSource
+  iv: Uint8Array
+  data: ArrayBuffer
   keyPointer: string
   address: Address.Address
   publicKey: PublicKey.PublicKey
