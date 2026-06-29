@@ -1,6 +1,6 @@
 {
   "name": "@0xsequence/relayer",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -37,6 +37,6 @@
     "@0xsequence/wallet-primitives": "workspace:^",
     "mipd": "^0.0.7",
     "ox": "^0.9.17",
-    "viem": "^2.40.3"
+    "viem": "^2.50.3"
   }
 }
