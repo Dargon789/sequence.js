@@ -1,4 +1,4 @@
-import { Hex, Bytes } from 'ox'
+import { Hex, Address, Bytes } from 'ox'
 import { Handler } from './handler.js'
 import * as Db from '../../dbs/index.js'
 import { Signatures } from '../signatures.js'
@@ -6,7 +6,6 @@ import * as Identity from '@0xsequence/identity-instrument'
 import { IdentitySigner } from '../../identity/signer.js'
 import { AuthCodeHandler } from './authcode.js'
 import type { WdkEnv } from '../../env.js'
-import type { CommitAuthArgs } from '../../dbs/auth-commitments.js'
 
 export class AuthCodePkceHandler extends AuthCodeHandler implements Handler {
   constructor(
@@ -23,30 +22,25 @@ export class AuthCodePkceHandler extends AuthCodeHandler implements Handler {
     super(signupKind, issuer, oauthUrl, audience, nitro, signatures, commitments, authKeys, env)
   }
 
-  public async commitAuth(target: string, args: CommitAuthArgs) {
+  public async commitAuth(target: string, isSignUp: boolean, state?: string, signer?: string) {
     let challenge = new Identity.AuthCodePkceChallenge(this.issuer, this.audience, this.redirectUri)
-    if (args.type === 'reauth') {
-      challenge = challenge.withSigner({ address: args.signer, keyType: Identity.KeyType.Ethereum_Secp256k1 })
+    if (signer) {
+      challenge = challenge.withSigner({ address: signer, keyType: Identity.KeyType.Ethereum_Secp256k1 })
     }
     const { verifier, loginHint, challenge: codeChallenge } = await this.nitroCommitVerifier(challenge)
-    const state = args.state ?? Hex.fromBytes(Bytes.random(32))
+    if (!state) {
+      state = Hex.fromBytes(Bytes.random(32))
+    }
 
-    const base = {
+    await this.commitments.set({
       id: state,
-      kind: this.signupKind as Db.AuthCommitment['kind'],
+      kind: this.signupKind,
       verifier,
       challenge: codeChallenge,
       target,
       metadata: {},
-    }
-
-    if (args.type === 'reauth') {
-      await this.commitments.set({ ...base, type: 'reauth', signer: args.signer })
-    } else if (args.type === 'add-signer') {
-      await this.commitments.set({ ...base, type: 'add-signer', wallet: args.wallet })
-    } else {
-      await this.commitments.set({ ...base, type: 'auth' })
-    }
+      isSignUp,
+    })
 
     const searchParams = this.serializeQuery({
       code_challenge: codeChallenge,

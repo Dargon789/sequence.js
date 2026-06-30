@@ -1,7 +1,14 @@
-import { Constants, Payload, Permission, SessionConfig, SessionSignature } from '@0xsequence/wallet-primitives'
+import {
+  Constants,
+  Extensions,
+  Payload,
+  Permission,
+  SessionConfig,
+  SessionSignature,
+} from '@0xsequence/wallet-primitives'
 import { AbiFunction, AbiParameters, Address, Bytes, Hash, Hex, Provider } from 'ox'
 import { MemoryPkStore, PkStore } from '../pk/index.js'
-import { ExplicitSessionSigner, isIncrementCall, SessionSignerValidity, UsageLimit } from './session.js'
+import { ExplicitSessionSigner, SessionSignerValidity, UsageLimit } from './session.js'
 
 export type ExplicitParams = Omit<Permission.SessionPermissions, 'signer'>
 
@@ -208,7 +215,11 @@ export class Explicit implements ExplicitSessionSigner {
     sessionManagerAddress: Address.Address,
     provider?: Provider.Provider,
   ): Promise<boolean> {
-    if (isIncrementCall(call, sessionManagerAddress)) {
+    if (
+      Address.isEqual(call.to, sessionManagerAddress) &&
+      Hex.size(call.data) > 4 &&
+      Hex.isEqual(Hex.slice(call.data, 0, 4), AbiFunction.getSelector(Constants.INCREMENT_USAGE_LIMIT))
+    ) {
       // Can sign increment usage calls
       return true
     }
@@ -230,7 +241,11 @@ export class Explicit implements ExplicitSessionSigner {
   ): Promise<SessionSignature.SessionCallSignature> {
     const call = payload.calls[callIdx]!
     let permissionIndex: number
-    if (isIncrementCall(call, sessionManagerAddress)) {
+    if (
+      Address.isEqual(call.to, sessionManagerAddress) &&
+      Hex.size(call.data) > 4 &&
+      Hex.isEqual(Hex.slice(call.data, 0, 4), AbiFunction.getSelector(Constants.INCREMENT_USAGE_LIMIT))
+    ) {
       // Permission check not required. Use the first permission
       permissionIndex = 0
     } else {
@@ -248,7 +263,10 @@ export class Explicit implements ExplicitSessionSigner {
     }
 
     // Sign it
-    const callHash = SessionSignature.hashPayloadWithCallIdx(wallet, payload, callIdx, chainId, sessionManagerAddress)
+    const useDeprecatedHash =
+      Address.isEqual(sessionManagerAddress, Extensions.Dev1.sessions) ||
+      Address.isEqual(sessionManagerAddress, Extensions.Dev2.sessions)
+    const callHash = SessionSignature.hashCallWithReplayProtection(payload, callIdx, chainId, useDeprecatedHash)
     const sessionSignature = await this._privateKey.signDigest(Bytes.fromHex(callHash))
     return {
       permissionIndex: BigInt(permissionIndex),
@@ -308,7 +326,7 @@ export class Explicit implements ExplicitSessionSigner {
           Bytes.fromHex(call.data).slice(Number(rule.offset), Number(rule.offset) + 32),
           32,
         )
-        const value: Bytes.Bytes = callDataValue.map((b, i) => b & rule.mask[i]!)
+        let value: Bytes.Bytes = callDataValue.map((b, i) => b & rule.mask[i]!)
         if (Bytes.toBigInt(value) === 0n) continue
 
         // Add to list

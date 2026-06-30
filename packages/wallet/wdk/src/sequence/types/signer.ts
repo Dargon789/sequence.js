@@ -5,14 +5,14 @@ export const Kinds = {
   LoginPasskey: 'login-passkey',
   LoginMnemonic: 'login-mnemonic', // Todo: do not name it login-mnemonic, just mnemonic
   LoginEmailOtp: 'login-email-otp',
-  LoginGoogle: 'login-google',
+  LoginGooglePkce: 'login-google-pkce',
   LoginApple: 'login-apple',
   Recovery: 'recovery-extension',
   Guard: 'guard-extension',
   Unknown: 'unknown',
 } as const
 
-export type Kind = (typeof Kinds)[keyof typeof Kinds] | `custom-${string}`
+export type Kind = (typeof Kinds)[keyof typeof Kinds]
 
 export type WitnessExtraSignerKind = {
   signerKind: string

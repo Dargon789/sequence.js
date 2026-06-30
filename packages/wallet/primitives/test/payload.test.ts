@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
-import { Address, Bytes, Hex } from 'ox'
+import { describe, expect, it, vi } from 'vitest'
+import { Address, Bytes, Hash, Hex } from 'ox'
+import { UserOperation } from 'ox/erc4337'
 
 import {
   KIND_TRANSACTIONS,
@@ -16,7 +17,11 @@ import {
   Digest,
   SessionImplicitAuthorize,
   Calls4337_07,
+  Recovery,
+  MayRecoveryPayload,
+  Payload,
   Parented,
+  TypedDataToSign,
   SolidityDecoded,
   fromMessage,
   fromConfigUpdate,

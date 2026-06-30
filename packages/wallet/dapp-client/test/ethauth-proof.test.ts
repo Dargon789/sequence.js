@@ -11,33 +11,34 @@ describe('ETHAuth proof persistence', () => {
     vi.unstubAllGlobals()
   })
 
-  const createSequenceStorageMock = () => ({
-    setPendingRedirectRequest: vi.fn().mockResolvedValue(undefined),
-    isRedirectRequestPending: vi.fn().mockResolvedValue(false),
-    saveTempSessionPk: vi.fn().mockResolvedValue(undefined),
-    getAndClearTempSessionPk: vi.fn().mockResolvedValue(null),
-    savePendingRequest: vi.fn().mockResolvedValue(undefined),
-    getAndClearPendingRequest: vi.fn().mockResolvedValue(null),
-    peekPendingRequest: vi.fn().mockResolvedValue(null),
-    saveExplicitSession: vi.fn().mockResolvedValue(undefined),
-    getExplicitSessions: vi.fn().mockResolvedValue([]),
-    clearExplicitSessions: vi.fn().mockResolvedValue(undefined),
-    saveImplicitSession: vi.fn().mockResolvedValue(undefined),
-    getImplicitSession: vi.fn().mockResolvedValue(null),
-    clearImplicitSession: vi.fn().mockResolvedValue(undefined),
-    saveSessionlessConnection: vi.fn().mockResolvedValue(undefined),
-    getSessionlessConnection: vi.fn().mockResolvedValue(null),
-    clearSessionlessConnection: vi.fn().mockResolvedValue(undefined),
-    saveEthAuthProof: vi.fn().mockResolvedValue(undefined),
-    getEthAuthProof: vi.fn().mockResolvedValue(null),
-    clearEthAuthProof: vi.fn().mockResolvedValue(undefined),
-    clearAllData: vi.fn().mockResolvedValue(undefined),
-  })
+  const createSequenceStorageMock = () =>
+    ({
+      setPendingRedirectRequest: vi.fn().mockResolvedValue(undefined),
+      isRedirectRequestPending: vi.fn().mockResolvedValue(false),
+      saveTempSessionPk: vi.fn().mockResolvedValue(undefined),
+      getAndClearTempSessionPk: vi.fn().mockResolvedValue(null),
+      savePendingRequest: vi.fn().mockResolvedValue(undefined),
+      getAndClearPendingRequest: vi.fn().mockResolvedValue(null),
+      peekPendingRequest: vi.fn().mockResolvedValue(null),
+      saveExplicitSession: vi.fn().mockResolvedValue(undefined),
+      getExplicitSessions: vi.fn().mockResolvedValue([]),
+      clearExplicitSessions: vi.fn().mockResolvedValue(undefined),
+      saveImplicitSession: vi.fn().mockResolvedValue(undefined),
+      getImplicitSession: vi.fn().mockResolvedValue(null),
+      clearImplicitSession: vi.fn().mockResolvedValue(undefined),
+      saveSessionlessConnection: vi.fn().mockResolvedValue(undefined),
+      getSessionlessConnection: vi.fn().mockResolvedValue(null),
+      clearSessionlessConnection: vi.fn().mockResolvedValue(undefined),
+      saveEthAuthProof: vi.fn().mockResolvedValue(undefined),
+      getEthAuthProof: vi.fn().mockResolvedValue(null),
+      clearEthAuthProof: vi.fn().mockResolvedValue(undefined),
+      clearAllData: vi.fn().mockResolvedValue(undefined),
+    }) as any
 
   it('persists ETHAuth proof when connect requests ethAuth in redirect mode', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
-    vi.stubGlobal('window', { fetch: fetchMock })
+    vi.stubGlobal('window', { fetch: fetchMock } as any)
 
     const ethAuthProof = {
       typedData: {
@@ -46,13 +47,13 @@ describe('ETHAuth proof persistence', () => {
         message: {},
       },
       ewtString: 'proof-string',
-    }
+    } as any
 
     const sequenceStorage = createSequenceStorageMock()
     const sendRequestMock = vi.spyOn(DappTransport.prototype, 'sendRequest').mockResolvedValue({
       walletAddress: '0x1111111111111111111111111111111111111111',
       ethAuthProof,
-    })
+    } as any)
 
     const client = new DappClient('https://wallet.example', 'https://dapp.example', 'test-project-access-key', {
       sequenceStorage,
@@ -83,8 +84,8 @@ describe('ETHAuth proof persistence', () => {
   it('persists ETHAuth proof when connect requests ethAuth in popup mode', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
-    vi.stubGlobal('window', { fetch: fetchMock })
-    vi.stubGlobal('document', {})
+    vi.stubGlobal('window', { fetch: fetchMock } as any)
+    vi.stubGlobal('document', {} as any)
 
     const ethAuthProof = {
       typedData: {
@@ -93,13 +94,13 @@ describe('ETHAuth proof persistence', () => {
         message: {},
       },
       ewtString: 'proof-string',
-    }
+    } as any
 
     const sequenceStorage = createSequenceStorageMock()
     const sendRequestMock = vi.spyOn(DappTransport.prototype, 'sendRequest').mockResolvedValue({
       walletAddress: '0x1111111111111111111111111111111111111111',
       ethAuthProof,
-    })
+    } as any)
 
     const client = new DappClient('https://wallet.example', 'https://dapp.example', 'test-project-access-key', {
       sequenceStorage,
@@ -129,7 +130,7 @@ describe('ETHAuth proof persistence', () => {
   it('does not persist ETHAuth proof when connect does not request ethAuth', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
-    vi.stubGlobal('window', { fetch: fetchMock })
+    vi.stubGlobal('window', { fetch: fetchMock } as any)
 
     const ethAuthProof = {
       typedData: {
@@ -138,13 +139,13 @@ describe('ETHAuth proof persistence', () => {
         message: {},
       },
       ewtString: 'proof-string',
-    }
+    } as any
 
     const sequenceStorage = createSequenceStorageMock()
     const sendRequestMock = vi.spyOn(DappTransport.prototype, 'sendRequest').mockResolvedValue({
       walletAddress: '0x1111111111111111111111111111111111111111',
       ethAuthProof,
-    })
+    } as any)
 
     const client = new DappClient('https://wallet.example', 'https://dapp.example', 'test-project-access-key', {
       sequenceStorage,
@@ -169,7 +170,7 @@ describe('ETHAuth proof persistence', () => {
   it('clears ETHAuth proof on disconnect', async () => {
     const fetchMock = vi.fn()
     vi.stubGlobal('fetch', fetchMock)
-    vi.stubGlobal('window', { fetch: fetchMock })
+    vi.stubGlobal('window', { fetch: fetchMock } as any)
 
     const ethAuthProof = {
       typedData: {
@@ -178,12 +179,12 @@ describe('ETHAuth proof persistence', () => {
         message: {},
       },
       ewtString: 'proof-string',
-    }
+    } as any
 
     vi.spyOn(DappTransport.prototype, 'sendRequest').mockResolvedValue({
       walletAddress: '0x1111111111111111111111111111111111111111',
       ethAuthProof,
-    })
+    } as any)
 
     const client = new DappClient('https://wallet.example', 'https://dapp.example', 'test-project-access-key', {
       sequenceStorage: new WebStorage(),

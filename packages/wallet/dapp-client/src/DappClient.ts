@@ -32,7 +32,7 @@ import { KEYMACHINE_URL, NODES_URL, RELAYER_URL } from './utils/constants.js'
 import { getRelayerUrl, getRpcUrl } from './utils/index.js'
 import { Relayer } from '@0xsequence/relayer'
 
-export type DappClientEventListener = (data?: unknown) => void
+export type DappClientEventListener = (data?: any) => void
 
 interface DappClientEventMap {
   sessionsUpdated: () => void
@@ -182,12 +182,11 @@ export class DappClient {
    */
   public on<K extends keyof DappClientEventMap>(event: K, listener: DappClientEventMap[K]): () => void {
     if (!this.eventListeners[event]) {
-      // @ts-expect-error - indexing into evenListeners will improperly create a union of all the possible types
-      this.eventListeners[event] = new Set<DappClientEventMap[K]>()
+      this.eventListeners[event] = new Set() as any
     }
-    this.eventListeners[event].add(listener)
+    ;(this.eventListeners[event] as any).add(listener)
     return () => {
-      this.eventListeners[event]?.delete(listener)
+      ;(this.eventListeners[event] as any)?.delete(listener)
     }
   }
 
@@ -1000,6 +999,8 @@ export class DappClient {
    */
   async disconnect(options?: { keepSessionlessConnection?: boolean }): Promise<void> {
     const keepSessionlessConnection = options?.keepSessionlessConnection ?? true
+
+    const transportMode = this.transportMode
 
     if (this.transport) {
       this.transport.destroy()

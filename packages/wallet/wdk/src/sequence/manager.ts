@@ -14,7 +14,6 @@ import {
   AuthCodePkceHandler,
   DevicesHandler,
   Handler,
-  IdTokenHandler,
   MnemonicHandler,
   OtpHandler,
   PasskeysHandler,
@@ -32,24 +31,8 @@ import { Wallets, WalletsInterface } from './wallets.js'
 import { GuardHandler, PromptCodeHandler } from './handlers/guard.js'
 import { PasskeyCredential } from '../dbs/index.js'
 import { PromptMnemonicHandler } from './handlers/mnemonic.js'
-import { PromptIdTokenHandler } from './handlers/idtoken.js'
 import { PromptOtpHandler } from './handlers/otp.js'
 import { defaultPasskeyProvider, type PasskeyProvider } from './passkeys-provider.js'
-
-type CustomIdentityProvider =
-  | {
-      kind: `custom-${string}`
-      authMethod: 'id-token'
-      issuer: string
-      clientId: string
-    }
-  | {
-      kind: `custom-${string}`
-      authMethod: 'authcode' | 'authcode-pkce'
-      issuer: string
-      oauthUrl: string
-      clientId: string
-    }
 
 export type ManagerOptions = {
   verbose?: boolean
@@ -102,14 +85,18 @@ export type ManagerOptions = {
     google?: {
       enabled: boolean
       clientId: string
-      authMethod?: 'authcode-pkce' | 'id-token'
     }
     apple?: {
       enabled: boolean
       clientId: string
-      authMethod?: 'authcode' | 'id-token'
     }
-    customProviders?: CustomIdentityProvider[]
+    customProviders?: {
+      kind: `custom-${string}`
+      authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
+      issuer: string
+      oauthUrl: string
+      clientId: string
+    }[]
   }
 }
 
@@ -125,14 +112,18 @@ export type ResolvedIdentityOptions = {
   google: {
     enabled: boolean
     clientId: string
-    authMethod: 'authcode-pkce' | 'id-token'
   }
   apple: {
     enabled: boolean
     clientId: string
-    authMethod: 'authcode' | 'id-token'
   }
-  customProviders?: CustomIdentityProvider[]
+  customProviders?: {
+    kind: `custom-${string}`
+    authMethod: 'id-token' | 'authcode' | 'authcode-pkce'
+    issuer: string
+    oauthUrl: string
+    clientId: string
+  }[]
 }
 
 export type ResolvedManagerOptions = {
@@ -257,12 +248,10 @@ export const ManagerOptionsDefaults = {
     google: {
       enabled: false,
       clientId: '',
-      authMethod: 'authcode-pkce' as const,
     },
     apple: {
       enabled: false,
       clientId: '',
-      authMethod: 'authcode' as const,
     },
   },
 }
@@ -572,7 +561,7 @@ export class Manager {
     const ops = applyManagerOptionsDefaults(options)
 
     // Build relayers list
-    const relayers: Relayer.Relayer[] = []
+    let relayers: Relayer.Relayer[] = []
 
     // Add EIP-6963 relayers if enabled
     if (ops.multiInjectedProviderDiscovery) {
@@ -688,84 +677,42 @@ export class Manager {
       shared.handlers.set(Kinds.LoginEmailOtp, this.otpHandler)
     }
     if (ops.identity.google?.enabled) {
-      if (ops.identity.google.authMethod === 'id-token') {
-        shared.handlers.set(
-          Kinds.LoginGoogle,
-          new IdTokenHandler(
-            'google-id-token',
-            'https://accounts.google.com',
-            ops.identity.google.clientId,
-            identityInstrument,
-            modules.signatures,
-            shared.databases.authKeys,
-            shared.env,
-          ),
-        )
-      } else {
-        shared.handlers.set(
-          Kinds.LoginGoogle,
-          new AuthCodePkceHandler(
-            'google-pkce',
-            'https://accounts.google.com',
-            'https://accounts.google.com/o/oauth2/v2/auth',
-            ops.identity.google.clientId,
-            identityInstrument,
-            modules.signatures,
-            shared.databases.authCommitments,
-            shared.databases.authKeys,
-            shared.env,
-          ),
-        )
-      }
+      shared.handlers.set(
+        Kinds.LoginGooglePkce,
+        new AuthCodePkceHandler(
+          'google-pkce',
+          'https://accounts.google.com',
+          'https://accounts.google.com/o/oauth2/v2/auth',
+          ops.identity.google.clientId,
+          identityInstrument,
+          modules.signatures,
+          shared.databases.authCommitments,
+          shared.databases.authKeys,
+          shared.env,
+        ),
+      )
     }
     if (ops.identity.apple?.enabled) {
-      if (ops.identity.apple.authMethod === 'id-token') {
-        shared.handlers.set(
-          Kinds.LoginApple,
-          new IdTokenHandler(
-            'apple-id-token',
-            'https://appleid.apple.com',
-            ops.identity.apple.clientId,
-            identityInstrument,
-            modules.signatures,
-            shared.databases.authKeys,
-            shared.env,
-          ),
-        )
-      } else {
-        shared.handlers.set(
-          Kinds.LoginApple,
-          new AuthCodeHandler(
-            'apple',
-            'https://appleid.apple.com',
-            'https://appleid.apple.com/auth/authorize',
-            ops.identity.apple.clientId,
-            identityInstrument,
-            modules.signatures,
-            shared.databases.authCommitments,
-            shared.databases.authKeys,
-            shared.env,
-          ),
-        )
-      }
+      shared.handlers.set(
+        Kinds.LoginApple,
+        new AuthCodeHandler(
+          'apple',
+          'https://appleid.apple.com',
+          'https://appleid.apple.com/auth/authorize',
+          ops.identity.apple.clientId,
+          identityInstrument,
+          modules.signatures,
+          shared.databases.authCommitments,
+          shared.databases.authKeys,
+          shared.env,
+        ),
+      )
     }
     if (ops.identity.customProviders?.length) {
       for (const provider of ops.identity.customProviders) {
         switch (provider.authMethod) {
           case 'id-token':
-            shared.handlers.set(
-              provider.kind,
-              new IdTokenHandler(
-                provider.kind,
-                provider.issuer,
-                provider.clientId,
-                identityInstrument,
-                modules.signatures,
-                shared.databases.authKeys,
-                shared.env,
-              ),
-            )
-            break
+            throw new Error('id-token is not supported yet')
           case 'authcode':
             shared.handlers.set(
               provider.kind,
@@ -821,20 +768,6 @@ export class Manager {
 
   public registerOtpUI(onPromptOtp: PromptOtpHandler) {
     return this.otpHandler?.registerUI(onPromptOtp) || (() => {})
-  }
-
-  public registerIdTokenUI(onPromptIdToken: PromptIdTokenHandler) {
-    const unregisters: (() => void)[] = []
-
-    this.shared.handlers.forEach((handler) => {
-      if (handler instanceof IdTokenHandler) {
-        unregisters.push(handler.registerUI(onPromptIdToken))
-      }
-    })
-
-    return () => {
-      unregisters.forEach((unregister) => unregister())
-    }
   }
 
   public registerGuardUI(onPromptCode: PromptCodeHandler) {
