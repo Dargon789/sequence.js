@@ -356,12 +356,12 @@ function fromSapientSignatureRecord(record: ArweaveSapientSignatureRecord): Sign
 }
 
 function inferContext(record: ArweaveWalletRecord): Context.Context | undefined {
-  if ('Context-Factory' in record) {
+  if (record['Context-Factory']) {
     return {
       factory: normalizeAddress(record['Context-Factory']),
-      stage1: normalizeAddress(record['Context-Stage-1']),
-      stage2: normalizeAddress(record['Context-Stage-2']),
-      creationCode: normalizeHex(record['Context-Creation-Code']),
+      stage1: normalizeAddress(record['Context-Stage-1']!),
+      stage2: normalizeAddress(record['Context-Stage-2']!),
+      creationCode: normalizeHex(record['Context-Creation-Code']!),
     }
   }
 
