@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { Manager, QueuedRecoveryPayload, SignerReady, TransactionDefined } from '../src/sequence'
+import { QueuedRecoveryPayload, SignerReady, TransactionDefined } from '../src/sequence/index.js'
 import { Bytes, Hex, Mnemonic, Provider, RpcTransport } from 'ox'
 import { Network, Payload } from '@0xsequence/wallet-primitives'
-import { LOCAL_RPC_URL, newManager } from './constants'
+import { LOCAL_RPC_URL, newManager } from './constants.js'
 
 async function feeParams(provider: Provider.Provider) {
   const gasPrice = (await provider.request({ method: 'eth_gasPrice', params: [] as any })) as `0x${string}`
@@ -173,7 +173,7 @@ describe('Recovery', () => {
     expect(tx.status).toBe('defined')
     expect((tx as TransactionDefined).relayerOptions.length).toBe(1)
 
-    const localRelayer = (tx as TransactionDefined).relayerOptions[0]
+    const localRelayer = (tx as TransactionDefined).relayerOptions[0]!
     expect(localRelayer).toBeDefined()
     expect(localRelayer.relayerId).toBe('local')
 
@@ -188,7 +188,7 @@ describe('Recovery', () => {
     const recoverySigner = request4.signers.find((s) => s.handler?.kind === 'recovery-extension')
     expect(recoverySigner).toBeDefined()
     expect(recoverySigner!.status).toBe('ready')
-    1
+
     // Handle the recovery signer
     const result4 = await (recoverySigner as SignerReady).handle()
     expect(result4).toBeDefined()
@@ -320,9 +320,9 @@ describe('Recovery', () => {
     })
 
     // Set up mnemonic handler and sign the payload
-    let handledMnemonic2 = 0
+    let _handledMnemonic2 = 0
     const unregisterHandler = manager.registerMnemonicUI(async (respond) => {
-      handledMnemonic2++
+      _handledMnemonic2++
       await respond(mnemonic2)
     })
 
@@ -350,7 +350,7 @@ describe('Recovery', () => {
     expect(Array.isArray(fetchedPayloads)).toBeTruthy()
     expect(fetchedPayloads.length).toBe(1)
 
-    const fetchedPayload = fetchedPayloads[0]
+    const fetchedPayload = fetchedPayloads[0]!
     expect(fetchedPayload).toBeDefined()
     expect(fetchedPayload.wallet).toBe(wallet)
     expect(fetchedPayload.chainId).toBe(Network.ChainId.ARBITRUM)
@@ -408,8 +408,8 @@ describe('Recovery', () => {
     expect(updatedPayloads.length).toBe(fetchedPayloads2.length)
 
     if (updatedPayloads.length > 0 && fetchedPayloads.length > 0) {
-      const updated = updatedPayloads[0]
-      const fetched = fetchedPayloads[0]
+      const updated = updatedPayloads[0]!
+      const fetched = fetchedPayloads[0]!
 
       expect(updated.id).toBe(fetched.id)
       expect(updated.wallet).toBe(fetched.wallet)

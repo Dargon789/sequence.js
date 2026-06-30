@@ -14,8 +14,10 @@ import {
   GetFeeTokensResponse,
   GuardConfig,
   LoginMethod,
+  EthAuthSettings,
   RandomPrivateKeyFn,
   RequestActionType,
+  ETHAuthProof,
   SendWalletTransactionPayload,
   SequenceSessionStorage,
   SignMessagePayload,
@@ -30,7 +32,7 @@ import { KEYMACHINE_URL, NODES_URL, RELAYER_URL } from './utils/constants.js'
 import { getRelayerUrl, getRpcUrl } from './utils/index.js'
 import { Relayer } from '@0xsequence/relayer'
 
-export type DappClientEventListener = (data?: any) => void
+export type DappClientEventListener = (data?: unknown) => void
 
 interface DappClientEventMap {
   sessionsUpdated: () => void
@@ -180,11 +182,12 @@ export class DappClient {
    */
   public on<K extends keyof DappClientEventMap>(event: K, listener: DappClientEventMap[K]): () => void {
     if (!this.eventListeners[event]) {
-      this.eventListeners[event] = new Set() as any
+      // @ts-expect-error - indexing into evenListeners will improperly create a union of all the possible types
+      this.eventListeners[event] = new Set<DappClientEventMap[K]>()
     }
-    ;(this.eventListeners[event] as any).add(listener)
+    this.eventListeners[event].add(listener)
     return () => {
-      ;(this.eventListeners[event] as any)?.delete(listener)
+      this.eventListeners[event]?.delete(listener)
     }
   }
 
@@ -408,6 +411,13 @@ export class DappClient {
   }
 
   /**
+   * Returns the latest persisted ETHAuth proof, if one has been received from the wallet.
+   */
+  public async getEthAuthProof(): Promise<ETHAuthProof | null> {
+    return this.sequenceStorage.getEthAuthProof()
+  }
+
+  /**
    * Restores a sessionless connection that was previously persisted via {@link disconnect} or a connect flow.
    * @returns A promise that resolves to true if a sessionless connection was applied.
    */
@@ -559,6 +569,7 @@ export class DappClient {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (this.isInitialized) {
@@ -614,6 +625,7 @@ export class DappClient {
       preferredLoginMethod?: LoginMethod
       email?: string
       includeImplicitSession?: boolean
+      ethAuth?: EthAuthSettings
     } = {},
   ): Promise<void> {
     if (!this.isInitialized || !this.hasSessionlessConnection || !this.walletAddress) {
@@ -795,6 +807,30 @@ export class DappClient {
   }
 
   /**
+   * Checks whether the given transactions would be sponsored on `chainId`.
+   *
+   * Returns `true` only when the relayer's `/FeeOptions` endpoint explicitly
+   * reports sponsorship. A failed quote, network error, or absence of
+   * sponsorship all return `false`, so a `true` result is always safe to
+   * surface as "free gas" in UI.
+   *
+   * Prefer this over inferring sponsorship from an empty `getFeeOptions`
+   * array — a swallowed `/FeeOptions` error also produces an empty array.
+   *
+   * @example
+   * if (await dappClient.isSponsored(1, transactions)) {
+   *   // safe to show "Free gas, sponsored by app"
+   * } else {
+   *   const feeOptions = await dappClient.getFeeOptions(1, transactions)
+   *   // present feeOptions[0..n] to the user as payment choices
+   * }
+   */
+  async isSponsored(chainId: number, transactions: Transaction[]): Promise<boolean> {
+    const chainSessionManager = await this.getOrInitializeChainManager(chainId)
+    return await chainSessionManager.isSponsored(transactions)
+  }
+
+  /**
    * Fetches fee tokens for a chain.
    * @returns A promise that resolves with the fee tokens response. {@link GetFeeTokensResponse}
    * @throws If the fee tokens cannot be fetched. {@link InitializationError}
@@ -964,8 +1000,6 @@ export class DappClient {
    */
   async disconnect(options?: { keepSessionlessConnection?: boolean }): Promise<void> {
     const keepSessionlessConnection = options?.keepSessionlessConnection ?? true
-
-    const transportMode = this.transportMode
 
     if (this.transport) {
       this.transport.destroy()

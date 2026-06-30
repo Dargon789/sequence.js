@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { Guard } from '../src/sequence'
-import { PayloadType } from '../src/client/guard.gen'
+import { Guard } from '../src/sequence.js'
+import { PayloadType } from '../src/client/guard.gen.js'
 import { Address, Bytes, Hex } from 'ox'
 
 // Mock fetch globally for guard API calls
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+globalThis.fetch = mockFetch
 
 describe('Sequence', () => {
   describe('GuardSigner', () => {
@@ -86,10 +86,10 @@ describe('Sequence', () => {
           ok: true,
         })
 
-        await guard.signPayload(testWallet, 1, PayloadType.ConfigUpdate, testMessageDigest, testMessage)
+        await guard.signPayload(testWallet, customChainId, PayloadType.ConfigUpdate, testMessageDigest, testMessage)
 
         const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body)
-        expect(requestBody.request.chainId).toBe(1)
+        expect(requestBody.request.chainId).toBe(customChainId)
       })
 
       it('Should throw error when guard service fails', async () => {
@@ -114,6 +114,21 @@ describe('Sequence', () => {
         await expect(
           guard.signPayload(testWallet, 42161, PayloadType.ConfigUpdate, testMessageDigest, testMessage),
         ).rejects.toThrow('Error signing with guard')
+      })
+
+      it('Should preserve the original guard failure as cause', async () => {
+        mockFetch.mockRejectedValueOnce(new Error('Network error'))
+
+        try {
+          await guard.signPayload(testWallet, 42161, PayloadType.ConfigUpdate, testMessageDigest, testMessage)
+          throw new Error('Expected signPayload to throw')
+        } catch (error) {
+          expect(error).toBeInstanceOf(Error)
+          expect((error as Error).message).toBe('Error signing with guard')
+          expect((error as Error & { cause?: unknown }).cause).toBeInstanceOf(Error)
+          expect((error as Error & { cause?: Error }).cause?.name).toBe('WebrpcRequestFailed')
+          expect((error as Error & { cause?: Error }).cause?.message).toBe('request failed')
+        }
       })
 
       it('Should include proper headers and signer address in request', async () => {
