@@ -14,6 +14,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
-
-Tell them to email security@example.com, and they can expect an initial response within 48 hours. We will provide regular updates on the status of the reported vulnerability.
+Please report any security vulnerabilities by emailing security@sequence.xyz. You can expect an initial response within 48 hours, and we will provide regular updates on the status of the reported vulnerability.
