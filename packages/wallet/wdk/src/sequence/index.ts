@@ -14,6 +14,8 @@ export type {
   MnemonicSignupArgs,
   EmailOtpSignupArgs,
   CompleteRedirectArgs,
+  CompleteRedirectWithMetadataArgs,
+  CompleteRedirectMetadataResult,
   SignupArgs,
   LoginToWalletArgs,
   LoginToMnemonicArgs,
