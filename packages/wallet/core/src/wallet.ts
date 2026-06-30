@@ -416,7 +416,6 @@ export class Wallet {
     // If the latest configuration does not match the onchain configuration
     // then we bundle the update into the transaction envelope
     if (!options?.noConfigUpdate) {
-      const status = await this.getStatus(provider)
       if (status.imageHash !== status.onChainImageHash) {
         calls.push({
           to: this.address,
@@ -447,7 +446,7 @@ export class Wallet {
         factory,
         factoryData,
       },
-      ...(await this.prepareBlankEnvelope(Number(chainId), provider)),
+      ...(await this.prepareBlankEnvelope(Number(chainId), status.configuration)),
     }
   }
 
@@ -506,15 +505,15 @@ export class Wallet {
       }
     }
 
-    const [chainId, nonce] = await Promise.all([
+    const [chainId, nonce, status] = await Promise.all([
       provider.request({ method: 'eth_chainId' }),
       this.getNonce(provider, space),
+      this.getStatus(provider),
     ])
 
     // If the latest configuration does not match the onchain configuration
     // then we bundle the update into the transaction envelope
     if (!options?.noConfigUpdate) {
-      const status = await this.getStatus(provider)
       if (status.imageHash !== status.onChainImageHash) {
         calls.push({
           to: this.address,
@@ -535,7 +534,7 @@ export class Wallet {
         nonce,
         calls,
       },
-      ...(await this.prepareBlankEnvelope(Number(chainId), provider)),
+      ...(await this.prepareBlankEnvelope(Number(chainId), status.configuration)),
     }
   }
 
@@ -692,13 +691,15 @@ export class Wallet {
     return encoded
   }
 
-  private async prepareBlankEnvelope(chainId: number, provider?: Provider.Provider) {
-    const status = await this.getStatus(provider)
-
+  private async prepareBlankEnvelope(chainId: number, configuration?: Config.Config) {
+    if (!configuration) {
+      const status = await this.getStatus()
+      configuration = status.configuration
+    }
     return {
       wallet: this.address,
-      chainId: chainId,
-      configuration: status.configuration,
+      chainId,
+      configuration,
     }
   }
 }
