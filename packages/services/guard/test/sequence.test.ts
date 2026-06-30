@@ -89,7 +89,7 @@ describe('Sequence', () => {
         await guard.signPayload(testWallet, customChainId, PayloadType.ConfigUpdate, testMessageDigest, testMessage)
 
         const requestBody = JSON.parse(mockFetch.mock.calls[0][1].body)
-        expect(requestBody.request.chainId).toBe(1)
+        expect(requestBody.request.chainId).toBe(customChainId)
       })
 
       it('Should throw error when guard service fails', async () => {
