@@ -62,7 +62,7 @@ const solanaAdapter = new SolanaAdapter({
 ## Using Hooks
 
 ```tsx
-import { useAppKitProvider, useAppKitAccount, useAppKitConnection } from '@reown/appkit/react'
+import { useAppKitProvider, useAppKitAccount } from '@reown/appkit/react'
 import { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 function SolanaInteraction() {
