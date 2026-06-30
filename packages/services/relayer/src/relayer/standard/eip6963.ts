@@ -6,7 +6,7 @@ import { Payload } from '@0xsequence/wallet-primitives'
 import { FeeToken, TransactionPrecondition } from '../rpc-relayer/relayer.gen.js'
 
 export class EIP6963Relayer implements Relayer {
-  public readonly kind: 'relayer' = 'relayer'
+  public readonly kind = 'relayer'
   public readonly type = 'eip6963'
   public readonly id: string
   public readonly info: EIP6963ProviderInfo
@@ -23,16 +23,22 @@ export class EIP6963Relayer implements Relayer {
     return this.relayer.isAvailable(wallet, chainId)
   }
 
-  feeTokens(): Promise<{ isFeeRequired: boolean; tokens?: FeeToken[]; paymentAddress?: Address.Address }> {
+  feeTokens(): Promise<{
+    isFeeRequired: boolean
+    tokens?: FeeToken[]
+    paymentAddress?: Address.Address
+    failed?: boolean
+  }> {
     return this.relayer.feeTokens()
   }
 
   feeOptions(
     wallet: Address.Address,
     chainId: number,
+    to: Address.Address,
     calls: Payload.Call[],
-  ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
-    return this.relayer.feeOptions(wallet, chainId, calls)
+  ): Promise<{ options: FeeOption[]; quote?: FeeQuote; sponsored: boolean; failed?: boolean }> {
+    return this.relayer.feeOptions(wallet, chainId, to, calls)
   }
 
   async relay(to: Address.Address, data: Hex.Hex, chainId: number, _?: FeeQuote): Promise<{ opHash: Hex.Hex }> {
@@ -58,7 +64,7 @@ export function getEIP6963Store() {
   return store
 }
 
-let relayers: Map<string, EIP6963Relayer> = new Map()
+const relayers: Map<string, EIP6963Relayer> = new Map()
 
 export function getRelayers(): EIP6963Relayer[] {
   const store = getEIP6963Store()
