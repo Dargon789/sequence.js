@@ -92,7 +92,6 @@ Detect the active namespace and use the appropriate provider:
 ```js
 modal.subscribeNetwork((network) => {
   const namespace = network.caipNetwork?.chainNamespace
-  const provider = modal.getWalletProvider()
 
   switch (namespace) {
     case 'eip155':
