@@ -57,10 +57,7 @@ import { useAppKitProvider, useAppKitAccount, useAppKitNetwork } from '@reown/ap
 const { address, isConnected } = useAppKitAccount()
 const { caipNetwork } = useAppKitNetwork()
 
-// Access providers per namespace
-const { walletProvider: evmProvider } = useAppKitProvider('eip155')
-const { walletProvider: solanaProvider } = useAppKitProvider('solana')
-
+// Access providers per namespace if needed
 const activeNamespace = computed(() => caipNetwork.value?.chainNamespace)
 </script>
 
