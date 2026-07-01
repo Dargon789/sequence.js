@@ -88,11 +88,12 @@ function SolanaInteraction() {
     if (!walletProvider || !address) return
     const connection = new Connection('https://api.mainnet-beta.solana.com')
     const pubkey = new PublicKey(address)
+    const recipientAddress = '11111111111111111111111111111111' // Replace with actual recipient address
 
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: pubkey,
-        toPubkey: new PublicKey('RECIPIENT_ADDRESS'),
+        toPubkey: new PublicKey(recipientAddress),
         lamports: 0.01 * LAMPORTS_PER_SOL,
       })
     )
