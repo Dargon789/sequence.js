@@ -51,6 +51,7 @@ createAppKit({
 
 ```vue
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { useAppKitProvider, useAppKitAccount, useAppKitNetwork } from '@reown/appkit/vue'
 
 const { address, isConnected } = useAppKitAccount()
@@ -60,7 +61,7 @@ const { caipNetwork } = useAppKitNetwork()
 const { walletProvider: evmProvider } = useAppKitProvider('eip155')
 const { walletProvider: solanaProvider } = useAppKitProvider('solana')
 
-const activeNamespace = Vue.computed(() => caipNetwork.value?.chainNamespace)
+const activeNamespace = computed(() => caipNetwork.value?.chainNamespace)
 </script>
 
 <template>
