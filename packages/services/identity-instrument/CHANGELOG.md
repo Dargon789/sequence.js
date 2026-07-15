@@ -1,5 +1,11 @@
 # @0xsequence/identity-instrument
 
+## 3.0.12
+
+### Patch Changes
+
+- WDK fix
+
 ## 3.0.11
 
 ### Patch Changes
