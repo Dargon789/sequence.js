@@ -14,7 +14,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
-
-To report a vulnerability, please email us at [dev@wevm.dev](mailto:dev@wevm.dev). We aim to provide an initial response within 48 hours and will keep you updated on the status of the reported vulnerability.
-
+Please report any security vulnerabilities by emailing security@sequence.xyz. You can expect an initial response within 48 hours, and we will provide regular updates on the status of the reported vulnerability.

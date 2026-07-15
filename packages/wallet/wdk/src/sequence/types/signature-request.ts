@@ -13,8 +13,6 @@ export type ActionToPayload = {
   [Actions.Recovery]: Payload.Recovery<Payload.Calls>
   [Actions.AddRecoverySigner]: Payload.ConfigUpdate
   [Actions.RemoveRecoverySigner]: Payload.ConfigUpdate
-  [Actions.AddLoginSigner]: Payload.ConfigUpdate
-  [Actions.RemoveLoginSigner]: Payload.ConfigUpdate
   [Actions.SessionImplicitAuthorize]: Payload.SessionImplicitAuthorize
 }
 
@@ -28,8 +26,6 @@ export const Actions = {
   Recovery: 'recovery',
   AddRecoverySigner: 'add-recovery-signer',
   RemoveRecoverySigner: 'remove-recovery-signer',
-  AddLoginSigner: 'add-login-signer',
-  RemoveLoginSigner: 'remove-login-signer',
   SessionImplicitAuthorize: 'session-implicit-authorize',
 } as const
 

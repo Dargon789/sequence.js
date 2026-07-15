@@ -174,7 +174,7 @@ describe('Recovery', () => {
     const recoverySigner = request4.signers.find((s) => s.handler?.kind === 'recovery-extension')
     expect(recoverySigner).toBeDefined()
     expect(recoverySigner!.status).toBe('ready')
-
+    1
     // Handle the recovery signer
     const result4 = await (recoverySigner as SignerReady).handle()
     expect(result4).toBeDefined()
@@ -303,9 +303,9 @@ describe('Recovery', () => {
     })
 
     // Set up mnemonic handler and sign the payload
-    let _handledMnemonic2 = 0
+    let handledMnemonic2 = 0
     const unregisterHandler = manager.registerMnemonicUI(async (respond) => {
-      _handledMnemonic2++
+      handledMnemonic2++
       await respond(mnemonic2)
     })
 

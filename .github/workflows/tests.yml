@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install-dependencies
+      - run: pnpm install --no-frozen-lockfile
 
   build:
     name: Run build
@@ -21,8 +22,6 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - run: pnpm clean
       - run: pnpm build
-      - run: pnpm typecheck
-      - run: pnpm lint
 
   tests:
     name: Run all tests

@@ -30,7 +30,7 @@ export class GuardHandler implements Handler {
     this.onPromptCode = undefined
   }
 
-  onStatusChange(_cb: () => void): () => void {
+  onStatusChange(cb: () => void): () => void {
     return () => {}
   }
 
@@ -82,9 +82,8 @@ export class GuardHandler implements Handler {
       address,
       handler: this,
       status: 'ready',
-      handle: () => {
-        // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async (resolve, reject) => {
+      handle: () =>
+        new Promise(async (resolve, reject) => {
           try {
             const signature = await guard.signEnvelope(request.envelope)
             await this.signatures.addSignature(request.id, signature)
@@ -106,8 +105,7 @@ export class GuardHandler implements Handler {
               reject(e)
             }
           }
-        })
-      },
+        }),
     }
   }
 }

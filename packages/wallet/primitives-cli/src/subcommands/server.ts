@@ -326,7 +326,7 @@ async function handleHttpRequest(req: IncomingMessage, res: ServerResponse, debu
   } catch (error) {
     if (!silent) console.log(`[${new Date().toISOString()}] JSON parse error:`, error)
     res.statusCode = 400
-    res.end(JSON.stringify(errorResponse(undefined, -32700, 'Parse error', String(error))))
+    res.end(JSON.stringify(errorResponse(undefined, -32700, 'Parse error')))
     return
   }
 

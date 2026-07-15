@@ -1,7 +1,8 @@
 import { Payload, Precondition } from '@0xsequence/wallet-primitives'
 import { Address, Hex, Provider, Secp256k1, TransactionEnvelopeEip1559, TransactionReceipt } from 'ox'
 import { LocalRelayer } from './local.js'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
+import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../index.js'
+import { FeeToken } from '../rpc-relayer/relayer.gen.js'
 
 export class PkRelayer implements Relayer {
   public readonly kind = 'relayer'
@@ -106,12 +107,21 @@ export class PkRelayer implements Relayer {
     return providerChainId === chainId
   }
 
+  feeTokens(): Promise<{
+    isFeeRequired: boolean
+    tokens?: FeeToken[]
+    paymentAddress?: Address.Address
+    failed?: boolean
+  }> {
+    return this.relayer.feeTokens()
+  }
+
   feeOptions(
     wallet: Address.Address,
     chainId: number,
     to: Address.Address,
     calls: Payload.Call[],
-  ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
+  ): Promise<{ options: FeeOption[]; quote?: FeeQuote; sponsored: boolean; failed?: boolean }> {
     return this.relayer.feeOptions(wallet, chainId, to, calls)
   }
 
