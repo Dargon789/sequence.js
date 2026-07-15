@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03b41efd-f347-467b-b9b1-61b016392cc1" name="Changes" comment="update web3 next dev">
-      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/azure-pipelines.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/azure-pipelines.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/fortify.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/fortify.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/neuralegion.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/neuralegion.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/tests.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/tests.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/signals-implicit-mode/.github/workflows/test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/lib/signals-implicit-mode/.github/workflows/test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +31,7 @@
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/lib/signals-implicit-mode/Counter/lib/forge-std" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {}
@@ -60,12 +69,15 @@
     "com.google.services.firebase.aqiPopupShown": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "v1.14.0",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "kronk.content.tree.expanded.paths": "",
     "last_opened_file_path": "D:/GitHub/projects/sequence.js",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "show.migrate.to.gradle.popup": "false",
     "to.speed.mode.migration.done": "true"
   }

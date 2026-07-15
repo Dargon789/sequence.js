@@ -112,12 +112,7 @@ export class RpcRelayer implements Relayer {
     return Promise.resolve(this.chainId === chainId)
   }
 
-  async feeTokens(): Promise<{
-    isFeeRequired: boolean
-    tokens?: RpcFeeToken[]
-    paymentAddress?: Address.Address
-    failed?: boolean
-  }> {
+  async feeTokens(): Promise<{ isFeeRequired: boolean; tokens?: RpcFeeToken[]; paymentAddress?: Address.Address }> {
     try {
       const { isFeeRequired, tokens, paymentAddress } = await this.client.feeTokens()
       if (isFeeRequired) {
@@ -134,7 +129,7 @@ export class RpcRelayer implements Relayer {
       }
     } catch (e) {
       console.warn('RpcRelayer.feeTokens failed:', e)
-      return { isFeeRequired: false, failed: true }
+      return { isFeeRequired: false }
     }
   }
 
@@ -143,24 +138,22 @@ export class RpcRelayer implements Relayer {
     chainId: number,
     to: Address.Address,
     calls: Payload.Call[],
-    data?: Hex.Hex,
-  ): Promise<{ options: FeeOption[]; quote?: FeeQuote; sponsored: boolean; failed?: boolean }> {
+  ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     // IMPORTANT:
     // The relayer FeeOptions endpoint simulates `eth_call(to, data)`.
-    // Callers that already built a wallet transaction should pass its `to` and `data`.
-    // This is required for undeployed wallets because the transaction must target the
-    // guest module and include the deploy call before executing from the wallet.
-    const callsStruct: Payload.Calls = { type: 'call', space: 0n, nonce: 0n, calls }
+    // wallet-webapp-v3 requests FeeOptions with `to = wallet` and `data = Payload.encode(calls, self=wallet)`.
+    // This works for undeployed wallets and avoids guest-module simulation pitfalls.
+    const callsStruct: Payload.Calls = { type: 'call', space: 0n, nonce: 0n, calls: calls }
 
-    const feeOptionsTo = to
-    const feeOptionsData = data ?? Hex.fromBytes(Payload.encode(callsStruct, to))
+    const feeOptionsTo = wallet
+    const data = Payload.encode(callsStruct, wallet)
 
     try {
       const result = await this.client.feeOptions(
         {
           wallet,
           to: feeOptionsTo,
-          data: feeOptionsData,
+          data: Hex.fromBytes(data),
         },
         { ...(this.projectAccessKey ? { 'X-Access-Key': this.projectAccessKey } : undefined) },
       )
@@ -176,10 +169,10 @@ export class RpcRelayer implements Relayer {
         gasLimit: option.gasLimit,
       }))
 
-      return { options, quote, sponsored: result.sponsored }
+      return { options, quote }
     } catch (e) {
       console.warn('RpcRelayer.feeOptions failed:', e)
-      return { options: [], sponsored: false, failed: true }
+      return { options: [] }
     }
   }
 
