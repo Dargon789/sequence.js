@@ -86,7 +86,7 @@ export default function RootLayout({
 'use client'
 
 import { useAppKitProvider, useAppKitAccount } from '@reown/appkit/react'
-import { BrowserProvider, Contract, formatEther } from 'ethers'
+import { BrowserProvider, formatEther } from 'ethers'
 import type { Provider } from '@reown/appkit/react'
 
 export default function Home() {

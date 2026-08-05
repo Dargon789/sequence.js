@@ -96,6 +96,7 @@ function WalletInfo() {
 ## Smart Contract Interaction (Wagmi hooks)
 
 ```tsx
+import { erc20Abi } from 'viem'
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 
 function ContractInteraction() {

@@ -48,6 +48,10 @@ Note: Ethers adapter does **not** require `WagmiProvider` or `QueryClientProvide
 ## Using the Provider
 
 ```tsx
+const erc20Abi = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'function transfer(address to, uint256 value) returns (bool)'
+]
 import { useAppKitProvider, useAppKitAccount } from '@reown/appkit/react'
 import { BrowserProvider, Contract, formatEther, parseEther } from 'ethers'
 import type { Provider } from '@reown/appkit/react'
