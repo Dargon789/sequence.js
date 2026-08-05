@@ -12,6 +12,9 @@ jobs:
 
   rm:
     if: ${{ github.event.label.name == 'pnpm format' }}
+    permissions:
+      contents: read
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Remove the label
