@@ -913,7 +913,8 @@ And that has made all the difference.
     }
 
     return setConsoleMsg(prevState => {
-      return `${prevState}\n\n${message}`
+      const base = prevState ?? ''
+      return base ? `${base}\n\n${message}` : message
     })
   }
 
