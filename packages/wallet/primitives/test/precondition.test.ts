@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  Precondition,
   NativeBalancePrecondition,
   Erc20BalancePrecondition,
   Erc20ApprovalPrecondition,
@@ -9,6 +10,7 @@ import {
   Erc1155BalancePrecondition,
   Erc1155ApprovalPrecondition,
   AnyPrecondition,
+  IntentPrecondition,
   isValidPreconditionType,
   createPrecondition,
   createIntentPrecondition,
@@ -223,13 +225,13 @@ describe('Precondition', () => {
       })
 
       it('should throw for null precondition', () => {
-        expect(() => createPrecondition(null as unknown as AnyPrecondition)).toThrow(
+        expect(() => createPrecondition(null as any)).toThrow(
           "Invalid precondition object: missing or invalid 'type' property.",
         )
       })
 
       it('should throw for undefined precondition', () => {
-        expect(() => createPrecondition(undefined as unknown as AnyPrecondition)).toThrow(
+        expect(() => createPrecondition(undefined as any)).toThrow(
           "Invalid precondition object: missing or invalid 'type' property.",
         )
       })
@@ -238,7 +240,7 @@ describe('Precondition', () => {
         const invalidPrecondition = {
           address: testAddress,
           min: testMinAmount,
-        } as unknown as AnyPrecondition
+        } as any
         expect(() => createPrecondition(invalidPrecondition)).toThrow(
           "Invalid precondition object: missing or invalid 'type' property.",
         )
@@ -248,7 +250,7 @@ describe('Precondition', () => {
         const invalidPrecondition = {
           type: 'invalid-type',
           address: testAddress,
-        } as unknown as AnyPrecondition
+        } as any
         expect(() => createPrecondition(invalidPrecondition)).toThrow(
           "Invalid precondition object: missing or invalid 'type' property.",
         )
@@ -258,7 +260,7 @@ describe('Precondition', () => {
         const invalidPrecondition = {
           type: 123,
           address: testAddress,
-        } as unknown as AnyPrecondition
+        } as any
         expect(() => createPrecondition(invalidPrecondition)).toThrow(
           "Invalid precondition object: missing or invalid 'type' property.",
         )
@@ -384,7 +386,7 @@ describe('Precondition', () => {
         const invalidPrecondition = {
           type: 'invalid-type',
           address: testAddress,
-        } as unknown as AnyPrecondition
+        } as any
         expect(() => createIntentPrecondition(invalidPrecondition)).toThrow('Invalid precondition type: invalid-type')
       })
 

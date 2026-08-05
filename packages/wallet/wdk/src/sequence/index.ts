@@ -9,7 +9,6 @@ export { Sessions } from './sessions.js'
 export { Signatures } from './signatures.js'
 export type {
   StartSignUpWithRedirectArgs,
-  StartAddLoginSignerWithRedirectArgs,
   CommonSignupArgs,
   PasskeySignupArgs,
   MnemonicSignupArgs,
@@ -18,8 +17,6 @@ export type {
   CompleteRedirectWithMetadataArgs,
   CompleteRedirectMetadataResult,
   SignupArgs,
-  AddLoginSignerArgs,
-  RemoveLoginSignerArgs,
   LoginToWalletArgs,
   LoginToMnemonicArgs,
   LoginToPasskeyArgs,
