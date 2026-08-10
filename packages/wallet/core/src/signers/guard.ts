@@ -3,10 +3,9 @@ import { Attestation, Payload } from '@0xsequence/wallet-primitives'
 import * as GuardService from '@0xsequence/guard'
 import * as Envelope from '../envelope.js'
 
-export type GuardToken = {
-  id: 'TOTP' | 'PIN' | 'recovery'
+type GuardToken = {
+  id: 'TOTP' | 'PIN'
   code: string
-  resetAuth?: boolean
 }
 
 export class Guard {
@@ -37,7 +36,7 @@ export class Guard {
       digest,
       message,
       previousSignatures,
-      token ? { id: token.id, token: token.code, resetAuth: token.resetAuth } : undefined,
+      token ? { id: token.id, token: token.code } : undefined,
     )
     return {
       address: this.guard.address,

@@ -16,22 +16,16 @@ type PimlicoGasPrice = {
 }
 
 export class PimlicoBundler implements Bundler {
-  public readonly kind = 'bundler'
+  public readonly kind: 'bundler' = 'bundler'
   public readonly id: string
 
   public readonly provider: Provider.Provider
   public readonly bundlerRpcUrl: string
-  private readonly fetcher: typeof fetch
 
-  constructor(bundlerRpcUrl: string, provider: Provider.Provider | string, fetcher?: typeof fetch) {
+  constructor(bundlerRpcUrl: string, provider: Provider.Provider | string) {
     this.id = `pimlico-erc4337-${bundlerRpcUrl}`
     this.provider = typeof provider === 'string' ? Provider.from(RpcTransport.fromHttp(provider)) : provider
     this.bundlerRpcUrl = bundlerRpcUrl
-    const resolvedFetch = fetcher ?? (globalThis as any).fetch
-    if (!resolvedFetch) {
-      throw new Error('fetch is not available')
-    }
-    this.fetcher = resolvedFetch
   }
 
   async isAvailable(entrypoint: Address.Address, chainId: number): Promise<boolean> {
@@ -119,7 +113,7 @@ export class PimlicoBundler implements Bundler {
       let pimlico: PimlicoStatusResp | undefined
       try {
         pimlico = await this.bundlerRpc<PimlicoStatusResp>('pimlico_getUserOperationStatus', [opHash])
-      } catch {
+      } catch (_) {
         /* ignore - not Pimlico or endpoint down */
       }
 
@@ -171,7 +165,7 @@ export class PimlicoBundler implements Bundler {
 
   private async bundlerRpc<T>(method: string, params: any[]): Promise<T> {
     const body = JSON.stringify({ jsonrpc: '2.0', id: 1, method, params })
-    const res = await this.fetcher(this.bundlerRpcUrl, {
+    const res = await fetch(this.bundlerRpcUrl, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body,

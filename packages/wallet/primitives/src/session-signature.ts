@@ -1,19 +1,18 @@
 import { Address, Bytes, Hash, Hex } from 'ox'
-import { Attestation, Extensions, Payload } from './index.js'
+import { Attestation, encode, encodeForJson, fromParsed, toJson } from './attestation.js'
 import { MAX_PERMISSIONS_COUNT } from './permission.js'
 import {
-  decodeSessionsTopology,
   encodeSessionsTopology,
-  getIdentitySigners,
   isCompleteSessionsTopology,
   minimiseSessionsTopology,
   SessionsTopology,
 } from './session-config.js'
 import { RSY } from './signature.js'
-import { minBytesFor, packRSY, unpackRSY } from './utils.js'
+import { minBytesFor, packRSY } from './utils.js'
+import { Payload } from './index.js'
 
 export type ImplicitSessionCallSignature = {
-  attestation: Attestation.Attestation
+  attestation: Attestation
   identitySignature: RSY
   sessionSignature: RSY
 }
@@ -46,7 +45,7 @@ export function sessionCallSignatureToJson(callSignature: SessionCallSignature):
 export function encodeSessionCallSignatureForJson(callSignature: SessionCallSignature): any {
   if (isImplicitSessionCallSignature(callSignature)) {
     return {
-      attestation: Attestation.encodeForJson(callSignature.attestation),
+      attestation: encodeForJson(callSignature.attestation),
       identitySignature: rsyToRsvStr(callSignature.identitySignature),
       sessionSignature: rsyToRsvStr(callSignature.sessionSignature),
     }
@@ -68,7 +67,7 @@ export function sessionCallSignatureFromJson(json: string): SessionCallSignature
 export function sessionCallSignatureFromParsed(decoded: any): SessionCallSignature {
   if (decoded.attestation) {
     return {
-      attestation: Attestation.fromParsed(decoded.attestation),
+      attestation: fromParsed(decoded.attestation),
       identitySignature: rsyFromRsvStr(decoded.identitySignature),
       sessionSignature: rsyFromRsvStr(decoded.sessionSignature),
     }
@@ -104,19 +103,9 @@ function rsyFromRsvStr(sigStr: string): RSY {
 
 // Usage
 
-/**
- * Encodes a list of session call signatures into a bytes array for contract validation.
- * @param callSignatures The list of session call signatures to encode.
- * @param topology The complete session topology.
- * @param explicitSigners The list of explicit signers to encode. Others will be hashed into nodes.
- * @param implicitSigners The list of implicit signers to encode. Others will be hashed into nodes.
- * @param identitySigner  The identity signer to encode. Others will be hashed into nodes.
- * @returns The encoded session call signatures.
- */
-export function encodeSessionSignature(
+export function encodeSessionCallSignatures(
   callSignatures: SessionCallSignature[],
   topology: SessionsTopology,
-  identitySigner: Address.Address,
   explicitSigners: Address.Address[] = [],
   implicitSigners: Address.Address[] = [],
 ): Bytes.Bytes {
@@ -128,14 +117,8 @@ export function encodeSessionSignature(
     throw new Error('Incomplete topology')
   }
 
-  // Check the topology contains the identity signer
-  const identitySigners = getIdentitySigners(topology)
-  if (!identitySigners.some((s) => Address.isEqual(s, identitySigner))) {
-    throw new Error('Identity signer not found')
-  }
-
   // Optimise the configuration tree by rolling unused signers into nodes.
-  topology = minimiseSessionsTopology(topology, explicitSigners, implicitSigners, identitySigner)
+  topology = minimiseSessionsTopology(topology, explicitSigners, implicitSigners)
 
   // Session topology
   const encodedTopology = encodeSessionsTopology(topology)
@@ -151,12 +134,10 @@ export function encodeSessionSignature(
   // Map each call signature to its attestation index
   callSignatures.filter(isImplicitSessionCallSignature).forEach((callSig) => {
     if (callSig.attestation) {
-      const attestationStr = Attestation.toJson(callSig.attestation)
+      const attestationStr = toJson(callSig.attestation)
       if (!attestationMap.has(attestationStr)) {
         attestationMap.set(attestationStr, encodedAttestations.length)
-        encodedAttestations.push(
-          Bytes.concat(Attestation.encode(callSig.attestation), packRSY(callSig.identitySignature)),
-        )
+        encodedAttestations.push(Bytes.concat(encode(callSig.attestation), packRSY(callSig.identitySignature)))
       }
     }
   })
@@ -171,7 +152,7 @@ export function encodeSessionSignature(
   for (const callSignature of callSignatures) {
     if (isImplicitSessionCallSignature(callSignature)) {
       // Implicit
-      const attestationStr = Attestation.toJson(callSignature.attestation)
+      const attestationStr = toJson(callSignature.attestation)
       const attestationIndex = attestationMap.get(attestationStr)
       if (attestationIndex === undefined) {
         // Unreachable
@@ -195,126 +176,24 @@ export function encodeSessionSignature(
   return Bytes.concat(...parts)
 }
 
-export function decodeSessionSignature(encodedSignatures: Bytes.Bytes): {
-  topology: SessionsTopology
-  callSignatures: SessionCallSignature[]
-} {
-  let offset = 0
+// Helper
 
-  // Parse session topology length (3 bytes)
-  const topologyLength = Bytes.toNumber(encodedSignatures.slice(offset, offset + 3))
-  offset += 3
-
-  // Parse session topology
-  const topologyBytes = encodedSignatures.slice(offset, offset + topologyLength)
-  offset += topologyLength
-  const topology = decodeSessionsTopology(topologyBytes)
-
-  // Parse attestations count (1 byte)
-  const attestationsCount = Bytes.toNumber(encodedSignatures.slice(offset, offset + 1))
-  offset += 1
-
-  // Parse attestations and identity signatures
-  const attestations: Attestation.Attestation[] = []
-  const identitySignatures: RSY[] = []
-
-  for (let i = 0; i < attestationsCount; i++) {
-    // Parse attestation
-    const attestation = Attestation.decode(encodedSignatures.slice(offset))
-    offset += Attestation.encode(attestation).length
-    attestations.push(attestation)
-
-    // Parse identity signature (64 bytes)
-    const identitySignature = unpackRSY(encodedSignatures.slice(offset, offset + 64))
-    offset += 64
-    identitySignatures.push(identitySignature)
-  }
-
-  // Parse call signatures
-  const callSignatures: SessionCallSignature[] = []
-
-  while (offset < encodedSignatures.length) {
-    // Parse flag byte
-    const flagByte = encodedSignatures[offset]!
-    offset += 1
-
-    // Parse session signature (64 bytes)
-    const sessionSignature = unpackRSY(encodedSignatures.slice(offset, offset + 64))
-    offset += 64
-
-    // Check if implicit (MSB set) or explicit
-    if ((flagByte & 0x80) !== 0) {
-      // Implicit call signature
-      const attestationIndex = flagByte & 0x7f
-      if (attestationIndex >= attestations.length) {
-        throw new Error('Invalid attestation index')
-      }
-
-      callSignatures.push({
-        attestation: attestations[attestationIndex]!,
-        identitySignature: identitySignatures[attestationIndex]!,
-        sessionSignature,
-      })
-    } else {
-      // Explicit call signature
-      const permissionIndex = flagByte
-      callSignatures.push({
-        permissionIndex: BigInt(permissionIndex),
-        sessionSignature,
-      })
-    }
-  }
-
-  return {
-    topology,
-    callSignatures,
-  }
-}
-
-// Call encoding
-
-/**
- * Hashes a call with replay protection parameters.
- * @param payload The payload to hash.
- * @param callIdx The index of the call to hash.
- * @param chainId The chain ID. Use 0 when noChainId enabled.
- * @param sessionManagerAddress The session manager address to compile the hash for. Only required to support deprecated hash encodings for Dev1, Dev2 and Rc3.
- * @returns The hash of the call with replay protection parameters for sessions.
- */
-export function hashPayloadWithCallIdx(
-  wallet: Address.Address,
-  payload: Payload.Calls & Payload.Parent,
+export function hashCallWithReplayProtection(
+  payload: Payload.Calls,
   callIdx: number,
   chainId: number,
-  sessionManagerAddress?: Address.Address,
+  skipCallIdx: boolean = false, // Deprecated. Dev1 and Dev2 support
 ): Hex.Hex {
-  // Support deprecated hashes for Dev1, Dev2 and Rc3
-  const deprecatedHashing =
-    sessionManagerAddress &&
-    (Address.isEqual(sessionManagerAddress, Extensions.Dev1.sessions) ||
-      Address.isEqual(sessionManagerAddress, Extensions.Dev2.sessions) ||
-      Address.isEqual(sessionManagerAddress, Extensions.Rc3.sessions))
-  if (deprecatedHashing) {
-    const call = payload.calls[callIdx]!
-    const ignoreCallIdx = !Address.isEqual(sessionManagerAddress, Extensions.Rc3.sessions)
-    return Hex.fromBytes(
-      Hash.keccak256(
-        Bytes.concat(
-          Bytes.fromNumber(chainId, { size: 32 }),
-          Bytes.fromNumber(payload.space, { size: 32 }),
-          Bytes.fromNumber(payload.nonce, { size: 32 }),
-          ignoreCallIdx ? Bytes.from([]) : Bytes.fromNumber(callIdx, { size: 32 }),
-          Bytes.fromHex(Payload.hashCall(call)),
-        ),
+  const call = payload.calls[callIdx]!
+  return Hex.fromBytes(
+    Hash.keccak256(
+      Bytes.concat(
+        Bytes.fromNumber(chainId, { size: 32 }),
+        Bytes.fromNumber(payload.space, { size: 32 }),
+        Bytes.fromNumber(payload.nonce, { size: 32 }),
+        skipCallIdx ? Bytes.from([]) : Bytes.fromNumber(callIdx, { size: 32 }),
+        Bytes.fromHex(Payload.hashCall(call)),
       ),
-    )
-  }
-  // Current hashing scheme uses entire payload hash and call index (without last parent)
-  const parentWallets = payload.parentWallets
-  if (payload.parentWallets && payload.parentWallets.length > 0) {
-    payload.parentWallets.pop()
-  }
-  const payloadHash = Payload.hash(wallet, chainId, payload)
-  payload.parentWallets = parentWallets
-  return Hex.fromBytes(Hash.keccak256(Bytes.concat(payloadHash, Bytes.fromNumber(callIdx, { size: 32 }))))
+    ),
+  )
 }
