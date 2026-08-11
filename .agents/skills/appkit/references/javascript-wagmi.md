@@ -102,7 +102,7 @@ modal.subscribeNetwork((network) => {
 npm install @wagmi/core
 ```
 
-```js
+import { erc20Abi } from 'viem'
 import { readContract, writeContract, waitForTransactionReceipt } from '@wagmi/core'
 
 // Read
