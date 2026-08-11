@@ -1,9 +1,9 @@
 import { createStore, EIP6963ProviderInfo, EIP6963ProviderDetail } from 'mipd'
 import { EIP1193ProviderAdapter, LocalRelayer } from './local.js'
-import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../index.js'
+import { FeeOption, FeeQuote, OperationStatus, Relayer } from '../relayer.js'
 import { Address, Hex } from 'ox'
 import { Payload } from '@0xsequence/wallet-primitives'
-import { FeeToken, TransactionPrecondition } from '../rpc-relayer/relayer.gen.js'
+import { IntentPrecondition } from './rpc/relayer.gen.js'
 
 export class EIP6963Relayer implements Relayer {
   public readonly kind = 'relayer'
@@ -23,21 +23,12 @@ export class EIP6963Relayer implements Relayer {
     return this.relayer.isAvailable(wallet, chainId)
   }
 
-  feeTokens(): Promise<{
-    isFeeRequired: boolean
-    tokens?: FeeToken[]
-    paymentAddress?: Address.Address
-    failed?: boolean
-  }> {
-    return this.relayer.feeTokens()
-  }
-
   feeOptions(
     wallet: Address.Address,
     chainId: number,
     to: Address.Address,
     calls: Payload.Call[],
-  ): Promise<{ options: FeeOption[]; quote?: FeeQuote; sponsored: boolean; failed?: boolean }> {
+  ): Promise<{ options: FeeOption[]; quote?: FeeQuote }> {
     return this.relayer.feeOptions(wallet, chainId, to, calls)
   }
 
@@ -49,7 +40,7 @@ export class EIP6963Relayer implements Relayer {
     return this.relayer.status(opHash, chainId)
   }
 
-  async checkPrecondition(precondition: TransactionPrecondition): Promise<boolean> {
+  async checkPrecondition(precondition: IntentPrecondition): Promise<boolean> {
     return this.relayer.checkPrecondition(precondition)
   }
 }
