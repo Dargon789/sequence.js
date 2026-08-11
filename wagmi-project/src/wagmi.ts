@@ -2,12 +2,12 @@ import { http, createConfig } from 'wagmi'
 import { mainnet, sepolia } from 'wagmi/chains'
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
 
-const walletConnectProjectId = import.meta.env.VITE_WC_PROJECT_ID
+const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID
 
-if (!walletConnectProjectId) {
-  throw new Error(
-    'VITE_WC_PROJECT_ID is required for WalletConnect. ' +
-      'Set this environment variable (e.g. in a .env file) to enable the WalletConnect connector.',
+if (!wcProjectId) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[wagmi] VITE_WC_PROJECT_ID is not set; WalletConnect connector will not be registered.'
   )
 }
 
@@ -16,7 +16,7 @@ export const config = createConfig({
   connectors: [
     injected(),
     coinbaseWallet(),
-    walletConnect({ projectId: walletConnectProjectId }),
+    ...(wcProjectId ? [walletConnect({ projectId: wcProjectId })] : []),
   ],
   transports: {
     [mainnet.id]: http(),
