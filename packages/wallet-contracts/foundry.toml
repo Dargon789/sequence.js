@@ -1,0 +1,11 @@
+[profile.default]
+src = 'contracts'
+out = 'foundry_artifacts'
+libs = ["node_modules", "lib", "dependencies"]
+test = 'foundry_test'
+
+ffi = true
+max_test_rejects = 2048000
+
+[dependencies]
+forge-std = "1.11.0"
