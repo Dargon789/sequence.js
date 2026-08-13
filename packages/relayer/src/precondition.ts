@@ -267,8 +267,6 @@ function isBigNumberish(value: any): value is ethers.BigNumberish {
   }
 }
 
-function encodeBigNumberish<T extends ethers.BigNumberish | undefined>(
-  value: T
-): T extends ethers.BigNumberish ? string : undefined {
-  return value !== undefined ? ethers.toBigInt(value).toString() : (undefined as any)
+function encodeBigNumberish(value: ethers.BigNumberish | undefined): string | undefined {
+  return value !== undefined ? ethers.toBigInt(value).toString() : undefined
 }
