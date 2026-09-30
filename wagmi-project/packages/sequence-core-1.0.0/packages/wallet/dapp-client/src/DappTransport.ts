@@ -513,6 +513,9 @@ export class DappTransport {
   }
 
   private generateId(): string {
-    return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 9)}`
+    const randomBytes = new Uint8Array(16)
+    window.crypto.getRandomValues(randomBytes)
+    const randomHex = Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+    return `${Date.now().toString(36)}-${randomHex}`
   }
 }
