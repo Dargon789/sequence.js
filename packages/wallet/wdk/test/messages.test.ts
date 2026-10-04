@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { Manager, SignerActionable } from '../src/sequence/index.js'
+import { Manager, SignerActionable } from '../src/sequence'
 import { Mnemonic } from 'ox'
-import { newManager } from './constants.js'
+import { newManager } from './constants'
 import { Network } from '@0xsequence/wallet-primitives'
 
 describe('Messages', () => {
@@ -41,13 +41,12 @@ describe('Messages', () => {
     // Verify message appears in list
     const messages = await manager.messages.list()
     expect(messages.length).toBe(1)
-    const message = messages[0]!
-    expect(message.wallet).toBe(wallet)
-    expect(message.message).toBe(testMessage)
-    expect(message.status).toBe('requested')
-    expect(message.signatureId).toBe(signatureId)
-    expect(message.source).toBe('unknown')
-    expect(message.id).toBeDefined()
+    expect(messages[0].wallet).toBe(wallet)
+    expect(messages[0].message).toBe(testMessage)
+    expect(messages[0].status).toBe('requested')
+    expect(messages[0].signatureId).toBe(signatureId)
+    expect(messages[0].source).toBe('unknown')
+    expect(messages[0].id).toBeDefined()
   })
 
   it('Should create message request with custom source', async () => {
@@ -64,11 +63,8 @@ describe('Messages', () => {
 
     const messages = await manager.messages.list()
     expect(messages.length).toBe(1)
-
-    const message = messages[0]!
-
-    expect(message.source).toBe(customSource)
-    expect(message.message).toBe(testMessage)
+    expect(messages[0].source).toBe(customSource)
+    expect(messages[0].message).toBe(testMessage)
   })
 
   it('Should get message by ID', async () => {
@@ -83,7 +79,7 @@ describe('Messages', () => {
 
     const messages = await manager.messages.list()
     expect(messages.length).toBe(1)
-    const messageId = messages[0]!.id
+    const messageId = messages[0].id
 
     // Get by message ID
     const retrievedMessage = await manager.messages.get(messageId)
@@ -273,7 +269,7 @@ describe('Messages', () => {
     const signatureId = await manager.messages.request(wallet!, testMessage)
 
     const messages = await manager.messages.list()
-    const messageId = messages[0]!.id
+    const messageId = messages[0].id
 
     let updateCallCount = 0
     let lastMessage: any
@@ -319,7 +315,7 @@ describe('Messages', () => {
     await manager.messages.request(wallet!, testMessage)
 
     const messages = await manager.messages.list()
-    const messageId = messages[0]!.id
+    const messageId = messages[0].id
 
     let callCount = 0
     let receivedMessage: any
