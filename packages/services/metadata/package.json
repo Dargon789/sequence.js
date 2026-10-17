@@ -1,11 +1,15 @@
 {
   "name": "@0xsequence/metadata",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "publishConfig": {
     "access": "public"
   },
   "description": "metadata sub-package for Sequence",
-  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/services/metadata",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xsequence/sequence.js.git",
+    "directory": "packages/services/metadata"
+  },
   "author": "Sequence Platforms ULC",
   "license": "Apache-2.0",
   "type": "module",
