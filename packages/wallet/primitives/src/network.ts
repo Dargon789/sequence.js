@@ -74,9 +74,6 @@ export const ChainId = {
   TELOS: 40,
   TELOS_TESTNET: 41,
 
-  // B3 Sepolia
-  B3: 8333,
-
   // APE Chain
   APECHAIN: 33139,
   APECHAIN_TESTNET: 33111,
@@ -84,13 +81,12 @@ export const ChainId = {
   // SKALE Nebula
   SKALE_NEBULA: 1482601649,
 
+  // SKALE Base
+  SKALE_BASE_TESTNET: 324705682,
+
   // Soneium Minato
   SONEIUM_MINATO: 1946,
   SONEIUM: 1868,
-
-  // Immutable zkEVM
-  IMMUTABLE_ZKEVM: 13371,
-  IMMUTABLE_ZKEVM_TESTNET: 13473,
 
   // ETHERLINK
   ETHERLINK: 42793,
@@ -444,26 +440,6 @@ export const ALL: Network[] = [
     },
   },
   {
-    chainId: ChainId.B3,
-    type: NetworkType.MAINNET,
-    name: 'b3',
-    title: 'B3',
-    rpcUrl: getRpcUrl('b3'),
-    logoUrl: getLogoUrl(ChainId.B3),
-    blockExplorer: {
-      name: 'B3 Explorer',
-      url: 'https://explorer.b3.fun/',
-    },
-    nativeCurrency: {
-      symbol: 'ETH',
-      name: 'Ether',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
     chainId: ChainId.APECHAIN,
     type: NetworkType.MAINNET,
     name: 'apechain',
@@ -564,6 +540,26 @@ export const ALL: Network[] = [
     },
   },
   {
+    chainId: ChainId.SKALE_BASE_TESTNET,
+    type: NetworkType.TESTNET,
+    name: 'skale-base-testnet',
+    title: 'SKALE Base Testnet',
+    rpcUrl: getRpcUrl('skale-base-testnet'),
+    logoUrl: getLogoUrl(ChainId.SKALE_BASE_TESTNET),
+    blockExplorer: {
+      name: 'SKALE Base Testnet Explorer',
+      url: 'https://base-sepolia-testnet-explorer.skalenodes.com/',
+    },
+    nativeCurrency: {
+      symbol: 'CREDIT',
+      name: 'Credits',
+      decimals: 18,
+    },
+    contracts: {
+      multicall3: DEFAULT_MULTICALL3_ADDRESS,
+    },
+  },
+  {
     chainId: ChainId.SONEIUM,
     type: NetworkType.MAINNET,
     name: 'soneium',
@@ -597,46 +593,6 @@ export const ALL: Network[] = [
     nativeCurrency: {
       symbol: 'ETH',
       name: 'Ether',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
-    chainId: ChainId.IMMUTABLE_ZKEVM,
-    type: NetworkType.MAINNET,
-    name: 'immutable-zkevm',
-    title: 'Immutable zkEVM',
-    rpcUrl: getRpcUrl('immutable-zkevm'),
-    logoUrl: getLogoUrl(ChainId.IMMUTABLE_ZKEVM),
-    blockExplorer: {
-      name: 'Immutable zkEVM Explorer',
-      url: 'https://explorer.immutable.com/',
-    },
-    nativeCurrency: {
-      symbol: 'IMX',
-      name: 'IMX',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
-    chainId: ChainId.IMMUTABLE_ZKEVM_TESTNET,
-    type: NetworkType.TESTNET,
-    name: 'immutable-zkevm-testnet',
-    title: 'Immutable zkEVM Testnet',
-    rpcUrl: getRpcUrl('immutable-zkevm-testnet'),
-    logoUrl: getLogoUrl(ChainId.IMMUTABLE_ZKEVM_TESTNET),
-    blockExplorer: {
-      name: 'Immutable zkEVM Testnet Explorer',
-      url: 'https://explorer.testnet.immutable.com/',
-    },
-    nativeCurrency: {
-      symbol: 'IMX',
-      name: 'IMX',
       decimals: 18,
     },
     contracts: {
