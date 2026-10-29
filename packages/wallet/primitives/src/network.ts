@@ -70,13 +70,6 @@ export const ChainId = {
   BASE: 8453,
   BASE_SEPOLIA: 84532,
 
-  // TELOS
-  TELOS: 40,
-  TELOS_TESTNET: 41,
-
-  // B3 Sepolia
-  B3: 8333,
-
   // APE Chain
   APECHAIN: 33139,
   APECHAIN_TESTNET: 33111,
@@ -443,26 +436,6 @@ export const ALL: Network[] = [
     },
   },
   {
-    chainId: ChainId.B3,
-    type: NetworkType.MAINNET,
-    name: 'b3',
-    title: 'B3',
-    rpcUrl: getRpcUrl('b3'),
-    logoUrl: getLogoUrl(ChainId.B3),
-    blockExplorer: {
-      name: 'B3 Explorer',
-      url: 'https://explorer.b3.fun/',
-    },
-    nativeCurrency: {
-      symbol: 'ETH',
-      name: 'Ether',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
     chainId: ChainId.APECHAIN,
     type: NetworkType.MAINNET,
     name: 'apechain',
@@ -500,46 +473,6 @@ export const ALL: Network[] = [
     },
     contracts: {
       multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
-    chainId: ChainId.TELOS,
-    type: NetworkType.MAINNET,
-    name: 'telos',
-    title: 'Telos',
-    rpcUrl: getRpcUrl('telos'),
-    logoUrl: getLogoUrl(ChainId.TELOS),
-    blockExplorer: {
-      name: 'Telos Explorer',
-      url: 'https://explorer.telos.net/network/',
-    },
-    nativeCurrency: {
-      symbol: 'TLOS',
-      name: 'TLOS',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: DEFAULT_MULTICALL3_ADDRESS,
-    },
-  },
-  {
-    chainId: ChainId.TELOS_TESTNET,
-    type: NetworkType.TESTNET,
-    name: 'telos-testnet',
-    title: 'Telos Testnet',
-    rpcUrl: getRpcUrl('telos-testnet'),
-    logoUrl: getLogoUrl(ChainId.TELOS_TESTNET),
-    blockExplorer: {
-      name: 'Telos Testnet Explorer',
-      url: 'https://explorer-test.telos.net/network',
-    },
-    nativeCurrency: {
-      symbol: 'TLOS',
-      name: 'TLOS',
-      decimals: 18,
-    },
-    contracts: {
-      multicall3: SEQUENCE_MULTICALL3_ADDRESS,
     },
   },
   {
